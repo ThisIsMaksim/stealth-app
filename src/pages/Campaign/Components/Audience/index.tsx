@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow
 } from "keep-react";
-import {DotsThreeOutlineVertical, Funnel, Plus, PlusCircle} from "phosphor-react";
+import {DotsThreeOutlineVertical, Funnel, Plus} from "phosphor-react";
 
 interface IProspect {
   id: string

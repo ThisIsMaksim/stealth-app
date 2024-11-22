@@ -1,8 +1,5 @@
 import {
   Button,
-  Card,
-  Skeleton,
-  SkeletonLine,
   Tabs,
   TabsContent,
   TabsItem,
@@ -10,7 +7,6 @@ import {
 } from 'keep-react'
 import {
   Article,
-  Detective,
   Diamond,
   Gear,
   User
