@@ -1,6 +1,6 @@
 import {
   CaretDown,
-  ChartPie, Chats,
+  Chats,
   CheckSquare,
   Gear,
   HouseLine,
@@ -93,12 +93,6 @@ export const Menu = () => {
             <SidebarItem>
               <CheckSquare size={20} />
               Prospects
-            </SidebarItem>
-          </Link>
-          <Link to='/teams'>
-            <SidebarItem>
-              <ChartPie size={20} />
-              Teams
             </SidebarItem>
           </Link>
           <Link to='/settings'>

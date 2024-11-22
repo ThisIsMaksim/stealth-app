@@ -7,7 +7,7 @@
 
 .AuthPageWrapper {
     align-items: flex-start;
-    width: 100%;
+    width: calc(100vw - 300px);
     margin: 0 0 0 16px;
 }
 

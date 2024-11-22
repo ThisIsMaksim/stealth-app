@@ -1,4 +1,6 @@
 .Menu {
+    min-width: 260px;
+    max-width: 260px;
     height: calc(100vh - 32px);
 }
 
