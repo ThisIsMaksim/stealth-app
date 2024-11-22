@@ -1,0 +1,10 @@
+.Menu {
+    height: calc(100vh - 32px);
+}
+
+.Logo {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    font-weight: bold;
+}

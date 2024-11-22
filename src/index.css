@@ -1,0 +1,22 @@
+@import "keep-react/css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    color-scheme: light;
+}
+
+body {
+    overflow: hidden;
+}
+
+.light {
+    color-scheme: light;
+    background: #F3F5FF;
+}
+
+.dark {
+    color-scheme: dark;
+    background: #0E1015;
+}
