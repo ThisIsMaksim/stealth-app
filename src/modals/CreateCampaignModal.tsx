@@ -1,7 +1,5 @@
-import {IdentificationCard} from 'phosphor-react'
 import {
-  Button, Input, InputIcon,
-  Modal,
+  Button, Input, Modal,
   ModalContent,
   ModalDescription,
   ModalFooter,
