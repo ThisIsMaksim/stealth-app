@@ -1,5 +1,6 @@
 import { flow, makeAutoObservable } from "mobx"
 import {ICampaign, ICampaignCreateRequest} from "../types/Campaigns.type.ts"
+import {getHost} from "../utils/getHost.ts";
 
 class CampaignsStore {
   state = "pending"
@@ -31,7 +32,7 @@ class CampaignsStore {
   *createCampaign(request: ICampaignCreateRequest) {
     this.state = "pending"
 
-    const response = yield fetch('/api/v1/campaigns/', {
+    const response = yield fetch(`${getHost()}/api/v1/campaigns/`, {
       method: 'Post',
       body: JSON.stringify(request),
     })

@@ -1,5 +1,6 @@
 import { flow, makeAutoObservable } from "mobx"
 import {IUser} from "../types/User.type.ts"
+import {getHost} from "../utils/getHost.ts";
 
 interface ISignUpRequest {
   first_name: string
@@ -29,7 +30,7 @@ class UserStore {
   *fetchUser() {
     this.state = "pending"
 
-    const response = yield fetch('/api/v1/users/me')
+    const response = yield fetch(`${getHost()}/api/v1/users/me`)
 
     if (!response.ok) {
       this.state = "error"
@@ -45,7 +46,7 @@ class UserStore {
   *signUp(request: ISignUpRequest) {
     this.state = "pending"
 
-    const response = yield fetch('/api/v1/users/register', {
+    const response = yield fetch(`${getHost()}/api/v1/users/register`, {
       method: 'POST',
       body: JSON.stringify(request)
     })
@@ -62,7 +63,7 @@ class UserStore {
   *signIn(request: ISignInRequest) {
     this.state = "pending"
 
-    const response = yield fetch('/api/v1/users/login', {
+    const response = yield fetch(`${getHost()}/api/v1/users/login`, {
       method: 'POST',
       body: JSON.stringify(request)
     })
