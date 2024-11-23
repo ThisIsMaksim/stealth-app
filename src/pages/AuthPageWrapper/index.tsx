@@ -2,13 +2,13 @@ import {Header, Menu} from "../../components"
 import './index.css'
 import {Card, Spinner} from "keep-react";
 import {useStores} from "../../stores";
-import {Children, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {observer} from "mobx-react";
 import {useNavigate} from "react-router-dom";
 import {CreateCampaignModal} from "../../modals/CreateCampaignModal.tsx";
 
 interface AuthPageWrapperProps {
-  children: Children
+  children: React.ReactNode
 }
 
 export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
