@@ -10,9 +10,44 @@ import {
   InputIcon,
 } from 'keep-react'
 import './index.css'
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom"
+import {useStores} from "../../stores"
+import {useCallback, useEffect, useState} from "react"
 
 export function SignUp() {
+  const { UserStore } = useStores()
+  const navigate = useNavigate()
+  const [firstName, setFirstName] = useState("")
+  const [secondName, setSecondName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [repeatPassword, setRepeatPassword] = useState("")
+
+  const handleCreateUser = useCallback(() => {
+    if (password === '' && password !== repeatPassword) {
+
+    }
+    if (firstName.trim().length < 6) {
+
+    }
+    if (secondName.trim().length < 6) {
+
+    }
+
+    UserStore.signUp({
+      first_name: firstName,
+      second_name: secondName,
+      email: email,
+      password: password,
+    })
+  }, [UserStore, email, firstName, password, repeatPassword, secondName])
+
+  useEffect(() => {
+    if (UserStore.state === 'done') {
+      navigate('/')
+    }
+  }, [UserStore.state, navigate])
+
   return (
     <div className="Page">
       <Card className="min-w-96">
@@ -26,16 +61,24 @@ export function SignUp() {
               </Button>
             </CardDescription>
           </CardHeader>
-          <form className="space-y-3">
+          <div className="space-y-3">
             <fieldset className="flex flex-row items-center space-x-3">
               <div className="relative">
-                <Input id="firstname" placeholder="First name" className="ps-11"/>
+                <Input
+                  className="ps-11"
+                  placeholder="First name"
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
                 <InputIcon>
                   <IdentificationCard size={19} color="#AFBACA"/>
                 </InputIcon>
               </div>
               <div className="relative">
-                <Input id="email" placeholder="Last name" className="ps-11"/>
+                <Input
+                  className="ps-11"
+                  placeholder="Last name"
+                  onChange={(e) => setSecondName(e.target.value)}
+                />
                 <InputIcon>
                   <IdentificationCard size={19} color="#AFBACA"/>
                 </InputIcon>
@@ -43,7 +86,12 @@ export function SignUp() {
             </fieldset>
             <fieldset className="space-y-3">
               <div className="relative">
-                <Input id="email" type="email" placeholder="Email" className="ps-11"/>
+                <Input
+                  className="ps-11"
+                  type="email"
+                  placeholder="Email"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
                 <InputIcon>
                   <Envelope size={19} color="#AFBACA"/>
                 </InputIcon>
@@ -51,22 +99,32 @@ export function SignUp() {
             </fieldset>
             <fieldset className="space-y-3">
               <div className="relative">
-                <Input id="password" placeholder="Password" type="password" className="ps-11"/>
+                <Input
+                  className="ps-11"
+                  placeholder="Password"
+                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
                 <InputIcon>
                   <Lock size={19} color="#AFBACA"/>
                 </InputIcon>
               </div>
               <div className="relative">
-                <Input id="reapet-password" placeholder="Repeat password" type="password" className="ps-11"/>
+                <Input
+                  className="ps-11"
+                  placeholder="Repeat password"
+                  type="password"
+                  onChange={(e) => setRepeatPassword(e.target.value)}
+                />
                 <InputIcon>
                   <Lock size={19} color="#AFBACA"/>
                 </InputIcon>
               </div>
             </fieldset>
-            <Button type="submit" className="!mt-3 block w-full">
+            <Button className="!mt-3 block w-full" onClick={handleCreateUser}>
               Create Account
             </Button>
-          </form>
+          </div>
         </CardContent>
       </Card>
     </div>

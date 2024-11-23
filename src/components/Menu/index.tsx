@@ -19,29 +19,19 @@ import {
 } from 'keep-react'
 import './index.css'
 import {Link} from "react-router-dom"
-import {useEffect, useState} from "react";
+import {IUser} from "../../types/User.type.ts";
 
 interface Campaign {
   id: string
   name: string
 }
 
-export const Menu = () => {
-  const [campaigns, setCampaigns] = useState<Campaign[]>([])
+interface MenuProps {
+  user: IUser
+  campaigns: Campaign[]
+}
 
-  useEffect(() => {
-    setCampaigns([
-      {
-        id: '0',
-        name: 'Campaign 1',
-      },
-      {
-        id: '1',
-        name: 'Campaign 2',
-      }
-    ])
-  }, [])
-
+export const Menu = ({user, campaigns}: MenuProps) => {
   return (
     <Sidebar className="Menu">
       <SidebarBody>
@@ -109,8 +99,8 @@ export const Menu = () => {
           <AvatarFallback>KR</AvatarFallback>
         </Avatar>
         <div>
-          <p className="text-body-4 font-medium text-metal-400 dark:text-white">Enzo Farnandez</p>
-          <p className="text-body-4 font-normal text-metal-300 dark:text-metal-400">enzo123@gmail.com</p>
+          <p className="text-body-4 font-medium text-metal-400 text-start dark:text-white">{user.name}</p>
+          <p className="text-body-4 font-normal text-metal-300 text-start dark:text-metal-400">{user.email}</p>
         </div>
       </SidebarFooter>
     </Sidebar>

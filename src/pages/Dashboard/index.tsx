@@ -1,11 +1,10 @@
-import {AuthPageWrapper} from "../AuthPageWrapper";
+import {AuthPageWrapper} from "../AuthPageWrapper"
+import {observer} from "mobx-react"
 
-export function Dashboard() {
-  return (
-    <AuthPageWrapper>
-      <div>
-        Dashboard Page
-      </div>
-    </AuthPageWrapper>
-  )
-}
+export const Dashboard = observer(() => {
+  return <AuthPageWrapper>
+    <div>
+      Dashboard Page
+    </div>
+  </AuthPageWrapper>
+})

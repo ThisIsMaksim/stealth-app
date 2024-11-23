@@ -10,9 +10,29 @@ import {
   InputIcon,
 } from 'keep-react'
 import './index.css'
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
+import {useStores} from "../../stores";
+import {useCallback, useEffect, useState} from "react";
 
 export function SignIn() {
+  const { UserStore } = useStores()
+  const navigate = useNavigate()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const handleLogin = useCallback(() => {
+    UserStore.signIn({
+      email: email,
+      password: password,
+    })
+  }, [UserStore, email, password])
+
+  useEffect(() => {
+    if (UserStore.state === 'done') {
+      navigate('/')
+    }
+  }, [UserStore.state, navigate])
+
   return (
     <div className="Page">
       <Card className="min-w-96">
@@ -26,10 +46,15 @@ export function SignIn() {
               </Button>
             </CardDescription>
           </CardHeader>
-          <form className="space-y-3">
+          <div className="space-y-3">
             <fieldset className="space-y-3">
               <div className="relative">
-                <Input id="email" type="email" placeholder="Email" className="ps-11"/>
+                <Input
+                  className="ps-11"
+                  type="email"
+                  placeholder="Email"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
                 <InputIcon>
                   <Envelope size={19} color="#AFBACA"/>
                 </InputIcon>
@@ -37,16 +62,21 @@ export function SignIn() {
             </fieldset>
             <fieldset className="space-y-3">
               <div className="relative">
-                <Input id="password" placeholder="Password" type="password" className="ps-11"/>
+                <Input
+                  className="ps-11"
+                  placeholder="Password"
+                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
                 <InputIcon>
                   <Lock size={19} color="#AFBACA"/>
                 </InputIcon>
               </div>
             </fieldset>
-            <Button type="submit" className="!mt-3 block w-full">
+            <Button className="!mt-3 block w-full" onClick={handleLogin}>
               Login
             </Button>
-          </form>
+          </div>
         </CardContent>
       </Card>
     </div>
