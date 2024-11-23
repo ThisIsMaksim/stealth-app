@@ -3,7 +3,7 @@ import {
   Chats,
   CheckSquare,
   Gear,
-  HouseLine,
+  HouseLine, PlusCircle,
   PresentationChart,
 } from 'phosphor-react'
 import {
@@ -15,23 +15,20 @@ import {
   SidebarItem,
   SidebarList,
   AvatarFallback,
-  NavbarBrand, Label, Card, SidebarDropdown, SidebarCollapse, SidebarDropdownList
+  NavbarBrand, Label, Card, SidebarDropdown, SidebarCollapse, SidebarDropdownList, Button
 } from 'keep-react'
 import './index.css'
 import {Link} from "react-router-dom"
 import {IUser} from "../../types/User.type.ts";
+import {ICampaign} from "../../types/Campaigns.type.ts"
 
-interface Campaign {
-  id: string
-  name: string
-}
-
-interface MenuProps {
+interface Props {
   user: IUser
-  campaigns: Campaign[]
+  campaigns: ICampaign[]
+  showCreateCampaignModal: () => void
 }
 
-export const Menu = ({user, campaigns}: MenuProps) => {
+export const Menu = ({user, campaigns, showCreateCampaignModal}: Props) => {
   return (
     <Sidebar className="Menu">
       <SidebarBody>
@@ -48,31 +45,37 @@ export const Menu = ({user, campaigns}: MenuProps) => {
               Dashboard
             </SidebarItem>
           </Link>
-          <SidebarItem dropdown>
-            <SidebarDropdown>
-              <SidebarCollapse>
-                <div className="flex items-center gap-3">
-                  <span>
-                    <PresentationChart size={20} />
-                  </span>
-                  <span>Campaigns</span>
-                </div>
-                <span className="group-open:-rotate-180">
-                  <CaretDown size={20} />
-                </span>
-              </SidebarCollapse>
+          <Link to="/campaign">
+            <SidebarItem>
+              <PresentationChart size={20} />
+              Campaign
+            </SidebarItem>
+          </Link>
+          {/*<SidebarItem dropdown>*/}
+          {/*  <SidebarDropdown>*/}
+          {/*    <SidebarCollapse>*/}
+          {/*      <div className="flex items-center gap-3">*/}
+          {/*        <span>*/}
+          {/*          <PresentationChart size={20} />*/}
+          {/*        </span>*/}
+          {/*        <span>Campaigns</span>*/}
+          {/*      </div>*/}
+          {/*      <span className="group-open:-rotate-180">*/}
+          {/*        <CaretDown size={20} />*/}
+          {/*      </span>*/}
+          {/*    </SidebarCollapse>*/}
 
-              <SidebarDropdownList>
-                {campaigns.map((campaign: Campaign) => (
-                  <SidebarItem>
-                    <Link to={`/campaign/${campaign.id}`}>
-                      {campaign.name}
-                    </Link>
-                  </SidebarItem>
-                ))}
-              </SidebarDropdownList>
-            </SidebarDropdown>
-          </SidebarItem>
+          {/*    <SidebarDropdownList>*/}
+          {/*      {campaigns.map((campaign: Campaign) => (*/}
+          {/*        <SidebarItem>*/}
+          {/*          <Link to={`/campaign/${campaign.id}`}>*/}
+          {/*            {campaign.name}*/}
+          {/*          </Link>*/}
+          {/*        </SidebarItem>*/}
+          {/*      ))}*/}
+          {/*    </SidebarDropdownList>*/}
+          {/*  </SidebarDropdown>*/}
+          {/*</SidebarItem>*/}
           <Link to="/comments">
             <SidebarItem>
               <Chats size={20} />
@@ -92,6 +95,12 @@ export const Menu = ({user, campaigns}: MenuProps) => {
             </SidebarItem>
           </Link>
         </SidebarList>
+        <div className="flex justify-start">
+          <Button variant="outline" onClick={showCreateCampaignModal}>
+            <PlusCircle size={18} className="mr-1.5" />
+            <span className="lowercase">Add a campaign</span>
+          </Button>
+        </div>
       </SidebarBody>
       <SidebarFooter>
         <Avatar>

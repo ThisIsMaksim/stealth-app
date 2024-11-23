@@ -9,9 +9,9 @@ export const CampaignSettings: FC = () => {
     <div className="relative">
       <Input placeholder="Campaign name"/>
     </div>
-    <div className="relative">
-      <Input placeholder="Fetch not older than (days)"/>
-    </div>
+    {/*<div className="relative">*/}
+    {/*  <Input placeholder="Fetch not older than (days)"/>*/}
+    {/*</div>*/}
     <div className="w-full flex justify-start">
       <Button>Save</Button>
     </div>

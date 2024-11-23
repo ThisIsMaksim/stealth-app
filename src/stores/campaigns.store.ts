@@ -5,11 +5,16 @@ import {getHost} from "../utils/getHost.ts";
 class CampaignsStore {
   state = "pending"
   campaigns: ICampaign[] = []
+  activeCampaign: ICampaign
 
   constructor() {
     makeAutoObservable(this, {
       fetchCampaigns: flow,
     })
+  }
+
+  setActiveCampaign(campaign: ICampaign) {
+    this.activeCampaign = campaign
   }
 
   *fetchCampaigns() {
@@ -26,6 +31,7 @@ class CampaignsStore {
     const data = yield response.json()
 
     this.campaigns = data.campaigns
+    this.activeCampaign = this.campaigns[0]
     this.state = "done"
   }
 
@@ -43,8 +49,11 @@ class CampaignsStore {
       return
     }
 
+    const currentCampaigns = this.campaigns.map(c => c.id)
+
     yield this.fetchCampaigns()
 
+    this.activeCampaign = this.campaigns.find((c) => !currentCampaigns.includes(c.id))
     this.state = "done"
   }
 }

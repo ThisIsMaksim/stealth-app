@@ -36,7 +36,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
 
   useEffect(() => {
     if (CampaignsStore.state === 'done' && CampaignsStore.campaigns.length === 0) {
-      setNeedShowCreateCampaignModal(true)
+      CampaignsStore.createCampaign({name: 'First campaign', owner_context: '', company_context: ''})
     }
   }, [CampaignsStore.campaigns, CampaignsStore.state])
 
@@ -48,17 +48,25 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
 
   return (
     <div className="AuthPageApp h-full h-max-full">
-      <Menu user={UserStore.user} campaigns={CampaignsStore.campaigns} />
+      <Menu
+        user={UserStore.user}
+        campaigns={CampaignsStore.campaigns}
+        showCreateCampaignModal={() => setNeedShowCreateCampaignModal(true)}
+      />
       <div className="AuthPageWrapper h-full h-max-full">
-        <Header />
+        <Header
+          campaigns={CampaignsStore.campaigns}
+          activeCampaign={CampaignsStore.activeCampaign}
+          onChange={(campaign) => CampaignsStore.setActiveCampaign(campaign)}
+        />
           <Card className="Route w-full max-w-full p-4 mt-4 overflow-auto">
-            <CreateCampaignModal
-              isOpen={needShowCreateCampaignModal}
-              closeModal={() => setNeedShowCreateCampaignModal(false)}
-            />
             {children}
           </Card>
       </div>
+      <CreateCampaignModal
+        isOpen={needShowCreateCampaignModal}
+        closeModal={() => setNeedShowCreateCampaignModal(false)}
+      />
     </div>
   )
 })

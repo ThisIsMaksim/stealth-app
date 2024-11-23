@@ -27,7 +27,7 @@ export const CreateCampaignModal = ({isOpen, closeModal}: Props) => {
   return (
     <Modal
       open={isOpen}
-      showCloseIcon={false}
+      onOpenChange={(value) => !value ? closeModal() : null}
     >
       <ModalContent>
         <ModalHeader className="mb-6 space-y-3">
@@ -40,7 +40,7 @@ export const CreateCampaignModal = ({isOpen, closeModal}: Props) => {
         </ModalHeader>
         <div className="mt-4 mb-4">
           <Input
-            placeholder="First name"
+            placeholder="Campaign name"
             onChange={(e) => setName(e.target.value)}
           />
         </div>

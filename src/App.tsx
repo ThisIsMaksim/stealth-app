@@ -7,7 +7,7 @@ function App() {
     <Route path="/" element={<Dashboard />} />
     <Route path="/signup" element={<SignUp />} />
     <Route path="/signin" element={<SignIn />} />
-    <Route path="/campaign/:id" element={<Campaign />} />
+    <Route path="/campaign" element={<Campaign />} />
     <Route path="/comments" element={<Comments />} />
   </Routes>
 }
