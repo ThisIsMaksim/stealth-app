@@ -1,5 +1,4 @@
 import {
-  CaretDown,
   Chats,
   CheckSquare,
   Gear,
@@ -15,7 +14,7 @@ import {
   SidebarItem,
   SidebarList,
   AvatarFallback,
-  NavbarBrand, Label, Card, SidebarDropdown, SidebarCollapse, SidebarDropdownList, Button
+  NavbarBrand, Label, Card, Button
 } from 'keep-react'
 import './index.css'
 import {Link} from "react-router-dom"
@@ -28,7 +27,7 @@ interface Props {
   showCreateCampaignModal: () => void
 }
 
-export const Menu = ({user, campaigns, showCreateCampaignModal}: Props) => {
+export const Menu = ({user, showCreateCampaignModal}: Props) => {
   return (
     <Sidebar className="Menu">
       <SidebarBody>

@@ -1,14 +1,12 @@
 import {
-  Button,
   Navbar,
   NavbarContainer,
-  NavbarList, Select, SelectAction, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectValue,
+  NavbarList, Select, SelectAction, SelectContent, SelectGroup, SelectItem, SelectValue,
 } from 'keep-react'
 import {ThemeSwitcher} from "../ThemeSwitcher"
 import './index.css'
 import {ICampaign} from "../../types/Campaigns.type.ts"
 import {useCallback} from "react";
-import {PlusCircle} from "phosphor-react";
 
 interface Props {
   activeCampaign: ICampaign

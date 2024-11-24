@@ -24,16 +24,6 @@ export function SignUp() {
   const [repeatPassword, setRepeatPassword] = useState("")
 
   const handleCreateUser = useCallback(() => {
-    if (password === '' && password !== repeatPassword) {
-
-    }
-    if (firstName.trim().length < 6) {
-
-    }
-    if (secondName.trim().length < 6) {
-
-    }
-
     UserStore.signUp({
       first_name: firstName,
       second_name: secondName,
