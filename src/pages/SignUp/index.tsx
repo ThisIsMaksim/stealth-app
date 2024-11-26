@@ -10,13 +10,12 @@ import {
   InputIcon,
 } from 'keep-react'
 import './index.css'
-import {Link, useNavigate} from "react-router-dom"
+import {Link} from "react-router-dom"
 import {useStores} from "../../stores"
-import {useCallback, useEffect, useState} from "react"
+import {useCallback, useState} from "react"
 
 export function SignUp() {
   const { UserStore } = useStores()
-  const navigate = useNavigate()
   const [firstName, setFirstName] = useState("")
   const [secondName, setSecondName] = useState("")
   const [email, setEmail] = useState("")
@@ -31,12 +30,6 @@ export function SignUp() {
       password: password,
     })
   }, [UserStore, email, firstName, password, repeatPassword, secondName])
-
-  useEffect(() => {
-    if (UserStore.state === 'done') {
-      navigate('/')
-    }
-  }, [UserStore.state, navigate])
 
   return (
     <div className="Page">

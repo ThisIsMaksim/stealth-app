@@ -3,5 +3,5 @@ export const getHost = () => {
     return ''
   }
 
-  return 'https://95.214.62.89:8080'
+  return ''
 }

@@ -13,13 +13,26 @@ import {
 } from "phosphor-react"
 import './index.css'
 import {AuthPageWrapper} from "../AuthPageWrapper"
-import {ContextAboutYourCompany} from "./Components/ContextAboutYourCompany";
-import {ContextAboutYourYou} from "./Components/ContextAboutYou";
-import {Insights} from "./Components/Insights";
-import {CampaignSettings} from "./Components/CampaignSettings";
-import {Audience} from "./Components/Audience";
+import {ContextAboutYourCompany} from "./Components/ContextAboutYourCompany"
+import {ContextAboutYourYou} from "./Components/ContextAboutYou"
+import {Insights} from "./Components/Insights"
+import {CampaignSettings} from "./Components/CampaignSettings"
+import {Audience} from "./Components/Audience"
+import {useStores} from "../../stores"
+import {useEffect, useState} from "react"
+import {AddProspectModal} from "../../modals/AddProspectModal.tsx"
+import {observer} from "mobx-react"
 
-export function Campaign() {
+export const Campaign = observer(() => {
+  const { CampaignsStore, ProspectsStore } = useStores()
+  const [isOpenAddProspectModal, setOpenAddProspectModal] = useState(false)
+
+  useEffect(() => {
+    if (CampaignsStore.activeCampaign) {
+      ProspectsStore.fetchProspects(CampaignsStore.activeCampaign.id)
+    }
+  }, [CampaignsStore.activeCampaign, ProspectsStore])
+
   return (
     <AuthPageWrapper>
       <Tabs variant="underline" defaultValue="item-1" className="space-y-4">
@@ -44,7 +57,11 @@ export function Campaign() {
           </TabsList>
         </>
         <TabsContent value="item-1">
-          <Audience />
+          <Audience
+            prospects={ProspectsStore.prospects}
+            status={ProspectsStore.state}
+            openAddProspect={() => setOpenAddProspectModal(true)}
+          />
         </TabsContent>
         <TabsContent className="max-w-2xl items-start space-y-4" value="item-2">
           <ContextAboutYourCompany />
@@ -60,6 +77,10 @@ export function Campaign() {
           <CampaignSettings />
         </TabsContent>
       </Tabs>
+      <AddProspectModal
+        isOpen={isOpenAddProspectModal}
+        close={() => setOpenAddProspectModal(false)}
+      />
     </AuthPageWrapper>
   )
-}
+})

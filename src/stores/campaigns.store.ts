@@ -1,11 +1,13 @@
 import { flow, makeAutoObservable } from "mobx"
 import {ICampaign, ICampaignCreateRequest} from "../types/Campaigns.type.ts"
 import {getHost} from "../utils/getHost.ts";
+import {IProspect} from "../types/Prospects.type.ts";
 
 class CampaignsStore {
   state = "pending"
   campaigns: ICampaign[] = []
   activeCampaign: ICampaign
+  prospects: IProspect[] = []
 
   constructor() {
     makeAutoObservable(this, {
@@ -14,6 +16,8 @@ class CampaignsStore {
   }
 
   setActiveCampaign(campaign: ICampaign) {
+    localStorage.setItem("activeCampaign", campaign.id)
+
     this.activeCampaign = campaign
   }
 
@@ -31,7 +35,7 @@ class CampaignsStore {
     const data = yield response.json()
 
     this.campaigns = data.campaigns
-    this.activeCampaign = this.campaigns[0]
+    this.activeCampaign = this.campaigns.find(c => c.id === localStorage.getItem('activeCampaign')) ?? this.campaigns[0]
     this.state = "done"
   }
 

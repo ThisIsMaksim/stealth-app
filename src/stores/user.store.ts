@@ -57,6 +57,8 @@ class UserStore {
       return
     }
 
+    location.href = '/'
+
     this.state = "done"
   }
 
@@ -73,6 +75,8 @@ class UserStore {
 
       return
     }
+
+    location.href = '/'
 
     this.state = "done"
   }

@@ -38,7 +38,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
     if (CampaignsStore.state === 'done' && CampaignsStore.campaigns.length === 0) {
       CampaignsStore.createCampaign({name: 'First campaign', owner_context: '', company_context: ''})
     }
-  }, [CampaignsStore.campaigns, CampaignsStore.state])
+  }, [CampaignsStore, CampaignsStore.campaigns, CampaignsStore.state])
 
   if (!UserStore.authorized) {
     return <div className="AuthPageApp flex justify-center items-center">
