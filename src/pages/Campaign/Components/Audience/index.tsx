@@ -23,10 +23,11 @@ dayjs.extend(relativeTime)
 interface Props {
   status: string
   prospects: IProspect[]
-  openAddProspect: () => void
+  addProspect: () => void
+  removeProspect: (prospectId: string) => void
 }
 
-const EmptyComponent = ({openAddProspect}: Props) => (
+const EmptyComponent = ({addProspect}: Props) => (
   <Empty>
     <EmptyImage>
       <img
@@ -41,14 +42,14 @@ const EmptyComponent = ({openAddProspect}: Props) => (
     <EmptyDescription className="mb-8">
       Add the prospects to your campaign to start using them
     </EmptyDescription>
-    <Button variant="outline" className="flex gap-1.5" onClick={() => openAddProspect()}>
+    <Button variant="outline" className="flex gap-1.5" onClick={() => addProspect()}>
       <Plus className="size-4 fill-metal-900 dark:fill-white"/>
       Add prospect
     </Button>
   </Empty>
 )
 
-const Prospects = ({prospects}: Props) => (
+const Prospects = ({prospects, removeProspect}: Props) => (
   <Table className="mt-4">
     <TableHeader>
       <TableRow>
@@ -97,7 +98,7 @@ const Prospects = ({prospects}: Props) => (
                 </button>
               </DropdownAction>
               <DropdownContent align="end" className="w-[200px] border border-metal-100 p-3 dark:border-metal-800">
-                <DropdownItem>Delete</DropdownItem>
+                <DropdownItem onClick={() => removeProspect(item.id)}>Delete</DropdownItem>
               </DropdownContent>
             </Dropdown>
           </TableCell>
@@ -108,7 +109,7 @@ const Prospects = ({prospects}: Props) => (
 )
 
 export const Audience = (props: Props) => {
-  const {prospects, status, openAddProspect} = props
+  const {prospects, status, addProspect} = props
   const isEmpty = useMemo(() => status === 'done' && prospects.length === 0, [prospects, status])
 
   if (status === 'pending') return (
@@ -128,7 +129,7 @@ export const Audience = (props: Props) => {
           </Badge>
         </div>
         <div className="flex items-center gap-5">
-          <Button variant="outline" className="flex gap-1.5" onClick={() => openAddProspect()}>
+          <Button variant="outline" className="flex gap-1.5" onClick={() => addProspect()}>
             <Plus className="size-4 fill-metal-900 dark:fill-white"/>
             Add prospect
           </Button>

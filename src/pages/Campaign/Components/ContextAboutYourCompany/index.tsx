@@ -5,7 +5,7 @@ export const ContextAboutYourCompany: FC = () => {
   const [value, setValue] = useState('')
   const maxLength = useRef(100)
 
-  return <fieldset className="flex flex-col items-start space-y-3 p-2">
+  return <fieldset className="flex flex-col items-start space-y-3">
     <Label className="text-heading-6" htmlFor="message">Context about your company</Label>
     <Textarea
       id="message"

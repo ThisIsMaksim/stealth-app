@@ -1,5 +1,5 @@
 import { flow, makeAutoObservable } from "mobx"
-import {ICampaign, ICampaignCreateRequest} from "../types/Campaigns.type.ts"
+import {ICampaign, ICampaignCreateRequest, IChangeCampaignRequest} from "../types/Campaigns.type.ts"
 import {getHost} from "../utils/getHost.ts";
 import {IProspect} from "../types/Prospects.type.ts";
 
@@ -58,6 +58,25 @@ class CampaignsStore {
     yield this.fetchCampaigns()
 
     this.activeCampaign = this.campaigns.find((c) => !currentCampaigns.includes(c.id))
+    this.state = "done"
+  }
+
+  *changeCampaign(request: IChangeCampaignRequest, action: () => void) {
+    this.state = "pending"
+
+    const response = yield fetch(`${getHost()}/api/v1/campaigns/${this.activeCampaign.id}`, {
+      method: 'Put',
+      body: JSON.stringify(request),
+    })
+
+    if (!response.ok) {
+      this.state = "error"
+
+      return
+    }
+
+    yield this.fetchCampaigns()
+
     this.state = "done"
   }
 }

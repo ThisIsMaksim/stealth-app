@@ -11,3 +11,9 @@ export interface ICampaignCreateRequest {
   company_context: string
   owner_context: string
 }
+
+export interface IChangeCampaignRequest {
+  name: string
+  company_context: string
+  owner_context: string
+}

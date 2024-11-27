@@ -17,3 +17,8 @@ export interface IAddProspectRequest {
   campaign_id: string
   link_urls: string[]
 }
+
+export interface IRemoveProspectRequest {
+  campaign_id: string
+  prospect_id: string
+}

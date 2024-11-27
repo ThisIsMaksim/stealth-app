@@ -1,5 +1,5 @@
 import { flow, makeAutoObservable } from "mobx"
-import {IAddProspectRequest, IProspect} from "../types/Prospects.type.ts"
+import {IAddProspectRequest, IProspect, IRemoveProspectRequest} from "../types/Prospects.type.ts"
 import {getHost} from "../utils/getHost.ts"
 
 class ProspectsStore {
@@ -49,6 +49,24 @@ class ProspectsStore {
 
     yield this.fetchProspects(request.campaign_id)
 
+    this.state = "done"
+  }
+
+  *removeProspect(request: IRemoveProspectRequest) {
+    this.state = "pending"
+
+    const response = yield fetch(`${getHost()}/api/v1/prospects/remove`, {
+      method: 'Post',
+      body: JSON.stringify(request),
+    })
+
+    if (!response.ok) {
+      this.state = "error"
+
+      return
+    }
+
+    this.prospects = this.prospects.filter((prospect) => prospect.id !== request.prospect_id)
     this.state = "done"
   }
 }
