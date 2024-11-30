@@ -26,7 +26,7 @@ export const Campaign = observer(() => {
     if (CampaignsStore.activeCampaign) {
       ProspectsStore.fetchProspects(CampaignsStore.activeCampaign.id)
     }
-  }, [CampaignsStore.activeCampaign, ProspectsStore])
+  }, [CampaignsStore.activeCampaign?.id, ProspectsStore])
 
   return (
     <AuthPageWrapper>

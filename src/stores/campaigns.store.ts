@@ -77,6 +77,8 @@ class CampaignsStore {
 
     yield this.fetchCampaigns()
 
+    action()
+
     this.state = "done"
   }
 }

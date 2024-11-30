@@ -3,7 +3,7 @@ import {
   AvatarFallback, AvatarImage,
   Badge,
   Button, Dropdown, DropdownAction, DropdownContent,
-  DropdownItem, Empty, EmptyDescription, EmptyImage, EmptyTitle, Spinner,
+  DropdownItem, Empty, EmptyDescription, EmptyImage, EmptyTitle, Skeleton, SkeletonLine, Spinner,
   Table,
   TableBody,
   TableCell,
@@ -49,6 +49,26 @@ const EmptyComponent = ({addProspect}: Props) => (
   </Empty>
 )
 
+const Skeletons = () => Array.from({ length: 3 }).map((_) => (
+  <TableRow>
+    <TableCell className="text-start">
+      <Skeleton className="flex max-w-md items-center gap-3">
+        <SkeletonLine className="h-12 w-12 rounded-full"/>
+        <div className="space-y-2">
+          <SkeletonLine className="h-4 w-[200px]" />
+          <SkeletonLine className="h-4 w-[200px]" />
+        </div>
+      </Skeleton>
+    </TableCell>
+    <TableCell className="text-start"></TableCell>
+    <TableCell className="text-end"></TableCell>
+    <TableCell className="text-end"></TableCell>
+    <TableCell className="text-end"></TableCell>
+    <TableCell>
+    </TableCell>
+  </TableRow>
+))
+
 const Prospects = ({prospects, removeProspect}: Props) => (
   <Table className="mt-4">
     <TableHeader>
@@ -72,23 +92,30 @@ const Prospects = ({prospects, removeProspect}: Props) => (
       </TableRow>
     </TableHeader>
     <TableBody className="pb-10">
+      {prospects.length === 0 && <Skeletons />}
       {prospects.map((item) => (
         <TableRow key={item.id}>
           <TableCell className="text-start">
-            <div className="flex items-center gap-2">
+            {item.name && <div className="flex items-center gap-2">
               <Avatar>
                 <AvatarImage src={item.avatar_url}/>
-                <AvatarFallback>KR</AvatarFallback>
+                <AvatarFallback>{item.name.slice(0, 2)}</AvatarFallback>
               </Avatar>
               <div>
                 <p className="text-body-4 font-medium">{item.name}</p>
                 <p className="Position text-body-5 font-normal">{item.position}</p>
               </div>
-            </div>
+            </div>}
+            {!item.name && (
+              <Badge variant="border" color="primary">
+                <Spinner />
+                Enriching...
+              </Badge>
+            )}
           </TableCell>
           <TableCell className="text-start">{item.post_frequency}</TableCell>
           <TableCell className="text-end">{item.comments_count}</TableCell>
-          <TableCell className="text-end">{item.last_comment ? dayjs().to(item.last_comment) : '-'}</TableCell>
+          <TableCell className="text-end">{item.last_comment_ts ? dayjs().to(item.last_comment_ts) : '-'}</TableCell>
           <TableCell className="text-end">{item.last_check_ts ? dayjs().to(item.last_check_ts) : '-'}</TableCell>
           <TableCell>
             <Dropdown>
@@ -112,33 +139,32 @@ export const Audience = (props: Props) => {
   const {prospects, status, addProspect} = props
   const isEmpty = useMemo(() => status === 'done' && prospects.length === 0, [prospects, status])
 
-  if (status === 'pending') return (
-    <div className="h-[200px] flex justify-center items-center">
-      <Spinner/>
+  const Header = !isEmpty ? (
+    <div className="flex items-center justify-between pt-4 pb-4">
+      <div className="flex items-center gap-5">
+        <h2 className="text-heading-6 font-semibold text-metal-900 dark:text-white">Total prospects</h2>
+        <Badge className="dark:bg-metal-800 dark:text-white">
+          {prospects.length}
+        </Badge>
+      </div>
+      <div className="flex items-center gap-5">
+        <Button variant="outline" className="flex gap-1.5" onClick={() => addProspect()}>
+          <Plus className="size-4 fill-metal-900 dark:fill-white"/>
+          Add prospect
+        </Button>
+        <Button variant="outline" className="flex gap-1.5">
+          <Funnel className="size-4 fill-metal-900 dark:fill-white"/>
+          Filter prospects
+        </Button>
+      </div>
     </div>
-  )
+  ) : null
+
   if (isEmpty) return <EmptyComponent {...props} />
 
   return (
     <div>
-      <div className="flex items-center justify-between pt-4 pb-4">
-        <div className="flex items-center gap-5">
-          <h2 className="text-heading-6 font-semibold text-metal-900 dark:text-white">Total prospects</h2>
-          <Badge className="dark:bg-metal-800 dark:text-white">
-            {prospects.length}
-          </Badge>
-        </div>
-        <div className="flex items-center gap-5">
-          <Button variant="outline" className="flex gap-1.5" onClick={() => addProspect()}>
-            <Plus className="size-4 fill-metal-900 dark:fill-white"/>
-            Add prospect
-          </Button>
-          <Button variant="outline" className="flex gap-1.5">
-            <Funnel className="size-4 fill-metal-900 dark:fill-white"/>
-            Filter prospects
-          </Button>
-        </div>
-      </div>
+      {Header}
       <Prospects {...props} />
     </div>
   )

@@ -10,7 +10,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "schema:fetch": "node ./scripts/fetch-schema.js",
+    "schema:generate": "node ./scripts/schema-codegen.js --srcPath ./src/typings/api-schema.json --destPath ./src/typings/api --separatedFiles false",
+    "schema:codegen": "npm run schema:fetch && npm run schema:generate"
   },
   "dependencies": {
     "autoprefixer": "^10.4.20",
@@ -25,10 +28,12 @@
     "tailwindcss": "^3.4.15"
   },
   "devDependencies": {
+    "@codegena/oapi3ts-cli": "^2.1.10-alpha.8",
     "@eslint/js": "^9.13.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
+    "axios": "^1.7.8",
     "eslint": "^9.13.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",

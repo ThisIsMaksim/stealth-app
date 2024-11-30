@@ -1,6 +1,5 @@
 import {
   Chats,
-  CheckSquare,
   Gear,
   HouseLine, PlusCircle,
   PresentationChart,
@@ -20,6 +19,7 @@ import './index.css'
 import {Link} from "react-router-dom"
 import {IUser} from "../../types/User.type.ts";
 import {ICampaign} from "../../types/Campaigns.type.ts"
+import {useStores} from "../../stores";
 
 interface Props {
   user: IUser
@@ -28,6 +28,8 @@ interface Props {
 }
 
 export const Menu = ({user, showCreateCampaignModal}: Props) => {
+  const {UserStore} = useStores()
+
   return (
     <Sidebar className="Menu">
       <SidebarBody>
@@ -50,41 +52,10 @@ export const Menu = ({user, showCreateCampaignModal}: Props) => {
               Campaign
             </SidebarItem>
           </Link>
-          {/*<SidebarItem dropdown>*/}
-          {/*  <SidebarDropdown>*/}
-          {/*    <SidebarCollapse>*/}
-          {/*      <div className="flex items-center gap-3">*/}
-          {/*        <span>*/}
-          {/*          <PresentationChart size={20} />*/}
-          {/*        </span>*/}
-          {/*        <span>Campaigns</span>*/}
-          {/*      </div>*/}
-          {/*      <span className="group-open:-rotate-180">*/}
-          {/*        <CaretDown size={20} />*/}
-          {/*      </span>*/}
-          {/*    </SidebarCollapse>*/}
-
-          {/*    <SidebarDropdownList>*/}
-          {/*      {campaigns.map((campaign: Campaign) => (*/}
-          {/*        <SidebarItem>*/}
-          {/*          <Link to={`/campaign/${campaign.id}`}>*/}
-          {/*            {campaign.name}*/}
-          {/*          </Link>*/}
-          {/*        </SidebarItem>*/}
-          {/*      ))}*/}
-          {/*    </SidebarDropdownList>*/}
-          {/*  </SidebarDropdown>*/}
-          {/*</SidebarItem>*/}
           <Link to="/comments">
             <SidebarItem>
               <Chats size={20} />
               Comments
-            </SidebarItem>
-          </Link>
-          <Link to='/prospects'>
-            <SidebarItem>
-              <CheckSquare size={20} />
-              Prospects
             </SidebarItem>
           </Link>
           <Link to='/settings'>
@@ -103,8 +74,8 @@ export const Menu = ({user, showCreateCampaignModal}: Props) => {
       </SidebarBody>
       <SidebarFooter>
         <Avatar>
-          <AvatarImage src="/images/avatar/avatar-1.png" alt="avatar" />
-          <AvatarFallback>KR</AvatarFallback>
+          <AvatarImage src={UserStore.user.linkedin_account.avatar_url} alt="avatar" />
+          <AvatarFallback>{UserStore.user.name.slice(0, 2)}</AvatarFallback>
         </Avatar>
         <div>
           <p className="text-body-4 font-medium text-metal-400 text-start dark:text-white">{user.name}</p>

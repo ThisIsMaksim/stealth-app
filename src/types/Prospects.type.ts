@@ -6,7 +6,7 @@ export interface IProspect {
   id: string,
   is_important: true,
   last_check_ts: string,
-  last_comment: string,
+  last_comment_ts: string,
   link_url: string,
   name: string,
   position: string,

@@ -24,7 +24,7 @@ export const AddProspectModal = ({isOpen, close}: Props) => {
     })
 
     close()
-  }, [CampaignsStore.activeCampaign, ProspectsStore, close, link])
+  }, [CampaignsStore.activeCampaign?.id, ProspectsStore, close, link])
 
   return (
     <Modal

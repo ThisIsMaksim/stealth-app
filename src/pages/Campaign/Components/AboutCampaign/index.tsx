@@ -1,5 +1,5 @@
-import {FC, useCallback, useRef, useState} from "react";
-import {Button, Input, Label, Textarea} from "keep-react";
+import {useCallback, useRef, useState} from "react";
+import {Button, Divider, Input, Label, Textarea} from "keep-react";
 import {ICampaign, IChangeCampaignRequest} from "../../../../types/Campaigns.type.ts";
 
 interface Props {
@@ -22,16 +22,17 @@ export const AboutCampaign = ({ campaign, onSave }: Props) => {
     }, () => {})
   }, [name, contextAboutCampaign, contextAboutYou])
 
-  return <div>
+  return <div className=" space-y-4">
     <fieldset className="max-w-md space-y-4">
       <div className="flex justify-start">
-        <Label className="text-heading-6">Campaign settings</Label>
+        <Label className="text-heading-6">Campaign name</Label>
       </div>
       <div className="relative">
         <Input value={name} placeholder="Campaign name" onChange={(e) => setName(e.target.value)}/>
       </div>
     </fieldset>
-    <fieldset className="flex flex-col items-start space-y-3">
+    <Divider />
+    <fieldset className="flex flex-col items-start space-y-4">
       <Label className="text-heading-6" htmlFor="message">Context about your company</Label>
       <Textarea
         id="message"
@@ -48,7 +49,8 @@ export const AboutCampaign = ({ campaign, onSave }: Props) => {
         </p>
       </div>
     </fieldset>
-    <fieldset className="flex flex-col items-start space-y-3">
+    <Divider />
+    <fieldset className="flex flex-col items-start space-y-4">
       <Label className="text-heading-6" htmlFor="message">Context about You</Label>
       <Textarea
         id="message"
