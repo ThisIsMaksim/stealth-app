@@ -24,9 +24,9 @@ export const Post = ({ post }: Props) => {
   const commentMaxLength = useRef(500)
   const [pendingApprove, setPendingApprove] = useState(false)
   const [pendingReject, setPendingReject] = useState(false)
-  const [pendingRemark, setPendingRemark] = useState(false)
+  const [pendingRemake, setPendingRemake] = useState(false)
   
-  const isPending = useMemo(() => pendingApprove || pendingReject || pendingRemark, [pendingApprove, pendingReject, pendingRemark])
+  const isPending = useMemo(() => pendingApprove || pendingReject || pendingRemake, [pendingApprove, pendingReject, pendingRemake])
   
   const handleApprove = useCallback(() => {
     setPendingApprove(true)
@@ -37,6 +37,8 @@ export const Post = ({ post }: Props) => {
       (error) => {
         if (error) {
           toast.error('Something went wrong')
+        } else {
+          toast.success('Approved')
         }
 
         setPendingApprove(false)
@@ -53,6 +55,8 @@ export const Post = ({ post }: Props) => {
       (error) => {
         if (error) {
           toast.error('Something went wrong')
+        } else {
+          toast.success('Rejected')
         }
 
         setPendingReject(false)
@@ -60,10 +64,10 @@ export const Post = ({ post }: Props) => {
     )
   }, [PostsStore, post])
 
-  const handleRemark = useCallback(() => {
-    setPendingRemark(true)
+  const handleRemake = useCallback(() => {
+    setPendingRemake(true)
 
-    PostsStore.remarkPost(
+    PostsStore.remakePost(
       post.post.id,
       post.comment.id,
       (error) => {
@@ -71,13 +75,13 @@ export const Post = ({ post }: Props) => {
           toast.error('Something went wrong')
         }
 
-        setPendingRemark(false)
+        setPendingRemake(false)
       }
     )
   }, [PostsStore, post])
 
   return (
-    <Card className="min-w-[400px] max-w-[550px] dark:border-gray-700">
+    <Card className="min-w-[400px] max-w-[550px] dark:border-gray-700 mb-4">
       <CardContent className="space-y-3">
         <div className="flex flex-row gap-2">
           <Avatar>
@@ -100,8 +104,8 @@ export const Post = ({ post }: Props) => {
           width={600}
           height={300}
         />
-        <Divider />
-        <fieldset className="flex flex-col items-start space-y-3">
+        {post.comment.status === 'draft' && <Divider />}
+        {post.comment.status === 'draft' && <fieldset className="flex flex-col items-start space-y-3">
           <Label className="text-heading-6" htmlFor="message">Suggested comment</Label>
           <Textarea
             id="message"
@@ -117,14 +121,14 @@ export const Post = ({ post }: Props) => {
               {`${comment.length}/${commentMaxLength.current}`}
             </p>
           </div>
-        </fieldset>
-        <div className="flex flex-row justify-start gap-2">
+        </fieldset>}
+        {post.comment.status === 'draft' && <div className="flex flex-row justify-start gap-2">
           <Button color="success" disabled={isPending} onClick={handleApprove}>
             {!pendingApprove
               ? <CheckCircle size={24} className="mr-1.5"/>
-              : <div style={{ marginLeft: '-4px', transform: 'scale(0.6)'}}>
-                  <Spinner color="secondary" />
-                </div>
+              : <div style={{marginLeft: '-4px', transform: 'scale(0.6)'}}>
+                <Spinner color="secondary"/>
+              </div>
             }
             Approve
           </Button>
@@ -133,20 +137,20 @@ export const Post = ({ post }: Props) => {
             {!pendingReject
               ? <XCircle size={24} className="ml-1.5"/>
               : <div style={{marginLeft: '-4px', transform: 'scale(0.6)'}}>
-                  <Spinner color="secondary"/>
-                </div>
+                <Spinner color="secondary"/>
+              </div>
             }
           </Button>
-          <Button color="warning" disabled={isPending} onClick={handleRemark}>
+          <Button color="warning" disabled={isPending} onClick={handleRemake}>
             Refresh
-            {!pendingRemark
+            {!pendingRemake
               ? <ArrowsClockwise size={24} className="ml-1.5"/>
               : <div style={{marginLeft: '-4px', transform: 'scale(0.6)'}}>
-                  <Spinner color="secondary"/>
-                </div>
+                <Spinner color="secondary"/>
+              </div>
             }
           </Button>
-        </div>
+        </div>}
       </CardContent>
     </Card>
   )

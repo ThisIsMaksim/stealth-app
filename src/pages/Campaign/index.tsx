@@ -61,8 +61,6 @@ export const Campaign = observer(() => {
             onSave={(request, action) => CampaignsStore.changeCampaign(request, action)}
           />
         </TabsContent>
-        <TabsContent value="item-4">
-        </TabsContent>
       </Tabs>
       <AddProspectModal
         isOpen={isOpenAddProspectModal}

@@ -3,19 +3,15 @@ import {observer} from "mobx-react"
 import {useEffect} from "react";
 import {useStores} from "../../stores"
 import {
-  Badge,
-  Button,
   Card,
   CardContent,
   Divider,
   Empty,
-  EmptyDescription,
   EmptyImage,
   EmptyTitle,
   Skeleton,
-  SkeletonLine
+  SkeletonLine, Tabs, TabsContent, TabsItem, TabsList
 } from "keep-react"
-import {Funnel} from "phosphor-react"
 import {Post} from "./Post"
 
 const PostSkeleton = () => (
@@ -50,57 +46,67 @@ const EmptyComponent = () => (
         alt="404"
       />
     </EmptyImage>
-    <EmptyTitle className="mb-[14px] mt-5">You don't have any prospects yet</EmptyTitle>
-    <EmptyDescription className="mb-8">
-      Add the prospects to your campaign to start using them
-    </EmptyDescription>
+    <EmptyTitle className="mb-[14px] mt-5">You don't have new posts in this status</EmptyTitle>
   </Empty>
 )
 
-export const Comments = observer(() => {
+interface Props {
+  status: string
+}
+
+const Posts = observer(({status}: Props) => {
   const { CampaignsStore, PostsStore } = useStores()
+  const posts = PostsStore.postsWithComments
+    .filter(post => post.comment.status === status)
 
   useEffect(() => {
     if (CampaignsStore.activeCampaign) {
-      PostsStore.fetchPosts(CampaignsStore.activeCampaign.id, '')
+      PostsStore.fetchPosts(CampaignsStore.activeCampaign.id, status)
     }
-  }, [CampaignsStore.activeCampaign?.id])
-
-  let Component = <PostSkeleton />
+  }, [CampaignsStore.activeCampaign?.id, status])
 
   if (PostsStore.state === 'pending') {
-    Component = <PostSkeleton />
-  } else if (!PostsStore.postsWithComments.length) {
-    Component = <EmptyComponent />
+    return <PostSkeleton />
+  } else if (!posts.length) {
+    return <EmptyComponent />
   } else {
-    Component = (
-      <>
-        {PostsStore.postsWithComments.map((post) => (
-          <Post post={post} />
-        ))}
-      </>
-    )
+    return posts.map((post) => <Post post={post} />)
   }
+})
 
+export const Comments = observer(() => {
   return <AuthPageWrapper>
     <div className="w-full">
-      <div className="flex items-center justify-between pt-4 pb-4">
-        <div className="flex items-center gap-5">
-          <h2 className="text-heading-6 font-semibold text-metal-900 dark:text-white">Total posts</h2>
-          <Badge className="dark:bg-metal-800 dark:text-white">
-            {PostsStore.postsWithComments.length}
-          </Badge>
-        </div>
-        <div className="flex items-center gap-5">
-          <Button variant="outline" className="flex gap-1.5">
-            <Funnel className="size-4 fill-metal-900 dark:fill-white"/>
-            Filter posts
-          </Button>
-        </div>
-      </div>
-      <div className="flex flex-col gap-4">
-        {Component}
-      </div>
+      <Tabs variant="default" defaultValue="item-1" className="space-y-4">
+        <>
+          <TabsList className="flex justify-start">
+            <TabsItem value="item-1">
+              New
+            </TabsItem>
+            <TabsItem value="item-2">
+              Pending
+            </TabsItem>
+            <TabsItem value="item-3">
+              Posted
+            </TabsItem>
+            <TabsItem value="item-4">
+              Rejected
+            </TabsItem>
+          </TabsList>
+        </>
+        <TabsContent value="item-1">
+          <Posts status="draft" />
+        </TabsContent>
+        <TabsContent value="item-2">
+          <Posts status="pending" />
+        </TabsContent>
+        <TabsContent value="item-3">
+          <Posts status="posted" />
+        </TabsContent>
+        <TabsContent value="item-4">
+          <Posts status="rejected" />
+        </TabsContent>
+      </Tabs>
     </div>
   </AuthPageWrapper>
 })

@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow
 } from "keep-react";
-import {DotsThreeOutlineVertical, Funnel, Plus} from "phosphor-react"
+import {DotsThreeOutlineVertical, Plus} from "phosphor-react"
 import {IProspect} from "../../../../types/Prospects.type.ts"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
@@ -152,10 +152,10 @@ export const Audience = (props: Props) => {
           <Plus className="size-4 fill-metal-900 dark:fill-white"/>
           Add prospect
         </Button>
-        <Button variant="outline" className="flex gap-1.5">
-          <Funnel className="size-4 fill-metal-900 dark:fill-white"/>
-          Filter prospects
-        </Button>
+        {/*<Button variant="outline" className="flex gap-1.5">*/}
+        {/*  <Funnel className="size-4 fill-metal-900 dark:fill-white"/>*/}
+        {/*  Filter prospects*/}
+        {/*</Button>*/}
       </div>
     </div>
   ) : null

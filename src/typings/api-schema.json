@@ -43,6 +43,50 @@
         }
       }
     },
+    "/api/v1/campaigns/": {
+      "post": {
+        "description": "Create new campaign",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "campaigns"
+        ],
+        "summary": "Create new campaign",
+        "operationId": "v1campaigns",
+        "parameters": [
+          {
+            "description": "Set up result",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/campaign.CreateCampaignRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/campaign.CreateCampaignResponse"
+            }
+          },
+          "400": {
+            "description": ""
+          },
+          "403": {
+            "description": ""
+          },
+          "500": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/v1/campaigns/{campaign_id}": {
       "put": {
         "description": "Update the campaign",

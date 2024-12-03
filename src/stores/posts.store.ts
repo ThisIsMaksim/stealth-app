@@ -44,6 +44,14 @@ class PostsStore {
 
     const data = yield response.json()
 
+    this.postsWithComments = this.postsWithComments.map(post => {
+      if (post.post.id === postId) {
+        post.comment.status = 'pending'
+      }
+
+      return post
+    })
+
     action(null, data.body)
   }
 
@@ -58,11 +66,19 @@ class PostsStore {
 
     const data = yield response.json()
 
+    this.postsWithComments = this.postsWithComments.map(post => {
+      if (post.post.id === postId) {
+        post.comment.status = 'rejected'
+      }
+
+      return post
+    })
+
     action(null, data.body)
   }
 
-  *remarkPost(postId: string, commentId: string, action: (error?: string, response?: string) => void) {
-    const response = yield fetch(`${getHost()}/api/v1/posts/${postId}/comments/${commentId}/remark`, {method: 'Post'})
+  *remakePost(postId: string, commentId: string, action: (error?: string, response?: string) => void) {
+    const response = yield fetch(`${getHost()}/api/v1/posts/${postId}/comments/${commentId}/remake`, {method: 'Post'})
 
     if (!response.ok) {
       action('error', null)
@@ -71,6 +87,14 @@ class PostsStore {
     }
 
     const data = yield response.json()
+
+    this.postsWithComments = this.postsWithComments.map(post => {
+      if (post.post.id === postId) {
+        post.comment = data.comment
+      }
+
+      return post
+    })
 
     action(null, data.body)
   }
