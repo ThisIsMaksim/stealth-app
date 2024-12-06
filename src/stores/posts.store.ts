@@ -1,6 +1,6 @@
 import { flow, makeAutoObservable } from "mobx"
 import {getHost} from "../utils/getHost.ts"
-import {IPostWithComment} from "../types/Post.type.ts";
+import {IComment, IPostWithComment} from "../types/Post.type.ts";
 
 class PostsStore {
   state = "pending"
@@ -33,8 +33,16 @@ class PostsStore {
     this.state = "done"
   }
 
-  *approvePost(postId: string, commentId: string, action: (error?: string, response?: string) => void) {
-    const response = yield fetch(`${getHost()}/api/v1/posts/${postId}/comments/${commentId}/approve`, {method: 'Post'})
+  *approvePost(postId: string, commentId: string, comment: string, action: (error?: string, response?: string) => void) {
+    const response = yield fetch(
+      `${getHost()}/api/v1/posts/${postId}/comments/${commentId}/approve`,
+      {
+        method: 'Post',
+        body: JSON.stringify({
+          content: comment
+        }),
+      }
+    )
 
     if (!response.ok) {
       action('error', null)
@@ -77,7 +85,7 @@ class PostsStore {
     action(null, data.body)
   }
 
-  *remakePost(postId: string, commentId: string, action: (error?: string, response?: string) => void) {
+  *remakePost(postId: string, commentId: string, action: (error?: string, response?: IComment) => void) {
     const response = yield fetch(`${getHost()}/api/v1/posts/${postId}/comments/${commentId}/remake`, {method: 'Post'})
 
     if (!response.ok) {
@@ -88,15 +96,7 @@ class PostsStore {
 
     const data = yield response.json()
 
-    this.postsWithComments = this.postsWithComments.map(post => {
-      if (post.post.id === postId) {
-        post.comment = data.comment
-      }
-
-      return post
-    })
-
-    action(null, data.body)
+    action(null, data.comment)
   }
 }
 

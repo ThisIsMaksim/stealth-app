@@ -16,4 +16,5 @@ export interface IChangeCampaignRequest {
   name: string
   company_context: string
   owner_context: string
+  is_active: boolean
 }

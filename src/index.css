@@ -1,4 +1,5 @@
 @import "keep-react/css";
+@import 'react-photo-view/dist/react-photo-view.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -19,4 +20,8 @@ body {
 .dark {
     color-scheme: dark;
     background: #0E1015;
+}
+
+.link {
+    color: #1B4DFF;
 }

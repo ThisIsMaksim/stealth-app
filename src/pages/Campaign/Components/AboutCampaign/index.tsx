@@ -4,7 +4,7 @@ import {ICampaign, IChangeCampaignRequest} from "../../../../types/Campaigns.typ
 
 interface Props {
   campaign: ICampaign;
-  onSave: (request: IChangeCampaignRequest, action: () => void) => void
+  onSave: (request: IChangeCampaignRequest, action: (error?: string) => void) => void
 }
 
 export const AboutCampaign = ({ campaign, onSave }: Props) => {
@@ -19,8 +19,9 @@ export const AboutCampaign = ({ campaign, onSave }: Props) => {
       name,
       company_context: contextAboutCampaign,
       owner_context: contextAboutYou,
+      is_active: campaign.is_active,
     }, () => {})
-  }, [name, contextAboutCampaign, contextAboutYou])
+  }, [onSave, name, contextAboutCampaign, contextAboutYou, campaign])
 
   return <div className=" space-y-4">
     <fieldset className="max-w-md space-y-4">

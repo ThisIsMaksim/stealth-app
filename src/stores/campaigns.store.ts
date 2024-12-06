@@ -61,7 +61,7 @@ class CampaignsStore {
     this.state = "done"
   }
 
-  *changeCampaign(request: IChangeCampaignRequest, action: () => void) {
+  *changeCampaign(request: IChangeCampaignRequest, action: (error?: string) => void) {
     this.state = "pending"
 
     const response = yield fetch(`${getHost()}/api/v1/campaigns/${this.activeCampaign.id}`, {
@@ -70,7 +70,7 @@ class CampaignsStore {
     })
 
     if (!response.ok) {
-      this.state = "error"
+      action('Something went wrong')
 
       return
     }

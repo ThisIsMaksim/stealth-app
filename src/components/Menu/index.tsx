@@ -1,6 +1,5 @@
 import {
   Chats,
-  Gear,
   HouseLine, PlusCircle,
   PresentationChart,
 } from 'phosphor-react'
@@ -13,13 +12,14 @@ import {
   SidebarItem,
   SidebarList,
   AvatarFallback,
-  NavbarBrand, Label, Card, Button
+  NavbarBrand, Label, Card, Button, Switch, toast
 } from 'keep-react'
 import './index.css'
 import {Link} from "react-router-dom"
 import {IUser} from "../../types/User.type.ts";
 import {ICampaign} from "../../types/Campaigns.type.ts"
 import {useStores} from "../../stores";
+import {useCallback, useState} from "react";
 
 interface Props {
   user: IUser
@@ -42,32 +42,32 @@ export const Menu = ({user, showCreateCampaignModal}: Props) => {
         <SidebarList>
           <Link to="/">
             <SidebarItem>
-              <HouseLine size={20} />
+              <HouseLine size={20}/>
               Dashboard
             </SidebarItem>
           </Link>
           <Link to="/campaign">
             <SidebarItem>
-              <PresentationChart size={20} />
-              Campaign
+              <PresentationChart size={20}/>
+              Workspace
             </SidebarItem>
           </Link>
           <Link to="/comments">
             <SidebarItem>
-              <Chats size={20} />
+              <Chats size={20}/>
               Comments
             </SidebarItem>
           </Link>
-          <Link to='/settings'>
-            <SidebarItem>
-              <Gear size={20} />
-              Settings
-            </SidebarItem>
-          </Link>
+          {/*<Link to='/settings'>*/}
+          {/*  <SidebarItem>*/}
+          {/*    <Gear size={20} />*/}
+          {/*    Settings*/}
+          {/*  </SidebarItem>*/}
+          {/*</Link>*/}
         </SidebarList>
         <div className="flex justify-start">
           <Button variant="outline" onClick={showCreateCampaignModal}>
-            <PlusCircle size={18} className="mr-1.5" />
+            <PlusCircle size={18} className="mr-1.5"/>
             <span className="lowercase">Add a campaign</span>
           </Button>
         </div>

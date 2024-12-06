@@ -1,4 +1,5 @@
 import {
+  Alert, AlertContainer, AlertDescription, AlertDismiss, AlertIcon, AlertLink, AlertTitle, Button,
   Tabs,
   TabsContent,
   TabsItem,
@@ -13,14 +14,26 @@ import './index.css'
 import {AuthPageWrapper} from "../AuthPageWrapper"
 import {Audience} from "./Components/Audience"
 import {useStores} from "../../stores"
-import {useEffect, useState} from "react"
+import {useCallback, useEffect, useState} from "react"
 import {AddProspectModal} from "../../modals/AddProspectModal.tsx"
 import {observer} from "mobx-react"
 import {AboutCampaign} from "./Components/AboutCampaign";
+import {BindLinkedInAccountModal} from "../../modals/BindLinkedInAccountModal.tsx";
 
 export const Campaign = observer(() => {
-  const { CampaignsStore, ProspectsStore } = useStores()
+  const { UserStore, CampaignsStore, ProspectsStore } = useStores()
   const [isOpenAddProspectModal, setOpenAddProspectModal] = useState(false)
+  const [isOpenConnectAccount, setOpenConnectAccount] = useState<boolean>(false)
+
+  const handleAddProspect = useCallback(() => {
+    if (!UserStore.user.linkedin_account) {
+      setOpenConnectAccount(true)
+
+      return
+    }
+
+    setOpenAddProspectModal(true)
+  }, [UserStore.user])
 
   useEffect(() => {
     if (CampaignsStore.activeCampaign) {
@@ -30,7 +43,18 @@ export const Campaign = observer(() => {
 
   return (
     <AuthPageWrapper>
-      <Tabs variant="default" defaultValue="item-1" className="space-y-4">
+      {(CampaignsStore.activeCampaign && !CampaignsStore.activeCampaign?.is_active) && (
+        <Alert color="error">
+          <AlertContainer>
+            <AlertIcon/>
+            <AlertDescription>Campaign isn't active</AlertDescription>
+          </AlertContainer>
+          <AlertContainer>
+            <Button variant="outline">Activate</Button>
+          </AlertContainer>
+        </Alert>
+      )}
+      <Tabs variant="default" defaultValue="item-1" className="space-y-4 mt-4">
         <>
           <TabsList className="flex justify-start">
             <TabsItem value="item-1">
@@ -39,7 +63,7 @@ export const Campaign = observer(() => {
             </TabsItem>
             <TabsItem value="item-2">
               <Article size={16} />
-              About campaign
+              Settings
             </TabsItem>
             <TabsItem value="item-4">
               <Diamond size={16} />
@@ -51,7 +75,7 @@ export const Campaign = observer(() => {
           <Audience
             prospects={ProspectsStore.prospects}
             status={ProspectsStore.state}
-            addProspect={() => setOpenAddProspectModal(true)}
+            addProspect={handleAddProspect}
             removeProspect={(prospectId) => ProspectsStore.removeProspect({campaign_id: CampaignsStore.activeCampaign.id, prospect_id: prospectId})}
           />
         </TabsContent>
@@ -65,6 +89,11 @@ export const Campaign = observer(() => {
       <AddProspectModal
         isOpen={isOpenAddProspectModal}
         close={() => setOpenAddProspectModal(false)}
+      />
+      <BindLinkedInAccountModal
+        isOpen={isOpenConnectAccount}
+        locations={UserStore.locations}
+        close={() => setOpenConnectAccount(false)}
       />
     </AuthPageWrapper>
   )

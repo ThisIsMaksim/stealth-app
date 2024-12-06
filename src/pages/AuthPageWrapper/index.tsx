@@ -23,7 +23,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
   }, [UserStore])
 
   useEffect(() => {
-    if (UserStore.state === 'error') {
+    if (UserStore.state === '403' || UserStore.state === '401') {
       navigate('/signup')
     }
   }, [UserStore.state, navigate])
@@ -65,7 +65,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
       </div>
       <CreateCampaignModal
         isOpen={needShowCreateCampaignModal}
-        closeModal={() => setNeedShowCreateCampaignModal(false)}
+        close={() => setNeedShowCreateCampaignModal(false)}
       />
     </div>
   )

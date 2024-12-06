@@ -6,3 +6,8 @@ export interface IUser {
   email: string
   linkedin_account: ILinkedinAccount
 }
+
+export interface ILocation {
+  iso_code: string
+  name: string
+}

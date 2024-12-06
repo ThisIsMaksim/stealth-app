@@ -1,7 +1,8 @@
 export interface IPost {
+  id: string,
   author: IAuthor,
   content: string,
-  id: string,
+  image_urls: string[]
   is_relevant: true,
   last_check_ts: string,
   last_comment: string,

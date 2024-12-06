@@ -9,7 +9,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow, Tooltip, TooltipAction, TooltipContent, TooltipProvider
 } from "keep-react";
 import {DotsThreeOutlineVertical, Plus} from "phosphor-react"
 import {IProspect} from "../../../../types/Prospects.type.ts"
@@ -107,16 +107,30 @@ const Prospects = ({prospects, removeProspect}: Props) => (
               </div>
             </div>}
             {!item.name && (
-              <Badge variant="border" color="primary">
-                <Spinner />
-                Enriching...
-              </Badge>
+              <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                  <TooltipAction asChild>
+                    <Badge variant="border" color="primary">
+                      <Spinner />
+                      Enriching...
+                    </Badge>
+                  </TooltipAction>
+                  <TooltipContent>
+                    <p className="text-body-5 font-medium text-white lowercase">
+                      Prospect is in the process of enrichment,
+                    </p>
+                    <p className="text-body-5 font-medium text-white lowercase">
+                      it usually takes some time.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
           </TableCell>
           <TableCell className="text-start">{item.post_frequency}</TableCell>
           <TableCell className="text-end">{item.comments_count}</TableCell>
           <TableCell className="text-end">{item.last_comment_ts ? dayjs().to(item.last_comment_ts) : '-'}</TableCell>
-          <TableCell className="text-end">{item.last_check_ts ? dayjs().to(item.last_check_ts) : '-'}</TableCell>
+          <TableCell className="text-end">{item.last_post_check_ts ? dayjs().to(item.last_post_check_ts) : '-'}</TableCell>
           <TableCell>
             <Dropdown>
               <DropdownAction asChild>
@@ -125,6 +139,7 @@ const Prospects = ({prospects, removeProspect}: Props) => (
                 </button>
               </DropdownAction>
               <DropdownContent align="end" className="w-[200px] border border-metal-100 p-3 dark:border-metal-800">
+                <DropdownItem onClick={() => window.open(item.link_url, '_blank')}>Open in LinkedIn</DropdownItem>
                 <DropdownItem onClick={() => removeProspect(item.id)}>Delete</DropdownItem>
               </DropdownContent>
             </Dropdown>
@@ -152,10 +167,6 @@ export const Audience = (props: Props) => {
           <Plus className="size-4 fill-metal-900 dark:fill-white"/>
           Add prospect
         </Button>
-        {/*<Button variant="outline" className="flex gap-1.5">*/}
-        {/*  <Funnel className="size-4 fill-metal-900 dark:fill-white"/>*/}
-        {/*  Filter prospects*/}
-        {/*</Button>*/}
       </div>
     </div>
   ) : null

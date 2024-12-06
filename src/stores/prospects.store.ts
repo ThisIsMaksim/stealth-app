@@ -16,7 +16,7 @@ class ProspectsStore {
     this.state = "pending"
     this.prospects = []
 
-    const limit = 50
+    const limit = 500
     const offset = 0
 
     const response = yield fetch(`${getHost()}/api/v1/prospects/?limit=${limit}&offset=${offset}&campaign_id=${id}`)
@@ -33,7 +33,7 @@ class ProspectsStore {
     this.state = "done"
   }
 
-  *addProspect(request: IAddProspectRequest) {
+  *addProspect(request: IAddProspectRequest, action: (error?: string) => void) {
     this.state = "pending"
 
     const response = yield fetch(`${getHost()}/api/v1/prospects/`, {
@@ -42,7 +42,7 @@ class ProspectsStore {
     })
 
     if (!response.ok) {
-      this.state = "error"
+      action('Something went wrong')
 
       return
     }
@@ -50,6 +50,8 @@ class ProspectsStore {
     yield this.fetchProspects(request.campaign_id)
 
     this.state = "done"
+
+    action()
   }
 
   *removeProspect(request: IRemoveProspectRequest) {

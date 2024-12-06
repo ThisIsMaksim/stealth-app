@@ -1,16 +1,16 @@
 export interface IProspect {
   avatar_url: string,
   campaign_id: string,
-  comments_count: 0,
+  comments_count: string,
   email: string,
   id: string,
   is_important: true,
-  last_check_ts: string,
+  last_post_check_ts: string,
   last_comment_ts: string,
   link_url: string,
   name: string,
   position: string,
-  post_frequency: 0
+  post_frequency: string
 }
 
 export interface IAddProspectRequest {
