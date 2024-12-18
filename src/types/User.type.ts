@@ -4,7 +4,7 @@ export interface IUser {
   id: string
   name: string
   email: string
-  linkedin_account: ILinkedinAccount
+  linkedin_account?: ILinkedinAccount
 }
 
 export interface ILocation {

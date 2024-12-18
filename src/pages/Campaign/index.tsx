@@ -1,5 +1,5 @@
 import {
-  Alert, AlertContainer, AlertDescription, AlertDismiss, AlertIcon, AlertLink, AlertTitle, Button,
+  Alert, AlertContainer, AlertDescription, AlertIcon, Button,
   Tabs,
   TabsContent,
   TabsItem,
@@ -19,6 +19,8 @@ import {AddProspectModal} from "../../modals/AddProspectModal.tsx"
 import {observer} from "mobx-react"
 import {AboutCampaign} from "./Components/AboutCampaign";
 import {BindLinkedInAccountModal} from "../../modals/BindLinkedInAccountModal.tsx";
+import {CampaignSettings} from "./Components/CampaignSettings";
+import {CampaignToneOfVoice} from "./Components/CampaignToneOfVoice";
 
 export const Campaign = observer(() => {
   const { UserStore, CampaignsStore, ProspectsStore } = useStores()
@@ -63,11 +65,15 @@ export const Campaign = observer(() => {
             </TabsItem>
             <TabsItem value="item-2">
               <Article size={16} />
-              Settings
+              About campaign
             </TabsItem>
-            <TabsItem value="item-4">
+            <TabsItem value="item-3">
               <Diamond size={16} />
               Tone of voice
+            </TabsItem>
+            <TabsItem value="item-4">
+              <Article size={16} />
+              Settings
             </TabsItem>
           </TabsList>
         </>
@@ -85,6 +91,18 @@ export const Campaign = observer(() => {
             onSave={(request, action) => CampaignsStore.changeCampaign(request, action)}
           />
         </TabsContent>
+        <TabsContent className="max-w-2xl items-start space-y-3 pr-2 pl-2" value="item-3">
+          <CampaignToneOfVoice
+            campaign={CampaignsStore.activeCampaign}
+            onSave={(request, action) => CampaignsStore.changeCampaign(request, action)}
+          />
+        </TabsContent>
+        <TabsContent className="max-w-2xl items-start space-y-3 pr-2 pl-2" value="item-4">
+          <CampaignSettings
+            campaign={CampaignsStore.activeCampaign}
+            onSave={(request, action) => CampaignsStore.changeCampaign(request, action)}
+          />
+        </TabsContent>
       </Tabs>
       <AddProspectModal
         isOpen={isOpenAddProspectModal}
@@ -93,7 +111,11 @@ export const Campaign = observer(() => {
       <BindLinkedInAccountModal
         isOpen={isOpenConnectAccount}
         locations={UserStore.locations}
-        close={() => setOpenConnectAccount(false)}
+        close={() => {
+          UserStore.needCheckLinkedinAccountStatus = false
+
+          setOpenConnectAccount(false)
+        }}
       />
     </AuthPageWrapper>
   )

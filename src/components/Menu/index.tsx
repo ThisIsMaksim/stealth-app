@@ -12,14 +12,13 @@ import {
   SidebarItem,
   SidebarList,
   AvatarFallback,
-  NavbarBrand, Label, Card, Button, Switch, toast
+  NavbarBrand, Label, Card, Button
 } from 'keep-react'
 import './index.css'
 import {Link} from "react-router-dom"
-import {IUser} from "../../types/User.type.ts";
+import {IUser} from "../../types/User.type.ts"
 import {ICampaign} from "../../types/Campaigns.type.ts"
-import {useStores} from "../../stores";
-import {useCallback, useState} from "react";
+import {useStores} from "../../stores"
 
 interface Props {
   user: IUser
@@ -74,7 +73,7 @@ export const Menu = ({user, showCreateCampaignModal}: Props) => {
       </SidebarBody>
       <SidebarFooter>
         <Avatar>
-          <AvatarImage src={UserStore.user.linkedin_account.avatar_url} alt="avatar" />
+          <AvatarImage src={UserStore.user.linkedin_account?.avatar_url} alt="avatar" />
           <AvatarFallback>{UserStore.user.name.slice(0, 2)}</AvatarFallback>
         </Avatar>
         <div>

@@ -107,7 +107,7 @@ export const Post = observer(({post}: Props) => {
         setPendingApprove(false)
       }
     )
-  }, [UserStore.user.linkedin_account.linkedin_url, PostsStore, post.post.id, post.comment.id, comment])
+  }, [UserStore.user.linkedin_account?.linkedin_url, PostsStore, post.post.id, post.comment.id, comment])
 
   const handleReject = useCallback(() => {
     setPendingReject(true)
@@ -125,7 +125,7 @@ export const Post = observer(({post}: Props) => {
         setPendingReject(false)
       }
     )
-  }, [PostsStore, UserStore.user.linkedin_account.linkedin_url, post.comment.id, post.post.id])
+  }, [PostsStore, UserStore.user.linkedin_account?.linkedin_url, post.comment.id, post.post.id])
 
   const handleRemake = useCallback(() => {
     setPendingRemake(true)
@@ -143,7 +143,7 @@ export const Post = observer(({post}: Props) => {
         setPendingRemake(false)
       }
     )
-  }, [PostsStore, UserStore.user.linkedin_account.linkedin_url, post.comment.id, post.post.id])
+  }, [PostsStore, UserStore.user.linkedin_account?.linkedin_url, post.comment.id, post.post.id])
 
   return (
     <Card className="min-w-[400px] max-w-[550px] dark:border-gray-700 mb-4">

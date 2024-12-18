@@ -1,5 +1,5 @@
 import {useCallback, useRef, useState} from "react";
-import {Button, Divider, Input, Label, Textarea} from "keep-react";
+import {Button, Divider, Label, Textarea} from "keep-react";
 import {ICampaign, IChangeCampaignRequest} from "../../../../types/Campaigns.type.ts";
 
 interface Props {
@@ -8,7 +8,6 @@ interface Props {
 }
 
 export const AboutCampaign = ({ campaign, onSave }: Props) => {
-  const [name, setName] = useState(campaign.name)
   const [contextAboutCampaign, setContextAboutCampaign] = useState(campaign.company_context)
   const [contextAboutYou, setContextAboutYou] = useState(campaign.owner_context)
   const contextAboutCampaignMaxLength = useRef(100)
@@ -16,23 +15,15 @@ export const AboutCampaign = ({ campaign, onSave }: Props) => {
 
   const handleSave = useCallback(async () => {
     onSave({
-      name,
+      name: campaign.name,
       company_context: contextAboutCampaign,
       owner_context: contextAboutYou,
       is_active: campaign.is_active,
+      tone_of_voice: campaign.tone_of_voice,
     }, () => {})
-  }, [onSave, name, contextAboutCampaign, contextAboutYou, campaign])
+  }, [onSave, contextAboutCampaign, contextAboutYou, campaign])
 
-  return <div className=" space-y-4">
-    <fieldset className="max-w-md space-y-4">
-      <div className="flex justify-start">
-        <Label className="text-heading-6">Campaign name</Label>
-      </div>
-      <div className="relative">
-        <Input value={name} placeholder="Campaign name" onChange={(e) => setName(e.target.value)}/>
-      </div>
-    </fieldset>
-    <Divider />
+  return <div className="space-y-4">
     <fieldset className="flex flex-col items-start space-y-4">
       <Label className="text-heading-6" htmlFor="message">Context about your company</Label>
       <Textarea

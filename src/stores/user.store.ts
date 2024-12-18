@@ -1,6 +1,7 @@
 import { flow, makeAutoObservable } from "mobx"
 import {ILocation, IUser} from "../types/User.type.ts"
 import {getHost} from "../utils/getHost.ts";
+import {LinkedinAccountStatus} from "../types/LinkedinAccount.type.ts";
 
 interface ISignUpRequest {
   first_name: string
@@ -22,9 +23,12 @@ interface IBindLinkedInAccountRequest {
 
 class UserStore {
   state = "pending"
+  errorStatus: number
   user: IUser
   authorized: boolean
   locations: ILocation[] = []
+  linkedinAccountStatus: LinkedinAccountStatus | undefined
+  needCheckLinkedinAccountStatus = false
 
   constructor() {
     makeAutoObservable(this, {
@@ -43,6 +47,7 @@ class UserStore {
 
     if (!response.ok) {
       this.state = "error"
+      this.errorStatus = response.status
 
       return
     }
@@ -50,6 +55,8 @@ class UserStore {
     this.user = yield response.json()
     this.authorized = !!this.user
     this.state = "done"
+
+    this.checkBindLinkedinAccountStatus()
   }
 
   *signUp(request: ISignUpRequest) {
@@ -90,23 +97,36 @@ class UserStore {
     this.state = "done"
   }
 
-  *bindLinkedinAccount(request: IBindLinkedInAccountRequest, action: (error?: string) => void) {
-    this.state = "pending"
-
-    const response = yield fetch(`${getHost()}/api/v1/users/bind-linkedin-account`, {
+  *bindLinkedinAccount(request: IBindLinkedInAccountRequest) {
+    yield fetch(`${getHost()}/api/v1/users/bind-linkedin-account`, {
       method: 'POST',
       body: JSON.stringify(request)
     })
+  }
 
-    if (!response.ok) {
-      action('Something went wrong')
+  *sendOTP(otp: string) {
+    yield fetch(`${getHost()}/api/v1/users/set-otp`, {
+      method: 'POST',
+      body: JSON.stringify({otp})
+    })
+  }
 
-      return
+  *checkBindLinkedinAccountStatus() {
+    if (this.needCheckLinkedinAccountStatus) {
+      const response = yield fetch(`${getHost()}/api/v1/users/me/`)
+
+      if (!response.ok) {
+        return
+      }
+
+      const user: IUser = yield response.json()
+
+      this.linkedinAccountStatus = user.linkedin_account?.status
     }
 
-    this.state = "done"
-
-    action()
+    setTimeout(() => {
+      this.checkBindLinkedinAccountStatus()
+    }, 2000)
   }
 
   *fetchLocation() {

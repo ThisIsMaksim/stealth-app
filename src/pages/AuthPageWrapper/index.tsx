@@ -23,7 +23,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
   }, [UserStore])
 
   useEffect(() => {
-    if (UserStore.state === '403' || UserStore.state === '401') {
+    if (UserStore.errorStatus >= 400 && UserStore.errorStatus < 500) {
       navigate('/signup')
     }
   }, [UserStore.state, navigate])
