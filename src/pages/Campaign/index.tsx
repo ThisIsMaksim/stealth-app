@@ -1,41 +1,47 @@
 import {
-  Alert, AlertContainer, AlertDescription, AlertIcon, Button,
+  Alert,
+  AlertContainer,
+  AlertDescription,
+  AlertIcon,
+  Button,
   Tabs,
   TabsContent,
   TabsItem,
   TabsList
 } from 'keep-react'
-import {
-  Article,
-  Diamond,
-  User
-} from "phosphor-react"
+import {Article, Diamond, User} from "phosphor-react"
 import './index.css'
 import {AuthPageWrapper} from "../AuthPageWrapper"
 import {Audience} from "./Components/Audience"
 import {useStores} from "../../stores"
-import {useCallback, useEffect, useState} from "react"
-import {AddProspectModal} from "../../modals/AddProspectModal.tsx"
+import {useCallback, useEffect} from "react"
 import {observer} from "mobx-react"
-import {AboutCampaign} from "./Components/AboutCampaign";
-import {BindLinkedInAccountModal} from "../../modals/BindLinkedInAccountModal.tsx";
-import {CampaignSettings} from "./Components/CampaignSettings";
-import {CampaignToneOfVoice} from "./Components/CampaignToneOfVoice";
+import {CampaignSettings} from "./Components/CampaignSettings"
+import {ToneOfVoice} from "./Components/ToneOfVoice.tsx"
+import {ModalType} from "../../stores/modal.store.ts"
+import {AboutCampaign} from "./Components/AboutCampaign.tsx"
+import {AboutPersonal} from "./Components/AboutPersonal.tsx"
 
 export const Campaign = observer(() => {
-  const { UserStore, CampaignsStore, ProspectsStore } = useStores()
-  const [isOpenAddProspectModal, setOpenAddProspectModal] = useState(false)
-  const [isOpenConnectAccount, setOpenConnectAccount] = useState<boolean>(false)
+  const { UserStore, CampaignsStore, ProspectsStore, ModalStore } = useStores()
 
   const handleAddProspect = useCallback(() => {
     if (!UserStore.user.linkedin_account) {
-      setOpenConnectAccount(true)
+      ModalStore.open(
+        ModalType.BindLinkedInAccount,
+        {
+          locations: UserStore.locations,
+        },
+        () => UserStore.needCheckLinkedinAccountStatus = false
+      )
 
       return
     }
 
-    setOpenAddProspectModal(true)
-  }, [UserStore.user])
+    ModalStore.open(
+      ModalType.OpenAddProspect
+    )
+  }, [ModalStore, UserStore])
 
   useEffect(() => {
     if (CampaignsStore.activeCampaign) {
@@ -58,20 +64,24 @@ export const Campaign = observer(() => {
       )}
       <Tabs variant="default" defaultValue="item-1" className="space-y-4 mt-4">
         <>
-          <TabsList className="flex justify-start">
+          <TabsList className="flex flex-wrap lg:flex-nowrap justify-start">
             <TabsItem value="item-1">
               <User size={16} />
               Audience
             </TabsItem>
             <TabsItem value="item-2">
               <Article size={16} />
-              About campaign
+              Context about your company
             </TabsItem>
             <TabsItem value="item-3">
+              <Article size={16} />
+              Context about your company
+            </TabsItem>
+            <TabsItem value="item-4">
               <Diamond size={16} />
               Tone of voice
             </TabsItem>
-            <TabsItem value="item-4">
+            <TabsItem value="item-5">
               <Article size={16} />
               Settings
             </TabsItem>
@@ -88,35 +98,25 @@ export const Campaign = observer(() => {
         <TabsContent className="max-w-2xl items-start space-y-3 pr-2 pl-2" value="item-2">
           <AboutCampaign
             campaign={CampaignsStore.activeCampaign}
-            onSave={(request, action) => CampaignsStore.changeCampaign(request, action)}
           />
         </TabsContent>
         <TabsContent className="max-w-2xl items-start space-y-3 pr-2 pl-2" value="item-3">
-          <CampaignToneOfVoice
+          <AboutPersonal
             campaign={CampaignsStore.activeCampaign}
-            onSave={(request, action) => CampaignsStore.changeCampaign(request, action)}
           />
         </TabsContent>
         <TabsContent className="max-w-2xl items-start space-y-3 pr-2 pl-2" value="item-4">
+          <ToneOfVoice
+            campaign={CampaignsStore.activeCampaign}
+          />
+        </TabsContent>
+        <TabsContent className="max-w-2xl items-start space-y-3 pr-2 pl-2" value="item-5">
           <CampaignSettings
             campaign={CampaignsStore.activeCampaign}
             onSave={(request, action) => CampaignsStore.changeCampaign(request, action)}
           />
         </TabsContent>
       </Tabs>
-      <AddProspectModal
-        isOpen={isOpenAddProspectModal}
-        close={() => setOpenAddProspectModal(false)}
-      />
-      <BindLinkedInAccountModal
-        isOpen={isOpenConnectAccount}
-        locations={UserStore.locations}
-        close={() => {
-          UserStore.needCheckLinkedinAccountStatus = false
-
-          setOpenConnectAccount(false)
-        }}
-      />
     </AuthPageWrapper>
   )
 })

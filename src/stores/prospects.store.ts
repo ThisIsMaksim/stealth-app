@@ -1,6 +1,7 @@
 import { flow, makeAutoObservable } from "mobx"
 import {IAddProspectRequest, IProspect, IRemoveProspectRequest} from "../types/Prospects.type.ts"
 import {getHost} from "../utils/getHost.ts"
+import {Action} from "../utils/fetchWithDelay.ts";
 
 class ProspectsStore {
   state = "pending"
@@ -33,7 +34,7 @@ class ProspectsStore {
     this.state = "done"
   }
 
-  *addProspect(request: IAddProspectRequest, action: (error?: string) => void) {
+  *addProspect(request: IAddProspectRequest, action: Action<void>) {
     this.state = "pending"
 
     const response = yield fetch(`${getHost()}/api/v1/prospects/`, {

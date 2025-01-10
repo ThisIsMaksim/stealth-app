@@ -1,18 +1,20 @@
-import {Envelope, IdentificationCard, Lock} from 'phosphor-react'
+import {Envelope, Eye, IdentificationCard, Lock} from 'phosphor-react'
 import {
   Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
-  Input,
-  InputIcon,
+  CardTitle, Input,
+  InputIcon, toast,
 } from 'keep-react'
 import './index.css'
 import {Link} from "react-router-dom"
 import {useStores} from "../../stores"
 import {useCallback, useState} from "react"
+import {validatePassword} from "../../utils/validatePassword.ts"
+import {fetchWithDelay} from "../../utils/fetchWithDelay.ts"
+import {validateEmail} from "../../utils/validateEmail.ts"
 
 export function SignUp() {
   const { UserStore } = useStores()
@@ -21,13 +23,68 @@ export function SignUp() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [repeatPassword, setRepeatPassword] = useState("")
+  const [pending, setPending] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false)
 
   const handleCreateUser = useCallback(() => {
-    UserStore.signUp({
-      first_name: firstName,
-      second_name: secondName,
-      email: email,
-      password: password,
+    const valid = validatePassword(password)
+
+    if (!valid) {
+      toast.error('Password is not a valid')
+
+      return
+    }
+
+    if (password !== repeatPassword) {
+      toast.error("Passwords don't match")
+
+      return
+    }
+
+    if (!firstName.trim()) {
+      toast.error("First name is required")
+
+      return
+    }
+    if (!secondName.trim()) {
+      toast.error("Second name is required")
+
+      return
+    }
+
+    if (!validateEmail(email)) {
+      toast.error("Email is not a valid")
+
+      return
+    }
+
+    setPending(true)
+
+    const promise = async () => {
+      const { error } = await fetchWithDelay(
+        UserStore.signUp.bind(UserStore),
+        {
+          first_name: firstName,
+          second_name: secondName,
+          email: email,
+          password: password,
+        }
+      )
+
+      if (error) {
+        toast.error(error)
+      } else {
+        location.href = '/'
+      }
+
+      setPending(false)
+    }
+
+    toast.promise(promise, {
+      loading: 'Do magic...',
+      success: 'Successfully registered',
+      error: 'Something went wrong',
     })
   }, [UserStore, email, firstName, password, repeatPassword, secondName])
 
@@ -85,26 +142,38 @@ export function SignUp() {
                 <Input
                   className="ps-11"
                   placeholder="Password"
-                  type="password"
+                  type={!showPassword ? 'password' : 'text'}
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <InputIcon>
                   <Lock size={19} color="#AFBACA"/>
                 </InputIcon>
+                <Eye
+                  className="absolute top-[30%] right-4 cursor-pointer"
+                  size={19}
+                  color="#AFBACA"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
               </div>
               <div className="relative">
                 <Input
                   className="ps-11"
                   placeholder="Repeat password"
-                  type="password"
+                  type={!showRepeatPassword ? 'password' : 'text'}
                   onChange={(e) => setRepeatPassword(e.target.value)}
                 />
                 <InputIcon>
                   <Lock size={19} color="#AFBACA"/>
                 </InputIcon>
+                <Eye
+                  className="absolute top-[30%] right-4 cursor-pointer"
+                  size={19}
+                  color="#AFBACA"
+                  onClick={() => setShowRepeatPassword(!showRepeatPassword)}
+                />
               </div>
             </fieldset>
-            <Button className="!mt-3 block w-full" onClick={handleCreateUser}>
+            <Button className="!mt-3 block w-full" disabled={pending} onClick={handleCreateUser}>
               Create Account
             </Button>
           </div>

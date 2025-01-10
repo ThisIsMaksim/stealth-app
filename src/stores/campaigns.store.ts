@@ -1,7 +1,13 @@
 import { flow, makeAutoObservable } from "mobx"
-import {ICampaign, ICampaignCreateRequest, IChangeCampaignRequest} from "../types/Campaigns.type.ts"
-import {getHost} from "../utils/getHost.ts";
-import {IProspect} from "../types/Prospects.type.ts";
+import {
+  ICampaign,
+  ICampaignCreateRequest,
+  IChangeCampaignRequest,
+  ICompanyContext, IPersonalContext, IToneOfVoice
+} from "../types/Campaigns.type.ts"
+import {getHost} from "../utils/getHost.ts"
+import {IProspect} from "../types/Prospects.type.ts"
+import {Action} from "../utils/fetchWithDelay.ts"
 
 class CampaignsStore {
   state = "pending"
@@ -65,7 +71,7 @@ class CampaignsStore {
     this.state = "pending"
 
     const response = yield fetch(`${getHost()}/api/v1/campaigns/${this.activeCampaign.id}`, {
-      method: 'Put',
+      method: 'PUT',
       body: JSON.stringify(request),
     })
 
@@ -80,6 +86,57 @@ class CampaignsStore {
     action()
 
     this.state = "done"
+  }
+
+  *changeCampaignContext(request: ICompanyContext, action: Action<void>) {
+    const response = yield fetch(`${getHost()}/api/v1/campaigns/${this.activeCampaign.id}/context/company/`, {
+      method: 'PUT',
+      body: JSON.stringify(request),
+    })
+
+    if (!response.ok) {
+      action('Something went wrong')
+
+      return
+    }
+
+    yield this.fetchCampaigns()
+
+    action()
+  }
+
+  *changePersonalContext(request: IPersonalContext, action: Action<void>) {
+    const response = yield fetch(`${getHost()}/api/v1/campaigns/${this.activeCampaign.id}/context/personal/`, {
+      method: 'PUT',
+      body: JSON.stringify(request),
+    })
+
+    if (!response.ok) {
+      action('Something went wrong')
+
+      return
+    }
+
+    yield this.fetchCampaigns()
+
+    action()
+  }
+
+  *changeToneOfVoice(request: IToneOfVoice, action: Action<void>) {
+    const response = yield fetch(`${getHost()}/api/v1/campaigns/${this.activeCampaign.id}/tone-of-voices/`, {
+      method: 'PUT',
+      body: JSON.stringify(request),
+    })
+
+    if (!response.ok) {
+      action('Something went wrong')
+
+      return
+    }
+
+    yield this.fetchCampaigns()
+
+    action()
   }
 }
 

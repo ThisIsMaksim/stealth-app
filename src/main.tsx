@@ -5,12 +5,16 @@ import App from './App.tsx'
 import {ThemeProvider} from "./ThemeProvider.tsx"
 import {BrowserRouter} from "react-router-dom"
 import {ToastWrapper} from "keep-react"
+import {Modal} from "./components/Modal"
+import {Onboarding} from "./components/Onboarding.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <BrowserRouter>
-        <App />
+        <Onboarding>
+          <App />
+        </Onboarding>
         <ToastWrapper
           richColors={true}
           toastOptions={{
@@ -21,6 +25,7 @@ createRoot(document.getElementById('root')!).render(
             },
           }}
         />
+        <Modal />
       </BrowserRouter>
     </ThemeProvider>
   </StrictMode>,

@@ -2,6 +2,7 @@ import { flow, makeAutoObservable } from "mobx"
 import {ILocation, IUser} from "../types/User.type.ts"
 import {getHost} from "../utils/getHost.ts";
 import {LinkedinAccountStatus} from "../types/LinkedinAccount.type.ts";
+import {Action} from "../utils/fetchWithDelay.ts";
 
 interface ISignUpRequest {
   first_name: string
@@ -37,6 +38,7 @@ class UserStore {
       signIn: flow,
       bindLinkedinAccount: flow,
       fetchLocation: flow,
+      logout: flow,
     })
   }
 
@@ -59,49 +61,61 @@ class UserStore {
     this.checkBindLinkedinAccountStatus()
   }
 
-  *signUp(request: ISignUpRequest) {
-    this.state = "pending"
-
+  *signUp(request: ISignUpRequest, action: (error?: string, response?: string) => void) {
     const response = yield fetch(`${getHost()}/api/v1/users/register`, {
       method: 'POST',
       body: JSON.stringify(request)
     })
 
     if (!response.ok) {
-      this.state = "error"
+      const { error } = yield response.json()
+
+      action(error)
 
       return
     }
 
-    location.href = '/'
-
-    this.state = "done"
+    action()
   }
 
-  *signIn(request: ISignInRequest) {
-    this.state = "pending"
-
+  *signIn(request: ISignInRequest, action: (error?: string, response?: string) => void) {
     const response = yield fetch(`${getHost()}/api/v1/users/login`, {
       method: 'POST',
       body: JSON.stringify(request)
     })
 
     if (!response.ok) {
-      this.state = "error"
+      const { error } = yield response.json()
+
+      action(error)
 
       return
     }
 
-    location.href = '/'
-
-    this.state = "done"
+    action()
   }
 
-  *bindLinkedinAccount(request: IBindLinkedInAccountRequest) {
-    yield fetch(`${getHost()}/api/v1/users/bind-linkedin-account`, {
+  *logout(action: (error?: string, response?: string) => void) {
+    const response = yield fetch(`${getHost()}/api/v1/users/logout`, {method: 'POST'})
+
+    if (!response.ok) {
+      const { error } = yield response.json()
+
+      action(error)
+
+      return
+    }
+
+    action()
+  }
+
+  *bindLinkedinAccount(request: IBindLinkedInAccountRequest, action: (error?: string) => void) {
+    const response = yield fetch(`${getHost()}/api/v1/users/bind-linkedin-account`, {
       method: 'POST',
       body: JSON.stringify(request)
     })
+
+    action(!response.ok ? 'Something went wrong' : undefined)
   }
 
   *sendOTP(otp: string) {
@@ -147,6 +161,13 @@ class UserStore {
       .map((key: string) => ({ iso_code: key, name: data[key] }))
 
     this.state = "done"
+  }
+
+  *fetchUserLocation(action: Action<string>) {
+    const response = yield fetch('https://ipinfo.io/json/?token=64ae88c388b678')
+    const data = yield response.json() as Record<string, string>
+
+    action(undefined, data?.country)
   }
 }
 

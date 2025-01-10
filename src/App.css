@@ -3,6 +3,12 @@
   text-align: center;
 }
 
+@media (max-width: 1023px) {
+    #root {
+        padding: 4px;
+    }
+}
+
 .App {
     display: flex;
     flex-direction: row;

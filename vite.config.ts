@@ -8,6 +8,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': 'http://167.99.250.71:8080'
+      // '/api': 'http://95.214.62.89:8080'
     }
   },
   plugins: [react(), mkcert()],

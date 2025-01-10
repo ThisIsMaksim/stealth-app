@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useRef, useState} from "react"
+import {useCallback, useRef, useState} from "react"
 import {
   Avatar,
   AvatarFallback,
@@ -7,16 +7,17 @@ import {
   CardContent,
   CardDescription,
   Divider,
-  Label, Spinner,
-  Textarea, toast
+  Label, Textarea, toast
 } from "keep-react"
 import {IPostWithComment} from "../../../types/Post.type.ts"
 import {ArrowsClockwise, CheckCircle, XCircle} from "phosphor-react"
-import {useStores} from "../../../stores";
+import {useStores} from "../../../stores"
 import {PhotoProvider, PhotoView} from "react-photo-view"
 
 import 'react-photo-view/dist/react-photo-view.css'
 import {observer} from "mobx-react"
+import {Action, fetchWithDelay} from "../../../utils/fetchWithDelay.ts"
+import {IApprovePostRequest, IRejectPostRequest, IRemakePostRequest} from "../../../stores/posts.store.ts"
 
 interface Props {
   post: IPostWithComment
@@ -84,65 +85,99 @@ export const Post = observer(({post}: Props) => {
   const {PostsStore, UserStore} = useStores()
   const [comment, setComment] = useState<string>(post.comment.content)
   const commentMaxLength = useRef(500)
-  const [pendingApprove, setPendingApprove] = useState(false)
-  const [pendingReject, setPendingReject] = useState(false)
-  const [pendingRemake, setPendingRemake] = useState(false)
-
-  const isPending = useMemo(() => pendingApprove || pendingReject || pendingRemake, [pendingApprove, pendingReject, pendingRemake])
+  const [isPending, setPending] = useState(false)
 
   const handleApprove = useCallback(() => {
-    setPendingApprove(true)
+    setPending(true)
 
-    PostsStore.approvePost(
-      post.post.id,
-      post.comment.id,
-      comment,
-      (error) => {
-        if (error) {
-          toast.error('Something went wrong')
-        } else {
-          toast.success('Approved')
+    // eslint-disable-next-line no-async-promise-executor
+    const promise = () => new Promise<void>(async (resolve, reject) => {
+      const result = await fetchWithDelay<IApprovePostRequest, Action<string>>(
+        PostsStore.approvePost.bind(PostsStore),
+        {
+          postId: post.post.id,
+          commentId: post.comment.id,
+          comment,
         }
+      )
 
-        setPendingApprove(false)
+      PostsStore.changePostStatus(post.post.id, 'pending')
+
+      setPending(false)
+
+      if (result.error) {
+        reject()
+      } else {
+        resolve()
       }
-    )
-  }, [UserStore.user.linkedin_account?.linkedin_url, PostsStore, post.post.id, post.comment.id, comment])
+    })
+
+    toast.promise(promise, {
+      loading: 'Approving...',
+      success: 'Approved',
+      error: 'Something went wrong',
+    })
+  }, [post, comment])
 
   const handleReject = useCallback(() => {
-    setPendingReject(true)
+    setPending(true)
 
-    PostsStore.rejectPost(
-      post.post.id,
-      post.comment.id,
-      (error) => {
-        if (error) {
-          toast.error('Something went wrong')
-        } else {
-          toast.success('Rejected')
+    // eslint-disable-next-line no-async-promise-executor
+    const promise = () => new Promise<void>(async (resolve, reject) => {
+      const result = await fetchWithDelay<IRejectPostRequest, Action<string>>(
+        PostsStore.rejectPost.bind(PostsStore),
+        {
+          postId: post.post.id,
+          commentId: post.comment.id,
         }
+      )
 
-        setPendingReject(false)
+      PostsStore.changePostStatus(post.post.id, 'rejected')
+
+      setPending(false)
+
+      if (result.error) {
+        reject()
+      } else {
+        resolve()
       }
-    )
-  }, [PostsStore, UserStore.user.linkedin_account?.linkedin_url, post.comment.id, post.post.id])
+    })
+
+    toast.promise(promise, {
+      loading: 'Rejecting...',
+      success: 'Rejected',
+      error: 'Something went wrong',
+    })
+  }, [post])
 
   const handleRemake = useCallback(() => {
-    setPendingRemake(true)
+    setPending(true)
 
-    PostsStore.remakePost(
-      post.post.id,
-      post.comment.id,
-      (error, response) => {
-        if (error) {
-          toast.error('Something went wrong')
+    // eslint-disable-next-line no-async-promise-executor
+    const promise = () => new Promise<void>(async (resolve, reject) => {
+      const {error, data} = await fetchWithDelay<IRemakePostRequest, Action<string>>(
+        PostsStore.remakePost.bind(PostsStore),
+        {
+          postId: post.post.id,
+          commentId: post.comment.id,
         }
+      )
 
-        setComment(response.content)
+      setPending(false)
+      setComment(data.content)
 
-        setPendingRemake(false)
+      if (error) {
+        reject()
+      } else {
+        resolve()
       }
-    )
+    })
+
+    toast.promise(promise, {
+      loading: 'Remaking...',
+      success: 'Remade',
+      error: 'Something went wrong',
+    })
   }, [PostsStore, UserStore.user.linkedin_account?.linkedin_url, post.comment.id, post.post.id])
 
   return (
@@ -186,31 +221,16 @@ export const Post = observer(({post}: Props) => {
         </fieldset>
         {post.comment.status === 'draft' && <div className="flex flex-row justify-start gap-2">
             <Button color="success" disabled={isPending} onClick={handleApprove}>
-              {!pendingApprove
-                ? <CheckCircle size={24} className="mr-1.5"/>
-                : <div style={{marginLeft: '-4px', transform: 'scale(0.6)'}}>
-                  <Spinner color="secondary"/>
-                </div>
-              }
+                <CheckCircle size={24} className="mr-1.5"/>
                 Approve
             </Button>
             <Button color="error" disabled={isPending} onClick={handleReject}>
                 Reject
-              {!pendingReject
-                ? <XCircle size={24} className="ml-1.5"/>
-                : <div style={{marginLeft: '-4px', transform: 'scale(0.6)'}}>
-                  <Spinner color="secondary"/>
-                </div>
-              }
+                <XCircle size={24} className="ml-1.5"/>
             </Button>
             <Button color="warning" disabled={isPending} onClick={handleRemake}>
                 Refresh
-              {!pendingRemake
-                ? <ArrowsClockwise size={24} className="ml-1.5"/>
-                : <div style={{marginLeft: '-4px', transform: 'scale(0.6)'}}>
-                  <Spinner color="secondary"/>
-                </div>
-              }
+                <ArrowsClockwise size={24} className="ml-1.5"/>
             </Button>
         </div>}
       </CardContent>

@@ -1,11 +1,12 @@
-import {useCallback, useEffect, useState} from "react";
-import {Button, Label, Radio, Slider} from "keep-react";
-import {EToneSettings, ICampaign, IChangeCampaignRequest, IToneOfVoice} from "../../../../types/Campaigns.type.ts";
-import {observer} from "mobx-react";
+import {useCallback, useEffect, useState} from "react"
+import {Button, Label, Radio, Slider, toast} from "keep-react"
+import {EToneSettings, ICampaign, IToneOfVoice} from "../../../types/Campaigns.type.ts"
+import {observer} from "mobx-react"
+import {useStores} from "../../../stores"
+import {Action, fetchWithDelay} from "../../../utils/fetchWithDelay.ts"
 
 interface Props {
-  campaign: ICampaign;
-  onSave: (request: IChangeCampaignRequest, action: (error?: string) => void) => void
+  campaign: ICampaign
 }
 
 const DefaultToneOfVoice: IToneOfVoice = {
@@ -17,18 +18,36 @@ const DefaultToneOfVoice: IToneOfVoice = {
   comment_length: 150,
 }
 
-export const CampaignToneOfVoice = observer(({ campaign, onSave }: Props) => {
+export const ToneOfVoice = observer(({ campaign }: Props) => {
+  const {CampaignsStore} = useStores()
   const [toneOfVoice, setToneOfVoice] = useState<IToneOfVoice>()
+  const [pending, setPending] = useState(false)
 
   const handleSave = useCallback(async () => {
-    onSave({
-      name: campaign.name,
-      company_context: campaign.company_context,
-      owner_context: campaign.owner_context,
-      is_active: campaign.is_active,
-      tone_of_voice: toneOfVoice,
-    }, () => {})
-  }, [onSave, toneOfVoice, campaign])
+    setPending(true)
+
+    // eslint-disable-next-line no-async-promise-executor
+    const promise = () => new Promise<void>(async (resolve, reject) => {
+      const {error} = await fetchWithDelay<IToneOfVoice, Action<void>>(
+        CampaignsStore.changeToneOfVoice.bind(CampaignsStore),
+        toneOfVoice
+      )
+
+      setPending(false)
+
+      if (error) {
+        reject()
+      } else {
+        resolve()
+      }
+    })
+
+    toast.promise(promise, {
+      loading: 'Changing...',
+      success: 'Done',
+      error: 'Something went wrong',
+    })
+  }, [CampaignsStore, toneOfVoice])
 
   const handleEmojisChange = useCallback((event) => {
     setToneOfVoice({ ...toneOfVoice, use_emoji: event.target.value })
@@ -216,7 +235,7 @@ export const CampaignToneOfVoice = observer(({ campaign, onSave }: Props) => {
       </div>
     </form>
     <div className="w-full flex justify-start mt-4">
-      <Button onClick={handleSave}>Save</Button>
+      <Button disabled={pending} onClick={handleSave}>Save</Button>
     </div>
   </div>
 })

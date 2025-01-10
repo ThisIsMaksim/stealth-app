@@ -3,18 +3,24 @@ import UserStore from "./user.store"
 import CampaignsStore from "./campaigns.store.ts"
 import ProspectsStore from "./prospects.store.ts"
 import PostsStore from "./posts.store.ts"
+import ModalStore from "./modal.store.ts"
+import OnboardingStore from "./onboarding.store.ts";
 
 class RootStore {
   UserStore: UserStore
   CampaignsStore: CampaignsStore
   ProspectsStore: ProspectsStore
   PostsStore: PostsStore
+  ModalStore: ModalStore
+  OnboardingStore: OnboardingStore
 
   constructor() {
     this.UserStore = new UserStore()
     this.CampaignsStore = new CampaignsStore()
     this.ProspectsStore = new ProspectsStore()
     this.PostsStore = new PostsStore()
+    this.ModalStore = new ModalStore()
+    this.OnboardingStore = new OnboardingStore()
   }
 }
 

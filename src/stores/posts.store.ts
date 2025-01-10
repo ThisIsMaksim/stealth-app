@@ -2,6 +2,22 @@ import { flow, makeAutoObservable } from "mobx"
 import {getHost} from "../utils/getHost.ts"
 import {IComment, IPostWithComment} from "../types/Post.type.ts";
 
+export interface IApprovePostRequest {
+  postId: string
+  commentId: string
+  comment: string
+}
+
+export interface IRejectPostRequest {
+  postId: string
+  commentId: string
+}
+
+export interface IRemakePostRequest {
+  postId: string
+  commentId: string
+}
+
 class PostsStore {
   state = "pending"
   postsWithComments: IPostWithComment[] = []
@@ -33,13 +49,13 @@ class PostsStore {
     this.state = "done"
   }
 
-  *approvePost(postId: string, commentId: string, comment: string, action: (error?: string, response?: string) => void) {
+  *approvePost(request: IApprovePostRequest, action: (error?: string, response?: string) => void) {
     const response = yield fetch(
-      `${getHost()}/api/v1/posts/${postId}/comments/${commentId}/approve`,
+      `${getHost()}/api/v1/posts/${request.postId}/comments/${request.commentId}/approve`,
       {
         method: 'Post',
         body: JSON.stringify({
-          content: comment
+          content: request.comment
         }),
       }
     )
@@ -52,19 +68,11 @@ class PostsStore {
 
     const data = yield response.json()
 
-    this.postsWithComments = this.postsWithComments.map(post => {
-      if (post.post.id === postId) {
-        post.comment.status = 'pending'
-      }
-
-      return post
-    })
-
     action(null, data.body)
   }
 
-  *rejectPost(postId: string, commentId: string, action: (error?: string, response?: string) => void) {
-    const response = yield fetch(`${getHost()}/api/v1/posts/${postId}/comments/${commentId}/reject`, {method: 'Post'})
+  *rejectPost(request: IRejectPostRequest, action: (error?: string, response?: string) => void) {
+    const response = yield fetch(`${getHost()}/api/v1/posts/${request.postId}/comments/${request.commentId}/reject`, {method: 'Post'})
 
     if (!response.ok) {
       action('error', null)
@@ -74,19 +82,11 @@ class PostsStore {
 
     const data = yield response.json()
 
-    this.postsWithComments = this.postsWithComments.map(post => {
-      if (post.post.id === postId) {
-        post.comment.status = 'rejected'
-      }
-
-      return post
-    })
-
     action(null, data.body)
   }
 
-  *remakePost(postId: string, commentId: string, action: (error?: string, response?: IComment) => void) {
-    const response = yield fetch(`${getHost()}/api/v1/posts/${postId}/comments/${commentId}/remake`, {method: 'Post'})
+  *remakePost(request: IRemakePostRequest, action: (error?: string, response?: IComment) => void) {
+    const response = yield fetch(`${getHost()}/api/v1/posts/${request.postId}/comments/${request.commentId}/remake`, {method: 'Post'})
 
     if (!response.ok) {
       action('error', null)
@@ -97,6 +97,16 @@ class PostsStore {
     const data = yield response.json()
 
     action(null, data.comment)
+  }
+
+  *changePostStatus(postId: string, status: string) {
+    this.postsWithComments = this.postsWithComments.map(item => {
+      if (item.post.id === postId) {
+        item.comment.status = status
+      }
+
+      return item
+    })
   }
 }
 

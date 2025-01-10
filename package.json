@@ -16,6 +16,7 @@
     "schema:codegen": "npm run schema:fetch && npm run schema:generate"
   },
   "dependencies": {
+    "@reactour/tour": "^3.7.0",
     "autoprefixer": "^10.4.20",
     "dayjs": "^1.11.13",
     "keep-react": "^1.6.1",
@@ -26,6 +27,7 @@
     "react-dom": "^18.3.1",
     "react-photo-view": "^1.2.6",
     "react-router-dom": "^6.28.0",
+    "react-spinners": "^0.15.0",
     "tailwindcss": "^3.4.15"
   },
   "devDependencies": {

@@ -22,13 +22,11 @@ export const CampaignSettings = observer(({ campaign, onSave }: Props) => {
 
   const handleSave = useCallback(async () => {
     onSave({
+      ...campaign,
       name,
-      company_context: campaign.company_context,
-      owner_context: campaign.owner_context,
-      is_active: campaign.is_active,
-      tone_of_voice: campaign.tone_of_voice,
+      is_active: status,
     }, () => {})
-  }, [onSave, name, campaign])
+  }, [onSave, name, campaign, status])
 
   useEffect(() => {
     setName(campaign.name)

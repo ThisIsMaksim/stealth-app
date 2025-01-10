@@ -1,20 +1,21 @@
-import {Header, Menu} from "../../components"
-import './index.css'
-import {Card, Spinner} from "keep-react";
-import {useStores} from "../../stores";
-import {useEffect, useState} from "react";
-import {observer} from "mobx-react";
-import {useNavigate} from "react-router-dom";
-import {CreateCampaignModal} from "../../modals/CreateCampaignModal.tsx";
+import {Menu} from "../../components"
+import {Card} from "keep-react"
+import {useStores} from "../../stores"
+import {useEffect} from "react"
+import {observer} from "mobx-react"
+import {useNavigate} from "react-router-dom"
+import {HashLoader} from "react-spinners"
+import {ModalType} from "../../stores/modal.store.ts"
+import { Header } from "../../components/Header.tsx"
+import {NavBar} from "../../components/NavBar.tsx";
 
 interface AuthPageWrapperProps {
   children: React.ReactNode
 }
 
 export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
-  const { UserStore, CampaignsStore } = useStores()
+  const { UserStore, CampaignsStore, ModalStore } = useStores()
   const navigate = useNavigate()
-  const [needShowCreateCampaignModal, setNeedShowCreateCampaignModal] = useState(false)
 
   useEffect(() => {
     if (UserStore.authorized) return
@@ -24,7 +25,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
 
   useEffect(() => {
     if (UserStore.errorStatus >= 400 && UserStore.errorStatus < 500) {
-      navigate('/signup')
+      navigate('/signin')
     }
   }, [UserStore.state, navigate])
 
@@ -41,32 +42,30 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
   }, [CampaignsStore, CampaignsStore.campaigns, CampaignsStore.state])
 
   if (!UserStore.authorized) {
-    return <div className="AuthPageApp flex justify-center items-center">
-      <Spinner />
+    return <div className="flex flex-row justify-center items-center w-[calc(100vw-32px)]">
+      <HashLoader color="rgb(27, 77, 255)" />
     </div>
   }
 
   return (
-    <div className="AuthPageApp h-full h-max-full">
-      <Menu
-        user={UserStore.user}
-        campaigns={CampaignsStore.campaigns}
-        showCreateCampaignModal={() => setNeedShowCreateCampaignModal(true)}
-      />
-      <div className="AuthPageWrapper h-full h-max-full">
+    <div className="flex flex-row w-[calc(100vw-8px)] lg:w-[calc(100vw-32px)] h-[100vh] h-max-full">
+      <div className="hidden lg:block">
+        <Menu
+          campaigns={CampaignsStore.campaigns}
+          showCreateCampaignModal={() => ModalStore.open(ModalType.CreateCampaign)}
+        />
+      </div>
+      <div className="relative w-[100vw] lg:w-[calc(100vw-260px)] ml-0 lg:ml-[16px] overflow-x-hidden">
         <Header
           campaigns={CampaignsStore.campaigns}
           activeCampaign={CampaignsStore.activeCampaign}
           onChange={(campaign) => CampaignsStore.setActiveCampaign(campaign)}
         />
-          <Card className="Route w-full max-w-full p-4 mt-4 overflow-auto">
-            {children}
-          </Card>
+        <Card className="w-full max-w-full h-[calc(100vh-86px-86px-24px)] lg:h-[calc(100vh-82px-32px-24px)] p-4 mt-[4px] lg:mt-4 overflow-auto overflow-x-hidden">
+          {children}
+        </Card>
+        <NavBar />
       </div>
-      <CreateCampaignModal
-        isOpen={needShowCreateCampaignModal}
-        close={() => setNeedShowCreateCampaignModal(false)}
-      />
     </div>
   )
 })
