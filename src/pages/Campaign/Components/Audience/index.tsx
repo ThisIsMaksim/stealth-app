@@ -31,13 +31,13 @@ import {
   TooltipContent,
   TooltipProvider
 } from "keep-react";
-import {Chat, DotsThreeOutlineVertical, Plus, Timer, User} from "phosphor-react"
+import {DotsThreeOutlineVertical, Plus, Timer, User} from "phosphor-react"
 import {IProspect} from "../../../../types/Prospects.type.ts"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import './index.css'
 import {useMemo, useState} from "react"
-import {ClockLoader} from "react-spinners";
+import {ClockLoader} from "react-spinners"
 
 dayjs.extend(relativeTime)
 
@@ -94,9 +94,9 @@ const Skeletons = () => Array.from({ length: 3 }).map(() => (
         </div>
       </Skeleton>
     </TableCell>
-    <TableCell className="text-start"></TableCell>
-    <TableCell className="text-end"></TableCell>
-    <TableCell className="text-end"></TableCell>
+    {/*<TableCell className="text-start"></TableCell>*/}
+    <TableCell className="w-[200px]"></TableCell>
+    {/*<TableCell className="text-end"></TableCell>*/}
     <TableCell className="text-end"></TableCell>
     <TableCell>
     </TableCell>
@@ -108,20 +108,20 @@ const Prospects = ({prospects, withoutSkeletons, removeProspect}: ProspectsProps
     <TableHeader>
       <TableRow>
         <TableHead>
-          <div className="w-[200px]">Name</div>
+          <div>Name</div>
         </TableHead>
-        <TableHead>
-          <div className="">Post frequency</div>
+        <TableHead className="w-[200px]">
+          <div>Post frequency</div>
         </TableHead>
-        <TableHead>
-          <div className="text-end"># of comments</div>
+        {/*<TableHead>*/}
+        {/*  <div className="text-end"># of comments</div>*/}
+        {/*</TableHead>*/}
+        <TableHead className="w-[200px]">
+          <div className="text-end">Last comment</div>
         </TableHead>
-        <TableHead>
-          <div className="text-end w-[100px]">Last comment</div>
-        </TableHead>
-        <TableHead>
-          <div className="text-end w-[100px]">Last check</div>
-        </TableHead>
+        {/*<TableHead>*/}
+        {/*  <div className="text-end w-[100px]">Last check</div>*/}
+        {/*</TableHead>*/}
         <TableHead></TableHead>
       </TableRow>
     </TableHeader>
@@ -162,9 +162,9 @@ const Prospects = ({prospects, withoutSkeletons, removeProspect}: ProspectsProps
             )}
           </TableCell>
           <TableCell className="text-start">{item.post_frequency}</TableCell>
-          <TableCell className="text-end">{item.comments_count}</TableCell>
+          {/*<TableCell className="text-end">{item.comments_count}</TableCell>*/}
           <TableCell className="text-end">{item.last_comment_ts ? dayjs().to(item.last_comment_ts) : '-'}</TableCell>
-          <TableCell className="text-end">{item.last_post_check_ts ? dayjs().to(item.last_post_check_ts) : '-'}</TableCell>
+          {/*<TableCell className="text-end">{item.last_post_check_ts ? dayjs().to(item.last_post_check_ts) : '-'}</TableCell>*/}
           <TableCell>
             <Dropdown>
               <DropdownAction asChild>
@@ -188,12 +188,13 @@ export const Audience = (props: Props) => {
   const {prospects, status, addProspect} = props
   const isEmpty = useMemo(() => status === 'done' && prospects.length === 0, [prospects, status])
   const [filterByName, setFilterByName] = useState('all')
+  // @ts-ignore
   const [filterCommentsCount, setFilterCommentsCount] = useState('all')
   const [filterPostFrequency, setFilterPostFrequency] = useState('all')
   const [enteredName, setEnteredName] = useState('')
 
   const names = useMemo(() => {
-    return [...new Set(prospects.map(c => c.name))]
+    return [...new Set(prospects.filter(c => !!c.name).map(c => c.name))]
   }, [prospects, enteredName])
 
   const filteredProspects = useMemo(() => {
@@ -207,7 +208,39 @@ export const Audience = (props: Props) => {
 
     const byName = filterByName === 'all' ? items : items.filter((prospect) => prospect.name === filterByName)
     const byCommentsCount = filterCommentsCount === 'all' ? byName : items.filter((prospect) => prospect.comments_count > +filterCommentsCount)
-    const byPostFrequency = filterPostFrequency === 'all' ? byCommentsCount : byCommentsCount.filter((prospect) => prospect.post_frequency === filterPostFrequency)
+    const byPostFrequency = filterPostFrequency === 'all' ? byCommentsCount : byCommentsCount.filter((prospect) => {
+      if (filterPostFrequency === 'inactive') {
+        return prospect.post_frequency === 'inactive'
+      }
+      if (filterPostFrequency === 'less than once per week') {
+        if (prospect.post_frequency.toLowerCase().includes('times per week')) {
+          const items = prospect.post_frequency.split(' ')
+
+          return +items[0] < 1
+        }
+      }
+      if (filterPostFrequency === 'less than once per month') {
+        if (prospect.post_frequency.toLowerCase().includes('times per month')) {
+          const items = prospect.post_frequency.split(' ')
+
+          return +items[0] < 1
+        }
+      }
+      if (filterPostFrequency === 'more than once per week') {
+        if (prospect.post_frequency.toLowerCase().includes('times per week')) {
+          const items = prospect.post_frequency.split(' ')
+
+          return +items[0] > 1
+        }
+      }
+      if (filterPostFrequency === 'more than once per month') {
+        if (prospect.post_frequency.toLowerCase().includes('times per month') || prospect.post_frequency.toLowerCase().includes('times per week')) {
+          const items = prospect.post_frequency.split(' ')
+
+          return +items[0] > 1
+        }
+      }
+    })
 
     const result = byPostFrequency
 
@@ -264,33 +297,33 @@ export const Audience = (props: Props) => {
           </SelectGroup>
         </SelectContent>
       </Select>
-      <Select
-        value={filterCommentsCount === 'all' ? '' : filterCommentsCount}
-        onValueChange={setFilterCommentsCount}
-      >
-        <SelectAction className="w-[20rem]">
-          <div className="flex items-center gap-2.5">
-              <span>
-                <Chat className="h-4 w-4" />
-              </span>
-            <SelectValue
-              placeholder="Comments count"
-            />
-          </div>
-        </SelectAction>
-        <SelectContent className="border border-metal-100 dark:border-metal-800 dark:bg-gray-900">
-          <SelectGroup>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="1">More 1</SelectItem>
-            <SelectItem value="5">More 5</SelectItem>
-            <SelectItem value="10">More 10</SelectItem>
-            <SelectItem value="15">More 15</SelectItem>
-            <SelectItem value="30">More 30</SelectItem>
-            <SelectItem value="50">More 50</SelectItem>
-            <SelectItem value="100">More 100</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      {/*<Select*/}
+      {/*  value={filterCommentsCount === 'all' ? '' : filterCommentsCount}*/}
+      {/*  onValueChange={setFilterCommentsCount}*/}
+      {/*>*/}
+      {/*  <SelectAction className="w-[20rem]">*/}
+      {/*    <div className="flex items-center gap-2.5">*/}
+      {/*        <span>*/}
+      {/*          <Chat className="h-4 w-4" />*/}
+      {/*        </span>*/}
+      {/*      <SelectValue*/}
+      {/*        placeholder="Comments count"*/}
+      {/*      />*/}
+      {/*    </div>*/}
+      {/*  </SelectAction>*/}
+      {/*  <SelectContent className="border border-metal-100 dark:border-metal-800 dark:bg-gray-900">*/}
+      {/*    <SelectGroup>*/}
+      {/*      <SelectItem value="all">All</SelectItem>*/}
+      {/*      <SelectItem value="1">More 1</SelectItem>*/}
+      {/*      <SelectItem value="5">More 5</SelectItem>*/}
+      {/*      <SelectItem value="10">More 10</SelectItem>*/}
+      {/*      <SelectItem value="15">More 15</SelectItem>*/}
+      {/*      <SelectItem value="30">More 30</SelectItem>*/}
+      {/*      <SelectItem value="50">More 50</SelectItem>*/}
+      {/*      <SelectItem value="100">More 100</SelectItem>*/}
+      {/*    </SelectGroup>*/}
+      {/*  </SelectContent>*/}
+      {/*</Select>*/}
       <Select
         value={filterPostFrequency === 'all' ? '' : filterPostFrequency}
         onValueChange={setFilterPostFrequency}
@@ -308,11 +341,10 @@ export const Audience = (props: Props) => {
         <SelectContent className="border border-metal-100 dark:border-metal-800 dark:bg-gray-900">
           <SelectGroup>
             <SelectItem value="all">All</SelectItem>
-            <SelectItem value="more than once per week">more than once per week</SelectItem>
             <SelectItem value="less than once per week">less than once per week</SelectItem>
-            <SelectItem value="less than once per 2 weeks">less than once per 2 weeks</SelectItem>
             <SelectItem value="less than once per month">less than once per month</SelectItem>
-            <SelectItem value="less than once per 2 months">less than once per 2 months</SelectItem>
+            <SelectItem value="more than once per week">more than once per week</SelectItem>
+            <SelectItem value="more than once per month">more than once per month</SelectItem>
             <SelectItem value="inactive">inactive</SelectItem>
           </SelectGroup>
         </SelectContent>

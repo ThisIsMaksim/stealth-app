@@ -12,9 +12,22 @@ import {
   SidebarItem,
   SidebarList,
   AvatarFallback,
-  NavbarBrand, Label, Card, Button,
-  Dropdown, DropdownAction, DropdownContent,
-  DropdownGroup, DropdownItem, Divider
+  NavbarBrand,
+  Label,
+  Button,
+  Dropdown,
+  DropdownAction,
+  DropdownContent,
+  DropdownGroup,
+  DropdownItem,
+  Divider,
+  Select,
+  SelectAction,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  Switch, Card
 } from 'keep-react'
 import './index.css'
 import {Link, useLocation} from "react-router-dom"
@@ -24,15 +37,28 @@ import {useStores} from "../../stores"
 import {ModalType} from "../../stores/modal.store.ts"
 import {observer} from "mobx-react";
 import {PulseLoader} from "react-spinners"
+import {useTheme} from "../../ThemeProvider.tsx"
+import logo from '../../assets/logo.png'
 
 interface Props {
+  activeCampaign: ICampaign
   campaigns: ICampaign[]
+  onChange: (campaign?: ICampaign) => void
   showCreateCampaignModal: () => void
 }
 
-export const Menu = ({showCreateCampaignModal}: Props) => {
+export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChange}: Props) => {
   const { UserStore, ModalStore } = useStores()
   const location = useLocation()
+  const { theme, setTheme } = useTheme()
+
+  const handleChangeTheme = useCallback(() => {
+    setTheme(theme === "light" ? "dark" : "light")
+  }, [theme])
+
+  const handleChange = useCallback((id: string) => {
+    onChange(campaigns.find((c) => c.id === id))
+  }, [campaigns, onChange])
 
   const handleBindLinkedInAccount = useCallback(() => {
     ModalStore.open(
@@ -55,12 +81,42 @@ export const Menu = ({showCreateCampaignModal}: Props) => {
   return (
     <Sidebar className="Menu">
       <SidebarBody>
-        <NavbarBrand className="flex flex-row gap-1">
-          <Card className="w-11 h-11 bg-metal-600 dark:bg-metal-300 shadow-sm">
-            <Label className="text-heading-5 text-white dark:text-metal-600">S.</Label>
+        <NavbarBrand className="flex flex-row items-center gap-1">
+          <Card>
+            <img className="flex-shrink-0 w-[32px] h-[32px]" src={logo}/>
           </Card>
-          <Label className="text-heading-5">stealth</Label>
+          <Label className="text-heading-5">ELVYN.ai</Label>
         </NavbarBrand>
+        <div className="flex flex-col justify-start gap-2">
+          <Select
+            value={activeCampaign?.id}
+            onValueChange={handleChange}
+          >
+            <SelectAction>
+              <SelectValue
+                id="active-campaign"
+                placeholder={`Campaign: ${activeCampaign?.name}`}
+              />
+            </SelectAction>
+            <SelectContent className="border border-metal-100 dark:border-metal-800 dark:bg-gray-900">
+              <SelectGroup>
+                {campaigns.map((campaign) => (
+                  <SelectItem
+                    key={campaign.id}
+                    value={campaign.id}
+                  >
+                    {campaign.name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Button id="add-campaign" variant="outline" onClick={showCreateCampaignModal}>
+            <PlusCircle size={18} className="mr-1.5"/>
+            <span className="lowercase">Add a campaign</span>
+          </Button>
+        </div>
+        <Divider className="w-[100%]"/>
         <SidebarList>
           <Link to="/">
             <SidebarItem className={location.pathname === '/' ? 'bg-blue-700 text-gray-50' : ''}>
@@ -81,11 +137,10 @@ export const Menu = ({showCreateCampaignModal}: Props) => {
             </SidebarItem>
           </Link>
         </SidebarList>
-        <div className="flex justify-start">
-          <Button id="add-campaign" variant="outline" onClick={showCreateCampaignModal}>
-            <PlusCircle size={18} className="mr-1.5"/>
-            <span className="lowercase">Add a campaign</span>
-          </Button>
+        <Divider className="w-[100%]"/>
+        <div className="flex flex-row gap-2">
+          Dark mode
+          <Switch variant='icon' checked={theme === 'dark'} onCheckedChange={handleChangeTheme} />
         </div>
       </SidebarBody>
       <SidebarFooter className="flex flex-col gap-4 items-start">
@@ -93,7 +148,7 @@ export const Menu = ({showCreateCampaignModal}: Props) => {
           user={UserStore.user}
           handleBindLinkedInAccount={handleBindLinkedInAccount}
         />
-        <Divider className="w-[100%]" />
+        <Divider className="w-[100%]"/>
         <User
           user={UserStore.user}
           handleLogout={handleLogout}
@@ -109,12 +164,12 @@ interface LinkedInProps {
 }
 
 const LinkedIn = observer((props: LinkedInProps) => {
-  const { user, handleBindLinkedInAccount } = props
+  const {user, handleBindLinkedInAccount} = props
 
   if (!user?.linkedin_account) {
     return (
       <Button variant="outline" className="flex flex-row gap-1 p-4" onClick={handleBindLinkedInAccount}>
-        <LinkedinLogo size={28} />
+        <LinkedinLogo size={28}/>
         LinkedIn connect
       </Button>
     )
@@ -126,7 +181,7 @@ const LinkedIn = observer((props: LinkedInProps) => {
         <LinkedinLogo size={28}/>
         <div>
           <p className="text-body-4 font-medium text-metal-400 text-start dark:text-white">
-            Try to connect
+          Try to connect
           </p>
           <p
             className="w-[150px] text-body-4 font-normal text-metal-300 text-start dark:text-metal-400 lowercase overflow-hidden whitespace-nowrap"

@@ -31,7 +31,7 @@ export const Header = observer(({campaigns, activeCampaign, onChange}: Props) =>
   }, [campaigns, onChange])
 
   return (
-    <Navbar>
+    <Navbar className="lg:hidden">
       <NavbarContainer className="h-[44px] pr-[16px] pl-[16px]">
         <NavbarList className="flex flex-row justify-between w-[100%]">
           <div className="flex flex-row gap-2 max-w-[350px] w-[100%]">

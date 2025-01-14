@@ -1,13 +1,13 @@
 import {Menu} from "../../components"
-import {Card} from "keep-react"
+import {Button, Card, Empty, EmptyDescription, EmptyImage, EmptyTitle} from "keep-react"
 import {useStores} from "../../stores"
 import {useEffect} from "react"
 import {observer} from "mobx-react"
 import {useNavigate} from "react-router-dom"
-import {HashLoader} from "react-spinners"
 import {ModalType} from "../../stores/modal.store.ts"
 import { Header } from "../../components/Header.tsx"
-import {NavBar} from "../../components/NavBar.tsx";
+import {NavBar} from "../../components/NavBar.tsx"
+import {HashLoader} from "react-spinners"
 
 interface AuthPageWrapperProps {
   children: React.ReactNode
@@ -30,7 +30,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
   }, [UserStore.state, navigate])
 
   useEffect(() => {
-    if (!UserStore.authorized) return
+    if (!UserStore.authorized || !UserStore.user.is_confirmed) return
 
     CampaignsStore.fetchCampaigns()
   }, [UserStore.authorized, CampaignsStore])
@@ -41,9 +41,32 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
     }
   }, [CampaignsStore, CampaignsStore.campaigns, CampaignsStore.state])
 
-  if (!UserStore.authorized) {
+  if (!UserStore.authorized || (!!UserStore.user && !CampaignsStore.activeCampaign)) {
     return <div className="flex flex-row justify-center items-center w-[calc(100vw-32px)]">
       <HashLoader color="rgb(27, 77, 255)" />
+    </div>
+  }
+
+  if (!UserStore.user.is_confirmed) {
+    return <div className="flex items-center justify-center w-[100vw] h-[100vh]">
+      <Empty>
+        <EmptyImage>
+          <img
+            src="https://staticmania.cdn.prismic.io/staticmania/7c82d76e-be06-41ca-a6ef-3db9009e6231_Property+1%3DFolder_+Property+2%3DSm.svg"
+            className="pt-4"
+            height={234}
+            width={350}
+            alt="404"
+          />
+        </EmptyImage>
+        <EmptyTitle className="mb-[14px] mt-5">You need to confirm your email address</EmptyTitle>
+        <EmptyDescription className="mb-8">
+          {`We have sent you a confirmation email link to ${UserStore.user.email}`}
+        </EmptyDescription>
+        <Button variant="outline" className="flex gap-1.5">
+          Resend
+        </Button>
+      </Empty>
     </div>
   }
 
@@ -52,6 +75,8 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
       <div className="hidden lg:block">
         <Menu
           campaigns={CampaignsStore.campaigns}
+          activeCampaign={CampaignsStore.activeCampaign}
+          onChange={(campaign) => CampaignsStore.setActiveCampaign(campaign)}
           showCreateCampaignModal={() => ModalStore.open(ModalType.CreateCampaign)}
         />
       </div>
@@ -61,7 +86,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
           activeCampaign={CampaignsStore.activeCampaign}
           onChange={(campaign) => CampaignsStore.setActiveCampaign(campaign)}
         />
-        <Card className="w-full max-w-full h-[calc(100vh-86px-86px-24px)] lg:h-[calc(100vh-82px-32px-24px)] p-4 mt-[4px] lg:mt-4 overflow-auto overflow-x-hidden">
+        <Card className="w-full max-w-full h-[calc(100vh-86px-86px-24px)] lg:h-[calc(100vh-36px)] p-4 mt-[4px] overflow-auto overflow-x-hidden">
           {children}
         </Card>
         <NavBar />

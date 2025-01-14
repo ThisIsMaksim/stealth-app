@@ -13,10 +13,8 @@ export interface ICampaignCreateRequest {
   owner_context: string
 }
 
-export interface IChangeCampaignRequest extends Omit<ICampaign, 'id'>{
+export interface IChangeCampaignRequest {
   name: string
-  company_context: ICompanyContext
-  personal_context: IPersonalContext
   is_active: boolean
 }
 

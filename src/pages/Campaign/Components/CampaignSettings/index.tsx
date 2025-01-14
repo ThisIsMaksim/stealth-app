@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react"
 import {
   Button,
   Input,
@@ -6,27 +6,51 @@ import {
   SelectAction,
   SelectContent,
   SelectGroup, SelectItem,
-  SelectValue
+  SelectValue, toast
 } from "keep-react";
-import {ICampaign, IChangeCampaignRequest} from "../../../../types/Campaigns.type.ts";
-import {observer} from "mobx-react";
+import {ICampaign, IChangeCampaignRequest} from "../../../../types/Campaigns.type.ts"
+import {observer} from "mobx-react"
+import {Action, fetchWithDelay} from "../../../../utils/fetchWithDelay.ts"
+import {useStores} from "../../../../stores"
 
 interface Props {
-  campaign: ICampaign;
-  onSave: (request: IChangeCampaignRequest, action: (error?: string) => void) => void
+  campaign: ICampaign
 }
 
-export const CampaignSettings = observer(({ campaign, onSave }: Props) => {
+export const CampaignSettings = observer(({ campaign }: Props) => {
+  const { CampaignsStore } = useStores()
   const [name, setName] = useState(campaign.name)
   const [status, setStatus] = useState(campaign.is_active)
+  const [isPending, setPending] = useState(false)
 
   const handleSave = useCallback(async () => {
-    onSave({
-      ...campaign,
-      name,
-      is_active: status,
-    }, () => {})
-  }, [onSave, name, campaign, status])
+    setPending(true)
+
+    // eslint-disable-next-line no-async-promise-executor
+    const promise = () => new Promise<void>(async (resolve, reject) => {
+      const result = await fetchWithDelay<IChangeCampaignRequest, Action<string>>(
+        CampaignsStore.changeCampaign.bind(CampaignsStore),
+        {
+          name,
+          is_active: status,
+        }
+      )
+
+      setPending(false)
+
+      if (result.error) {
+        reject()
+      } else {
+        resolve()
+      }
+    })
+
+    toast.promise(promise, {
+      loading: 'Changing...',
+      success: 'Done',
+      error: 'Something went wrong',
+    })
+  }, [name, campaign, status])
 
   useEffect(() => {
     setName(campaign.name)
@@ -61,7 +85,7 @@ export const CampaignSettings = observer(({ campaign, onSave }: Props) => {
       </div>
     </fieldset>
     <div className="w-full flex justify-start">
-      <Button onClick={handleSave}>Save</Button>
+      <Button disabled={isPending} onClick={handleSave}>Save</Button>
     </div>
   </div>
 })

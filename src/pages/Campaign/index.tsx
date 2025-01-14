@@ -7,20 +7,22 @@ import {
   Tabs,
   TabsContent,
   TabsItem,
-  TabsList
+  TabsList, toast
 } from 'keep-react'
-import {Article, Diamond, User} from "phosphor-react"
+import {Article, Diamond, User, Users} from "phosphor-react"
 import './index.css'
 import {AuthPageWrapper} from "../AuthPageWrapper"
 import {Audience} from "./Components/Audience"
 import {useStores} from "../../stores"
-import {useCallback, useEffect} from "react"
+import {useCallback, useEffect, useState} from "react"
 import {observer} from "mobx-react"
 import {CampaignSettings} from "./Components/CampaignSettings"
 import {ToneOfVoice} from "./Components/ToneOfVoice.tsx"
 import {ModalType} from "../../stores/modal.store.ts"
 import {AboutCampaign} from "./Components/AboutCampaign.tsx"
 import {AboutPersonal} from "./Components/AboutPersonal.tsx"
+import {Action, fetchWithDelay} from "../../utils/fetchWithDelay.ts";
+import {IChangeCampaignRequest} from "../../types/Campaigns.type.ts";
 
 export const Campaign = observer(() => {
   const { UserStore, CampaignsStore, ProspectsStore, ModalStore } = useStores()
@@ -43,6 +45,37 @@ export const Campaign = observer(() => {
     )
   }, [ModalStore, UserStore])
 
+  const [isPending, setPending] = useState(false)
+
+  const handleActivateCampaign = useCallback(async () => {
+    setPending(true)
+
+    // eslint-disable-next-line no-async-promise-executor
+    const promise = () => new Promise<void>(async (resolve, reject) => {
+      const result = await fetchWithDelay<IChangeCampaignRequest, Action<string>>(
+        CampaignsStore.changeCampaign.bind(CampaignsStore),
+        {
+          name: CampaignsStore.activeCampaign.name,
+          is_active: true,
+        }
+      )
+
+      setPending(false)
+
+      if (result.error) {
+        reject()
+      } else {
+        resolve()
+      }
+    })
+
+    toast.promise(promise, {
+      loading: 'Changing...',
+      success: 'Done',
+      error: 'Something went wrong',
+    })
+  }, [])
+
   useEffect(() => {
     if (CampaignsStore.activeCampaign) {
       ProspectsStore.fetchProspects(CampaignsStore.activeCampaign.id)
@@ -58,7 +91,7 @@ export const Campaign = observer(() => {
             <AlertDescription>Campaign isn't active</AlertDescription>
           </AlertContainer>
           <AlertContainer>
-            <Button variant="outline">Activate</Button>
+            <Button variant="outline" disabled={isPending} onClick={handleActivateCampaign}>Activate</Button>
           </AlertContainer>
         </Alert>
       )}
@@ -66,7 +99,7 @@ export const Campaign = observer(() => {
         <>
           <TabsList className="flex flex-wrap lg:flex-nowrap justify-start">
             <TabsItem value="item-1">
-              <User size={16} />
+              <Users size={16} />
               Audience
             </TabsItem>
             <TabsItem value="item-2">
@@ -74,8 +107,8 @@ export const Campaign = observer(() => {
               Context about your company
             </TabsItem>
             <TabsItem value="item-3">
-              <Article size={16} />
-              Context about your company
+              <User size={16} />
+              Context about you
             </TabsItem>
             <TabsItem value="item-4">
               <Diamond size={16} />
@@ -113,7 +146,6 @@ export const Campaign = observer(() => {
         <TabsContent className="max-w-2xl items-start space-y-3 pr-2 pl-2" value="item-5">
           <CampaignSettings
             campaign={CampaignsStore.activeCampaign}
-            onSave={(request, action) => CampaignsStore.changeCampaign(request, action)}
           />
         </TabsContent>
       </Tabs>
