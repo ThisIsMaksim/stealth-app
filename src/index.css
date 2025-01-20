@@ -25,3 +25,60 @@ body {
 .link {
     color: #1B4DFF;
 }
+
+.gradient-text {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to right, rgba(15, 60, 217), rgba(74, 114, 255));
+}
+
+.bg-gradient-to-br {
+    background-image: linear-gradient(to bottom right, rgba(15, 60, 217), rgba(74, 114, 255));
+}
+
+.container {
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .container {
+        max-width: 640px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 768px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1024px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .container {
+        max-width: 1280px;
+    }
+}
+
+@media (min-width: 1536px) {
+    .container {
+        max-width: 1536px;
+    }
+}
+
+.shadow-lg {
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.bg-gradient-to-r {
+    background-image: linear-gradient(to left, rgba(15, 60, 217), rgba(74, 114, 255));
+}
+
+.bg-gradient-to-b {
+    background-image: linear-gradient(to bottom, rgba(15, 60, 217), rgba(74, 114, 255));
+}

@@ -11,7 +11,8 @@ import {
   Empty,
   EmptyDescription,
   EmptyImage,
-  EmptyTitle, Input,
+  EmptyTitle,
+  Input,
   Select,
   SelectAction,
   SelectContent,
@@ -188,14 +189,12 @@ export const Audience = (props: Props) => {
   const {prospects, status, addProspect} = props
   const isEmpty = useMemo(() => status === 'done' && prospects.length === 0, [prospects, status])
   const [filterByName, setFilterByName] = useState('all')
-  // @ts-ignore
-  const [filterCommentsCount, setFilterCommentsCount] = useState('all')
   const [filterPostFrequency, setFilterPostFrequency] = useState('all')
   const [enteredName, setEnteredName] = useState('')
 
   const names = useMemo(() => {
     return [...new Set(prospects.filter(c => !!c.name).map(c => c.name))]
-  }, [prospects, enteredName])
+  }, [prospects])
 
   const filteredProspects = useMemo(() => {
     const byIds = new Map()
@@ -207,24 +206,10 @@ export const Audience = (props: Props) => {
     const items = [...byIds.values()]
 
     const byName = filterByName === 'all' ? items : items.filter((prospect) => prospect.name === filterByName)
-    const byCommentsCount = filterCommentsCount === 'all' ? byName : items.filter((prospect) => prospect.comments_count > +filterCommentsCount)
-    const byPostFrequency = filterPostFrequency === 'all' ? byCommentsCount : byCommentsCount.filter((prospect) => {
+
+    return filterPostFrequency === 'all' ? byName : byName.filter((prospect) => {
       if (filterPostFrequency === 'inactive') {
         return prospect.post_frequency === 'inactive'
-      }
-      if (filterPostFrequency === 'less than once per week') {
-        if (prospect.post_frequency.toLowerCase().includes('times per week')) {
-          const items = prospect.post_frequency.split(' ')
-
-          return +items[0] < 1
-        }
-      }
-      if (filterPostFrequency === 'less than once per month') {
-        if (prospect.post_frequency.toLowerCase().includes('times per month')) {
-          const items = prospect.post_frequency.split(' ')
-
-          return +items[0] < 1
-        }
       }
       if (filterPostFrequency === 'more than once per week') {
         if (prospect.post_frequency.toLowerCase().includes('times per week')) {
@@ -241,11 +226,7 @@ export const Audience = (props: Props) => {
         }
       }
     })
-
-    const result = byPostFrequency
-
-    return result
-  }, [filterByName, filterCommentsCount, filterPostFrequency, prospects])
+  }, [filterByName, filterPostFrequency, prospects])
 
   const Header = !isEmpty ? (
     <div className="flex items-center justify-between pt-4 pb-4">
@@ -297,33 +278,6 @@ export const Audience = (props: Props) => {
           </SelectGroup>
         </SelectContent>
       </Select>
-      {/*<Select*/}
-      {/*  value={filterCommentsCount === 'all' ? '' : filterCommentsCount}*/}
-      {/*  onValueChange={setFilterCommentsCount}*/}
-      {/*>*/}
-      {/*  <SelectAction className="w-[20rem]">*/}
-      {/*    <div className="flex items-center gap-2.5">*/}
-      {/*        <span>*/}
-      {/*          <Chat className="h-4 w-4" />*/}
-      {/*        </span>*/}
-      {/*      <SelectValue*/}
-      {/*        placeholder="Comments count"*/}
-      {/*      />*/}
-      {/*    </div>*/}
-      {/*  </SelectAction>*/}
-      {/*  <SelectContent className="border border-metal-100 dark:border-metal-800 dark:bg-gray-900">*/}
-      {/*    <SelectGroup>*/}
-      {/*      <SelectItem value="all">All</SelectItem>*/}
-      {/*      <SelectItem value="1">More 1</SelectItem>*/}
-      {/*      <SelectItem value="5">More 5</SelectItem>*/}
-      {/*      <SelectItem value="10">More 10</SelectItem>*/}
-      {/*      <SelectItem value="15">More 15</SelectItem>*/}
-      {/*      <SelectItem value="30">More 30</SelectItem>*/}
-      {/*      <SelectItem value="50">More 50</SelectItem>*/}
-      {/*      <SelectItem value="100">More 100</SelectItem>*/}
-      {/*    </SelectGroup>*/}
-      {/*  </SelectContent>*/}
-      {/*</Select>*/}
       <Select
         value={filterPostFrequency === 'all' ? '' : filterPostFrequency}
         onValueChange={setFilterPostFrequency}
@@ -341,8 +295,6 @@ export const Audience = (props: Props) => {
         <SelectContent className="border border-metal-100 dark:border-metal-800 dark:bg-gray-900">
           <SelectGroup>
             <SelectItem value="all">All</SelectItem>
-            <SelectItem value="less than once per week">less than once per week</SelectItem>
-            <SelectItem value="less than once per month">less than once per month</SelectItem>
             <SelectItem value="more than once per week">more than once per week</SelectItem>
             <SelectItem value="more than once per month">more than once per month</SelectItem>
             <SelectItem value="inactive">inactive</SelectItem>

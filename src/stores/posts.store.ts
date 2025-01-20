@@ -6,6 +6,7 @@ export interface IApprovePostRequest {
   postId: string
   commentId: string
   comment: string
+  reaction?: string
 }
 
 export interface IRejectPostRequest {
@@ -16,6 +17,8 @@ export interface IRejectPostRequest {
 export interface IRemakePostRequest {
   postId: string
   commentId: string
+  comment: string
+  improves: string[]
 }
 
 class PostsStore {
@@ -55,7 +58,8 @@ class PostsStore {
       {
         method: 'Post',
         body: JSON.stringify({
-          content: request.comment
+          content: request.comment,
+          reaction: request.reaction,
         }),
       }
     )
@@ -86,7 +90,13 @@ class PostsStore {
   }
 
   *remakePost(request: IRemakePostRequest, action: (error?: string, response?: IComment) => void) {
-    const response = yield fetch(`${getHost()}/api/v1/posts/${request.postId}/comments/${request.commentId}/remake`, {method: 'Post'})
+    const response = yield fetch(`${getHost()}/api/v1/posts/${request.postId}/comments/${request.commentId}/remake`, {
+      method: 'Post',
+      body: JSON.stringify({
+        comment: request.comment,
+        improves: request.improves,
+      })
+    })
 
     if (!response.ok) {
       action('error', null)
@@ -96,7 +106,16 @@ class PostsStore {
 
     const data = yield response.json()
 
-    action(null, data.comment)
+    this.postsWithComments = this.postsWithComments.map(item => {
+      if (item.post.id === request.postId) {
+        console.log(data.comment.content)
+        item.comment.content = data.comment.content
+      }
+
+      return item
+    })
+
+    action(null)
   }
 
   *changePostStatus(postId: string, status: string) {
@@ -107,6 +126,8 @@ class PostsStore {
 
       return item
     })
+
+    yield undefined
   }
 }
 

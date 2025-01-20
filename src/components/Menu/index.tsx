@@ -1,6 +1,6 @@
 import {useCallback} from "react"
 import {
-  Chats, HouseLine, LinkedinLogo, PlusCircle,
+  Chats, LinkedinLogo, PlusCircle,
   PresentationChart, SignOut,
 } from 'phosphor-react'
 import {
@@ -83,7 +83,11 @@ export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChan
       <SidebarBody>
         <NavbarBrand className="flex flex-row items-center gap-1">
           <Card>
-            <img className="flex-shrink-0 w-[32px] h-[32px]" src={logo}/>
+            <img
+              className="flex-shrink-0 w-[32px] h-[32px]"
+              src={logo}
+              alt="logo"
+            />
           </Card>
           <Label className="text-heading-5">ELVYN.ai</Label>
         </NavbarBrand>
@@ -118,14 +122,14 @@ export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChan
         </div>
         <Divider className="w-[100%]"/>
         <SidebarList>
+          {/*<Link to="/">*/}
+          {/*  <SidebarItem className={location.pathname === '/' ? 'bg-blue-700 text-gray-50' : ''}>*/}
+          {/*    <HouseLine size={20}/>*/}
+          {/*    Dashboard*/}
+          {/*  </SidebarItem>*/}
+          {/*</Link>*/}
           <Link to="/">
             <SidebarItem className={location.pathname === '/' ? 'bg-blue-700 text-gray-50' : ''}>
-              <HouseLine size={20}/>
-              Dashboard
-            </SidebarItem>
-          </Link>
-          <Link to="/campaign">
-            <SidebarItem className={location.pathname === '/campaign' ? 'bg-blue-700 text-gray-50' : ''}>
               <PresentationChart size={20}/>
               Workspace
             </SidebarItem>

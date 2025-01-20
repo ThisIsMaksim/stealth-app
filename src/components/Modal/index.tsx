@@ -4,11 +4,13 @@ import {ModalType} from "../../stores/modal.store.ts"
 import {AddProspectModal} from "../../modals/AddProspectModal.tsx"
 import {observer} from "mobx-react"
 import {CreateCampaignModal} from "../../modals/CreateCampaignModal.tsx"
+import {RemakeCommentModal} from "../../modals/RemakeCommentModal.tsx"
 
 const Modals = {
     [ModalType.BindLinkedInAccount]: BindLinkedInAccountModal,
     [ModalType.OpenAddProspect]: AddProspectModal,
     [ModalType.CreateCampaign]: CreateCampaignModal,
+    [ModalType.RemakeComment]: RemakeCommentModal,
 }
 
 export const Modal = observer(() => {
@@ -22,6 +24,8 @@ export const Modal = observer(() => {
     if (!Component) return null
 
     return <>
+        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+        {/*@ts-expect-error*/}
         <Component
           isOpen={true}
           close={ModalStore.close.bind(ModalStore)}

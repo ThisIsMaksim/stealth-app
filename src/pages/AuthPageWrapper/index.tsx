@@ -41,7 +41,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
     }
   }, [CampaignsStore, CampaignsStore.campaigns, CampaignsStore.state])
 
-  if (!UserStore.authorized || (!!UserStore.user && !CampaignsStore.activeCampaign)) {
+  if (!UserStore.authorized || (UserStore.user.is_confirmed && !CampaignsStore.activeCampaign)) {
     return <div className="flex flex-row justify-center items-center w-[calc(100vw-32px)]">
       <HashLoader color="rgb(27, 77, 255)" />
     </div>

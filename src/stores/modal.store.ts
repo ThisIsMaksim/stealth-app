@@ -4,6 +4,7 @@ export enum ModalType {
   BindLinkedInAccount,
   OpenAddProspect,
   CreateCampaign,
+  RemakeComment,
 }
 
 class ModalStore {

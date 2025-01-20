@@ -5,22 +5,22 @@ import {
 } from 'keep-react'
 import {observer} from "mobx-react"
 import {Link, useLocation} from "react-router-dom"
-import {Chats, HouseLine, PresentationChart, User} from "phosphor-react"
+import {Chats, PresentationChart, User} from "phosphor-react"
 
 export const NavBar = observer(() => {
   const location = useLocation()
 
   return (
-    <Navbar className="fixed bottom-[8px] lg:hidden w-[calc(100%-4px-4px)]">
-      <NavbarContainer className="flex flex-row justify-around h-[44px]">
+    <Navbar className="w-full lg:hidden mt-[8px]">
+      <NavbarContainer className="flex flex-row justify-around h-[32px]">
+        {/*<Link to="/">*/}
+        {/*  <NavbarItem className="flex flex-col justify-center items-center" active={location.pathname === '/'}>*/}
+        {/*    <HouseLine size={24}/>*/}
+        {/*    Dashboard*/}
+        {/*  </NavbarItem>*/}
+        {/*</Link>*/}
         <Link to="/">
           <NavbarItem className="flex flex-col justify-center items-center" active={location.pathname === '/'}>
-            <HouseLine size={24}/>
-            Dashboard
-          </NavbarItem>
-        </Link>
-        <Link to="/campaign">
-          <NavbarItem className="flex flex-col justify-center items-center" active={location.pathname === '/campaign'}>
             <PresentationChart size={24}/>
             Workspace
           </NavbarItem>

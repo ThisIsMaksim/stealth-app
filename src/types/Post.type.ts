@@ -8,6 +8,8 @@ export interface IPost {
   last_comment: string,
   link_url: string,
   published_ts: string
+  shared_content?: IPost
+  summary?: string
 }
 
 export interface IComment {

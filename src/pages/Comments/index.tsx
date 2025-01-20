@@ -1,6 +1,6 @@
 import {AuthPageWrapper} from "../AuthPageWrapper"
 import {observer} from "mobx-react"
-import {useEffect} from "react";
+import {useEffect, useMemo, useState} from "react"
 import {useStores} from "../../stores"
 import {
   Card,
@@ -8,11 +8,12 @@ import {
   Divider,
   Empty,
   EmptyImage,
-  EmptyTitle,
+  EmptyTitle, Input, Label, Select, SelectAction, SelectContent, SelectGroup, SelectItem, SelectValue,
   Skeleton,
-  SkeletonLine, Tabs, TabsContent, TabsItem, TabsList
+  SkeletonLine
 } from "keep-react"
-import {Post} from "./Post"
+import {PostWithComment} from "./Post"
+import {Stack, User} from "phosphor-react"
 
 const PostSkeleton = () => (
   <Card className="min-w-[400px] max-w-[550px] dark:border-gray-700">
@@ -52,61 +53,116 @@ const EmptyComponent = () => (
 
 interface Props {
   status: string
+  authorName: string
 }
 
-const Posts = observer(({status}: Props) => {
+const Posts = observer(({status, authorName}: Props) => {
   const { CampaignsStore, PostsStore } = useStores()
   const posts = PostsStore.postsWithComments
-    .filter(post => post.comment.status === status)
-
+    .filter(post => post.comment.status === status && (authorName === 'all' || post.post.author.name === authorName))
   useEffect(() => {
     if (CampaignsStore.activeCampaign) {
       PostsStore.fetchPosts(CampaignsStore.activeCampaign.id, status)
     }
-  }, [CampaignsStore.activeCampaign?.id, status])
+  }, [CampaignsStore.activeCampaign, PostsStore, status])
 
   if (PostsStore.state === 'pending') {
     return <PostSkeleton />
   } else if (!posts.length) {
     return <EmptyComponent />
   } else {
-    return posts.map((post) => <Post post={post} />)
+    return posts.map((post) => <PostWithComment post={post} />)
   }
 })
 
 export const Comments = observer(() => {
-  return <AuthPageWrapper>
-    <div className="w-full">
-      <Tabs variant="default" defaultValue="item-1" className="space-y-4">
-        <>
-          <TabsList className="flex justify-start">
-            <TabsItem value="item-1">
-              New
-            </TabsItem>
-            <TabsItem value="item-2">
-              Pending
-            </TabsItem>
-            <TabsItem value="item-3">
-              Posted
-            </TabsItem>
-            <TabsItem value="item-4">
-              Rejected
-            </TabsItem>
-          </TabsList>
-        </>
-        <TabsContent value="item-1">
-          <Posts status="draft" />
-        </TabsContent>
-        <TabsContent value="item-2">
-          <Posts status="pending" />
-        </TabsContent>
-        <TabsContent value="item-3">
-          <Posts status="posted" />
-        </TabsContent>
-        <TabsContent value="item-4">
-          <Posts status="rejected" />
-        </TabsContent>
-      </Tabs>
+  const { PostsStore } = useStores()
+  const [filterByName, setFilterByName] = useState('all')
+  const [enteredName, setEnteredName] = useState('')
+  const [filterByStatus, setFilterByStatus] = useState('draft')
+  const posts = PostsStore.postsWithComments
+  const names = useMemo(() => {
+    return [...new Set(posts.filter(c => !!c.post.author.name).map(c => c.post.author.name))]
+  }, [posts])
+
+  const filters = (
+    <div className="text-start space-y-3">
+      <fieldset className="space-y-3">
+        <Label htmlFor="filter-by-name">Prospect name</Label>
+        <Select
+          value={filterByName}
+          onValueChange={setFilterByName}
+        >
+          <SelectAction id="filter-by-name" className="max-w-[550px]">
+            <div className="flex items-center gap-2.5">
+              <span>
+                <User className="h-4 w-4"/>
+              </span>
+              <SelectValue
+                placeholder="Prospect name"
+              />
+            </div>
+          </SelectAction>
+          <SelectContent className="w-full border border-metal-100 dark:border-metal-800 dark:bg-gray-900">
+            <Input
+              placeholder="Enter name"
+              type="text"
+              autoFocus
+              onChange={(e) => setEnteredName(e.target.value)}
+              onKeyDown={(e) => e.stopPropagation()}
+            />
+            <SelectGroup className="mt-2">
+              {!enteredName && <SelectItem value="all">All</SelectItem>}
+              {names
+                .filter((name) => name.toLowerCase().startsWith(enteredName.toLowerCase()))
+                .map((name) => (
+                  <SelectItem key={name} value={name}>{name}</SelectItem>
+                ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </fieldset>
+      <fieldset className="space-y-3">
+        <Label htmlFor="filter-by-status">Status</Label>
+        <Select
+          value={filterByStatus}
+          onValueChange={setFilterByStatus}
+        >
+          <SelectAction id="filter-by-name" className="max-w-[550px]">
+            <div className="flex items-center gap-2.5">
+              <span>
+                <Stack className="h-4 w-4" />
+              </span>
+              <SelectValue
+                placeholder="Prospect status"
+              />
+            </div>
+          </SelectAction>
+          <SelectContent className="w-full border border-metal-100 dark:border-metal-800 dark:bg-gray-900">
+            <SelectGroup className="mt-2">
+              <SelectItem value="draft">New</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="posted">Posted</SelectItem>
+              <SelectItem value="rejected">Rejected</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </fieldset>
     </div>
-  </AuthPageWrapper>
+  )
+
+  return (
+    <AuthPageWrapper>
+      <div className="relative flex flex-col-reverse lg:flex-row w-full gap-4">
+        <div className="w-full lg:max-w-[550px]">
+          <Posts status={filterByStatus} authorName={filterByName} />
+        </div>
+        <div className="relative w-full lg:max-w-[350px]">
+          <div className="relative lg:sticky lg:top-0">
+            {filters}
+          </div>
+        </div>
+      </div>
+    </AuthPageWrapper>
+  )
 })
