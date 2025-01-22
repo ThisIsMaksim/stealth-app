@@ -7,6 +7,7 @@ import {
 } from 'keep-react'
 import {useCallback, useState} from "react";
 import {useStores} from "../stores";
+import {YM} from "../utils/ym.ts";
 
 interface Props {
   isOpen: boolean
@@ -18,6 +19,8 @@ export const CreateCampaignModal = ({isOpen, close}: Props) => {
   const [name, setName] = useState("")
 
   const handleCreateCampaign = useCallback(async () => {
+    YM.richGoal('create-campaign')
+
     await CampaignsStore.createCampaign({name, company_context: '', owner_context: ''})
 
     close()
@@ -28,7 +31,7 @@ export const CreateCampaignModal = ({isOpen, close}: Props) => {
       open={isOpen}
       onOpenChange={(value) => !value ? close() : null}
     >
-      <ModalContent className="min-w-[500px]">
+      <ModalContent className="max-md:min-w-[calc(100%-16px)] min-w-[500px]">
         <ModalHeader className="mb-6 space-y-3">
           <div className="space-y-1">
             <ModalTitle>

@@ -10,6 +10,7 @@ import {useStores} from "../stores";
 import {fetchWithDelay} from "../utils/fetchWithDelay.ts";
 import {IAddProspectRequest} from "../types/Prospects.type.ts";
 import {SyncLoader} from "react-spinners";
+import {YM} from "../utils/ym.ts";
 
 interface Props {
   isOpen: boolean
@@ -22,6 +23,8 @@ export const AddProspectModal = ({isOpen, close}: Props) => {
   const [pending, setPending] = useState(false)
 
   const handleAddProspect = useCallback(async () => {
+    YM.richGoal('add-prospects')
+
     setPending(true)
 
     const items = link
@@ -89,7 +92,7 @@ export const AddProspectModal = ({isOpen, close}: Props) => {
       open={isOpen}
       onOpenChange={(value) => !value ? close() : null}
     >
-      <ModalContent className="min-w-[500px] h-[300px]">
+      <ModalContent className="max-md:min-w-[calc(100%-16px)] min-w-[500px] h-[300px]">
         {Component}
       </ModalContent>
     </Modal>

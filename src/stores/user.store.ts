@@ -169,6 +169,21 @@ class UserStore {
 
     action(undefined, data?.country)
   }
+
+  *confirmEmail(token: string, action: Action<void>) {
+    const response = yield fetch(`${getHost()}/api/v1/users/email-confirm`, {
+      method: 'POST',
+      body: JSON.stringify({sign: token})
+    })
+
+    if (!response.ok) {
+      action('error')
+
+      return
+    }
+
+    action()
+  }
 }
 
 export default UserStore

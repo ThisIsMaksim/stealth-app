@@ -29,7 +29,6 @@ import {
   SelectItem,
   Switch, Card
 } from 'keep-react'
-import './index.css'
 import {Link, useLocation} from "react-router-dom"
 import {IUser} from "../../types/User.type.ts"
 import {ICampaign} from "../../types/Campaigns.type.ts"
@@ -79,7 +78,7 @@ export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChan
   }, [UserStore])
 
   return (
-    <Sidebar className="Menu">
+    <Sidebar className="min-w[220px] max-w-[250px] lg:max-w-[220px] h-[calc(100%)] lg:h-[calc(100%-32px)]">
       <SidebarBody>
         <NavbarBrand className="flex flex-row items-center gap-1">
           <Card>
@@ -243,7 +242,12 @@ const User = observer(({ user, handleLogout }: UserProps) => {
           </Avatar>
           <div>
             <p className="text-body-4 font-medium text-metal-400 text-start dark:text-white">{user.name}</p>
-            <p className="text-body-4 font-normal text-metal-300 text-start dark:text-metal-400 lowercase">{user.email}</p>
+            <p
+              className="w-[140px] text-body-4 font-normal text-metal-300 text-start dark:text-metal-400 lowercase overflow-hidden whitespace-nowrap"
+              style={{textOverflow: 'ellipsis'}}
+            >
+              {user.email}
+            </p>
           </div>
         </div>
       </DropdownAction>

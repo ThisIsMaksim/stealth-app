@@ -86,76 +86,80 @@ export const Comments = observer(() => {
   }, [posts])
 
   const filters = (
-    <div className="text-start space-y-3">
-      <fieldset className="space-y-3">
-        <Label htmlFor="filter-by-name">Prospect name</Label>
-        <Select
-          value={filterByName}
-          onValueChange={setFilterByName}
-        >
-          <SelectAction id="filter-by-name" className="max-w-[550px]">
-            <div className="flex items-center gap-2.5">
+    <Card className="max-w-full dark:border-gray-700">
+      <CardContent>
+        <div className="text-start space-y-3">
+          <fieldset className="space-y-3">
+            <Label htmlFor="filter-by-name">Prospect name</Label>
+            <Select
+              value={filterByName}
+              onValueChange={setFilterByName}
+            >
+              <SelectAction id="filter-by-name" className="max-w-[550px]">
+                <div className="flex items-center gap-2.5">
               <span>
                 <User className="h-4 w-4"/>
               </span>
-              <SelectValue
-                placeholder="Prospect name"
-              />
-            </div>
-          </SelectAction>
-          <SelectContent className="w-full border border-metal-100 dark:border-metal-800 dark:bg-gray-900">
-            <Input
-              placeholder="Enter name"
-              type="text"
-              autoFocus
-              onChange={(e) => setEnteredName(e.target.value)}
-              onKeyDown={(e) => e.stopPropagation()}
-            />
-            <SelectGroup className="mt-2">
-              {!enteredName && <SelectItem value="all">All</SelectItem>}
-              {names
-                .filter((name) => name.toLowerCase().startsWith(enteredName.toLowerCase()))
-                .map((name) => (
-                  <SelectItem key={name} value={name}>{name}</SelectItem>
-                ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </fieldset>
-      <fieldset className="space-y-3">
-        <Label htmlFor="filter-by-status">Status</Label>
-        <Select
-          value={filterByStatus}
-          onValueChange={setFilterByStatus}
-        >
-          <SelectAction id="filter-by-name" className="max-w-[550px]">
-            <div className="flex items-center gap-2.5">
+                  <SelectValue
+                    placeholder="Prospect name"
+                  />
+                </div>
+              </SelectAction>
+              <SelectContent className="w-full border border-metal-100 dark:border-metal-800 dark:bg-gray-900">
+                <Input
+                  placeholder="Enter name"
+                  type="text"
+                  autoFocus
+                  onChange={(e) => setEnteredName(e.target.value)}
+                  onKeyDown={(e) => e.stopPropagation()}
+                />
+                <SelectGroup className="mt-2">
+                  {!enteredName && <SelectItem value="all">All</SelectItem>}
+                  {names
+                    .filter((name) => name.toLowerCase().startsWith(enteredName.toLowerCase()))
+                    .map((name) => (
+                      <SelectItem key={name} value={name}>{name}</SelectItem>
+                    ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </fieldset>
+          <fieldset className="space-y-3">
+            <Label htmlFor="filter-by-status">Status</Label>
+            <Select
+              value={filterByStatus}
+              onValueChange={setFilterByStatus}
+            >
+              <SelectAction id="filter-by-name" className="max-w-[550px]">
+                <div className="flex items-center gap-2.5">
               <span>
-                <Stack className="h-4 w-4" />
+                <Stack className="h-4 w-4"/>
               </span>
-              <SelectValue
-                placeholder="Prospect status"
-              />
-            </div>
-          </SelectAction>
-          <SelectContent className="w-full border border-metal-100 dark:border-metal-800 dark:bg-gray-900">
-            <SelectGroup className="mt-2">
-              <SelectItem value="draft">New</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="posted">Posted</SelectItem>
-              <SelectItem value="rejected">Rejected</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </fieldset>
-    </div>
+                  <SelectValue
+                    placeholder="Prospect status"
+                  />
+                </div>
+              </SelectAction>
+              <SelectContent className="w-full border border-metal-100 dark:border-metal-800 dark:bg-gray-900">
+                <SelectGroup className="mt-2">
+                  <SelectItem value="draft">New</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="posted">Posted</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </fieldset>
+        </div>
+      </CardContent>
+    </Card>
   )
 
   return (
     <AuthPageWrapper>
       <div className="relative flex flex-col-reverse lg:flex-row w-full gap-4">
         <div className="w-full lg:max-w-[550px]">
-          <Posts status={filterByStatus} authorName={filterByName} />
+          <Posts status={filterByStatus} authorName={filterByName}/>
         </div>
         <div className="relative w-full lg:max-w-[350px]">
           <div className="relative lg:sticky lg:top-0">

@@ -122,15 +122,8 @@ export const Comment = observer(({ postId, comment }: Props) => {
             </p>
           </div>
         </CardDescription>
-        <Card className="max-w-[215px]">
+        <Card className="max-w-[250px]">
           <CardContent className="flex flex-row gap-1 p-2">
-            <Button variant="softBg" color={reaction === 'funny' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('funny')}>
-              <img
-                src="https://www.userflow.nl/images/linkedin-funny-emoticon-250.png"
-                width="32"
-                alt="reaction"
-              />
-            </Button>
             <Button variant="softBg" color={reaction === 'like' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('like')}>
               <img
                 src="https://www.userflow.nl/images/Linkedin-Like-Icon-Thumbup250.png"
@@ -138,23 +131,37 @@ export const Comment = observer(({ postId, comment }: Props) => {
                 alt="reaction"
               />
             </Button>
-            <Button variant="softBg" color={reaction === 'celebrate' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('celebrate')}>
+            <Button variant="softBg" color={reaction === 'praise' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('praise')}>
               <img
                 src="https://www.userflow.nl/images/Linkedin-Celebrate-Icon-ClappingHands250.png"
                 width="32"
                 alt="reaction"
               />
             </Button>
-            <Button variant="softBg" color={reaction === 'support' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('support')}>
+            <Button variant="softBg" color={reaction === 'appreciation' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('appreciation')}>
               <img
                 src="https://www.userflow.nl/images/Linkedin-Support-Icon-HeartinHand250.png"
                 width="32"
                 alt="reaction"
               />
             </Button>
-            <Button variant="softBg" color={reaction === 'love' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('love')}>
+            <Button variant="softBg" color={reaction === 'empathy' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('empathy')}>
               <img
                 src="https://www.userflow.nl/images/Linkedin-Love-Icon-Heart250.png"
+                width="32"
+                alt="reaction"
+              />
+            </Button>
+            <Button variant="softBg" color={reaction === 'interest' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('interest')}>
+              <img
+                src="https://www.userflow.nl/images/Linkedin-Insightful-Icon-Lamp250.png"
+                width="32"
+                alt="reaction"
+              />
+            </Button>
+            <Button variant="softBg" color={reaction === 'entertainment' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('entertainment')}>
+              <img
+                src="https://www.userflow.nl/images/linkedin-funny-emoticon-250.png"
                 width="32"
                 alt="reaction"
               />

@@ -108,7 +108,7 @@ export const BindLinkedInAccountModal = observer(({isOpen, close}: Props) => {
   }, [UserStore, UserStore.linkedinAccountStatus, close])
 
   let Component = (
-    <ModalContent className="min-w-[500px] min-h-[300px]">
+    <ModalContent className="max-md:min-w-[calc(100%-16px)] min-w-[500px] min-h-[300px]">
       <ModalHeader className="mb-6 space-y-3">
         <div className="space-y-1">
           <ModalTitle>
@@ -169,7 +169,7 @@ export const BindLinkedInAccountModal = observer(({isOpen, close}: Props) => {
 
   if (pending) {
     Component = (
-      <ModalContent className="min-w-[500px] min-h-[300px]">
+      <ModalContent className="max-md:min-w-[calc(100%-16px)] min-w-[500px] min-h-[300px]">
         <div className="flex justify-center items-center h-[300px]">
           <div className="flex flex-row gap-4">
             <SyncLoader color="rgb(27, 77, 255)" size={10}/>
@@ -182,7 +182,7 @@ export const BindLinkedInAccountModal = observer(({isOpen, close}: Props) => {
 
   if (UserStore.linkedinAccountStatus === LinkedinAccountStatus.OTP_REQUESTED) {
     Component = (
-      <ModalContent className="min-w-[420px] min-h-[250px]">
+      <ModalContent className="max-md:min-w-[calc(100%-16px)] min-w-[420px] min-h-[250px]">
         <ModalHeader className="mb-6 space-y-3">
           <div className="space-y-1">
           <ModalTitle>
