@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom"
 import {ModalType} from "../../stores/modal.store.ts"
 import { Header } from "../../components/Header.tsx"
 import {HashLoader} from "react-spinners"
+import {UnActiveCampaign} from "../../components/UnActiveCampaign.tsx";
 
 interface AuthPageWrapperProps {
   children: React.ReactNode
@@ -99,6 +100,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
           onChange={(campaign) => CampaignsStore.setActiveCampaign(campaign)}
         />
         <Card className={`w-full max-w-full h-[calc(100%-86px-12px)] lg:h-[calc(100%-36px)] p-4 mt-[4px] overflow-auto overflow-x-hidden`}>
+          <UnActiveCampaign />
           {children}
         </Card>
       </div>

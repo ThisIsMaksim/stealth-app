@@ -1,7 +1,9 @@
 import {useCallback} from "react"
 import {
+  Article,
+  User as UserIcon,
   Chats, LinkedinLogo, PlusCircle,
-  PresentationChart, SignOut,
+  PresentationChart, SignOut, Users, Diamond, Gear, CaretDown,
 } from 'phosphor-react'
 import {
   Avatar,
@@ -27,7 +29,7 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  Switch, Card
+  Switch, Card, SidebarDropdown, SidebarCollapse, SidebarDropdownList
 } from 'keep-react'
 import {Link, useLocation} from "react-router-dom"
 import {IUser} from "../../types/User.type.ts"
@@ -95,9 +97,8 @@ export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChan
             value={activeCampaign?.id}
             onValueChange={handleChange}
           >
-            <SelectAction>
+            <SelectAction id="active-campaign">
               <SelectValue
-                id="active-campaign"
                 placeholder={`Campaign: ${activeCampaign?.name}`}
               />
             </SelectAction>
@@ -122,19 +123,67 @@ export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChan
         <Divider className="w-[100%]"/>
         <SidebarList>
           {/*<Link to="/">*/}
-          {/*  <SidebarItem className={location.pathname === '/' ? 'bg-blue-700 text-gray-50' : ''}>*/}
+          {/*  <SidebarItem className={location.pathname === '/' ? 'text-blue-500' : ''}>*/}
           {/*    <HouseLine size={20}/>*/}
           {/*    Dashboard*/}
           {/*  </SidebarItem>*/}
           {/*</Link>*/}
-          <Link to="/">
-            <SidebarItem className={location.pathname === '/' ? 'bg-blue-700 text-gray-50' : ''}>
-              <PresentationChart size={20}/>
-              Workspace
-            </SidebarItem>
-          </Link>
+          {/*<Link to="/">*/}
+          {/*  <SidebarItem className={location.pathname === '/' ? 'text-blue-500' : ''}>*/}
+          {/*    <PresentationChart size={20}/>*/}
+          {/*    Workspace*/}
+          {/*  </SidebarItem>*/}
+          {/*</Link>*/}
+          <SidebarItem className="text-start" dropdown>
+            <SidebarDropdown open>
+              <SidebarCollapse>
+                <div id="workspace" className="flex items-center gap-3">
+                  <span>
+                    <PresentationChart size={20}/>
+                  </span>
+                  <span>Workspace</span>
+                </div>
+                <span className="hidden lg:flex group-open:-rotate-180">
+                  <CaretDown size={16}/>
+                </span>
+              </SidebarCollapse>
+
+              <SidebarDropdownList>
+                <Link to="/workspace/audience">
+                  <SidebarItem className={location.pathname === '/workspace/audience' ? 'text-blue-500' : ''}>
+                    <Users size={16}/>
+                    Audience
+                  </SidebarItem>
+                </Link>
+                <Link to="/workspace/about-company">
+                  <SidebarItem id="about-company" className={location.pathname === '/workspace/about-company' ? 'text-blue-500' : ''}>
+                    <Article size={16} />
+                    About company
+                  </SidebarItem>
+                </Link>
+                <Link to="/workspace/about-you">
+                  <SidebarItem id="about-you" className={location.pathname === '/workspace/about-you' ? 'text-blue-500' : ''}>
+                    <UserIcon size={16} />
+                    About you
+                  </SidebarItem>
+                </Link>
+                <Link to="/workspace/tone-of-voice">
+                  <SidebarItem className={location.pathname === '/workspace/tone-of-voice' ? 'text-blue-500' : ''}>
+                    <Diamond size={16} />
+                    Tone of voice
+                  </SidebarItem>
+                </Link>
+                <Link to="/workspace/settings">
+                  <SidebarItem className={location.pathname === '/workspace/settings' ? 'text-blue-500' : ''}>
+                    <Gear size={16} />
+                    Settings
+                  </SidebarItem>
+                </Link>
+              </SidebarDropdownList>
+            </SidebarDropdown>
+          </SidebarItem>
           <Link to="/comments">
-            <SidebarItem className={location.pathname === '/comments' ? 'bg-blue-700 text-gray-50' : ''}>
+            <SidebarItem id="posts" className={location.pathname === '/comments' ? 'text-blue-500' : ''}>
               <Chats size={20}/>
               Comments
             </SidebarItem>

@@ -77,7 +77,7 @@ const EmptyComponent = ({addProspect}: EmptyComponentProps) => (
     <EmptyDescription className="mb-8">
       Add the prospects to your campaign to start using them
     </EmptyDescription>
-    <Button variant="outline" className="flex gap-1.5" onClick={() => addProspect()}>
+    <Button id="add-prospects" variant="outline" className="flex gap-1.5" onClick={() => addProspect()}>
       <Plus className="size-4 fill-metal-900 dark:fill-white"/>
       Add prospect
     </Button>
@@ -237,7 +237,7 @@ export const Audience = (props: Props) => {
         </Badge>
       </div>
       <div className="flex items-center gap-5">
-        <Button variant="outline" id="add-prospect" className="flex gap-1.5" onClick={() => addProspect()}>
+        <Button variant="outline" className="flex gap-1.5" onClick={() => addProspect()}>
           <Plus className="size-4 fill-metal-900 dark:fill-white"/>
           Add prospect
         </Button>
@@ -282,7 +282,7 @@ export const Audience = (props: Props) => {
         value={filterPostFrequency === 'all' ? '' : filterPostFrequency}
         onValueChange={setFilterPostFrequency}
       >
-        <SelectAction className="w-[20rem]">
+        <SelectAction id="post-frequency" className="w-[20rem]">
           <div className="flex items-center gap-2.5">
               <span>
                 <Timer className="h-4 w-4" />

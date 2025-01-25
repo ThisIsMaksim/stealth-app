@@ -16,6 +16,7 @@ import {ArrowSquareOut} from "phosphor-react"
 import {useCallback, useRef, useState} from "react";
 
 interface PropsPostWithComment {
+  index: number
   post: IPostWithComment
 }
 
@@ -60,7 +61,7 @@ export const SharedPost = observer(({ post }: PropsPost) => {
   )
 })
 
-export const PostWithComment = observer(({ post }: PropsPostWithComment) => {
+export const PostWithComment = observer(({ index, post }: PropsPostWithComment) => {
   const [showOpenPostButton, setShowOpenPostButton] = useState(false)
   const timeoutRef = useRef(null)
 
@@ -79,7 +80,7 @@ export const PostWithComment = observer(({ post }: PropsPostWithComment) => {
       {showOpenPostButton && <OpenPost linkUrl={post.post.link_url}/>}
       <CardContent className="space-y-3 max-md:p-4">
         <Post post={post.post} />
-        <Comment postId={post.post.id} comment={post.comment} />
+        <Comment index={index} postId={post.post.id} comment={post.comment} />
       </CardContent>
     </Card>
   )

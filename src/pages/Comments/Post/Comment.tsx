@@ -9,11 +9,12 @@ import {ModalType} from "../../../stores/modal.store.ts"
 import {observer} from "mobx-react"
 
 interface Props {
+  index: number
   postId: string
   comment: IComment
 }
 
-export const Comment = observer(({ postId, comment }: Props) => {
+export const Comment = observer(({ index, postId, comment }: Props) => {
   const {PostsStore, ModalStore} = useStores()
   const [isPending, setPending] = useState(false)
   const [value, setValue] = useState<string>(comment.content)
@@ -100,7 +101,7 @@ export const Comment = observer(({ postId, comment }: Props) => {
   }, [comment.content])
 
   return (
-    <Card className="w-full max-w-full text-start">
+    <Card id={`comment-${index}`} className="w-full max-w-full text-start">
       <CardContent className="max-md:p-4 bg-gray-100 dark:bg-gray-700">
         <CardTitle>
           {comment.status === 'draft' ? 'Suggested comment' : 'Your comment'}

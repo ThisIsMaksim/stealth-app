@@ -14,6 +14,7 @@ import {
 } from "keep-react"
 import {PostWithComment} from "./Post"
 import {Stack, User} from "phosphor-react"
+import {useOnbording} from "../../hooks/useOnbording.ts";
 
 const PostSkeleton = () => (
   <Card className="min-w-[400px] max-w-[550px] dark:border-gray-700">
@@ -71,7 +72,7 @@ const Posts = observer(({status, authorName}: Props) => {
   } else if (!posts.length) {
     return <EmptyComponent />
   } else {
-    return posts.map((post) => <PostWithComment post={post} />)
+    return posts.map((post, index) => <PostWithComment index={index} post={post} />)
   }
 })
 
@@ -84,8 +85,36 @@ export const Comments = observer(() => {
   const names = useMemo(() => {
     return [...new Set(posts.filter(c => !!c.post.author.name).map(c => c.post.author.name))]
   }, [posts])
+  const showOnbording = useOnbording()
 
-  const filters = (
+  useEffect(() => {
+    if (posts.length === 0) return
+
+    setTimeout(() => {
+      showOnbording('comment', [
+        {
+          selector: '#comment-0',
+          content: () => (
+            <div>
+              <div className="text-start text-body-3 text-gray-900">
+                You can Approve, Reject, or manually correct comments, either all at once or one by one. Approved comments go to Pending, and then are posted automatically.
+                <ul>
+                  <li>
+                    Nothing is posted without your approval.
+                  </li>
+                  <li>
+                    A like is added by default, so approving also likes the post. You can turn this off or change the reaction type.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          ),
+        },
+      ])
+    }, 1000)
+  }, [posts, showOnbording])
+
+  const filters = posts.length > 0 ? (
     <Card className="max-w-full dark:border-gray-700">
       <CardContent>
         <div className="text-start space-y-3">
@@ -153,7 +182,7 @@ export const Comments = observer(() => {
         </div>
       </CardContent>
     </Card>
-  )
+  ) : null
 
   return (
     <AuthPageWrapper>
