@@ -1,7 +1,7 @@
 import {observer} from "mobx-react"
-import {useStores} from "../stores"
-import {AboutCampaign} from "./Campaign/Components/AboutCampaign.tsx"
-import {AuthPageWrapper} from "./AuthPageWrapper";
+import {useStores} from "../../stores"
+import {AuthPageWrapper} from "../AuthPageWrapper"
+import {AboutCampaign} from "./Components/AboutCampaign"
 
 export const AboutCompanyPage = observer(() => {
   const {  CampaignsStore } = useStores()

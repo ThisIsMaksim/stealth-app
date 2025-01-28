@@ -1,12 +1,13 @@
-import './App.css'
 import {Route, Routes} from "react-router-dom"
 import {Comments, SignUp, SignIn, Landing} from "./pages"
 import {ConfirmedEmail} from "./pages/ConfirmEmail"
-import {AudiencePage} from "./pages/Audience.tsx"
-import {AboutCompanyPage} from "./pages/AboutCompany.tsx"
-import {AboutYouPage} from "./pages/AboutYou.tsx"
-import {ToneOfVoicePage} from "./pages/ToneOfVoice.tsx"
-import {SettingsPage} from "./pages/Settings.tsx"
+import {AudiencePage} from "./pages/Workspace/Audience"
+import {AboutCompanyPage} from "./pages/Workspace/AboutCompany"
+import {AboutYouPage} from "./pages/Workspace/AboutYou"
+import {ToneOfVoicePage} from "./pages/Workspace/ToneOfVoice"
+import {SettingsPage} from "./pages/Workspace/Settings"
+import {StripePage} from "./pages/StripePage"
+import './App.css'
 
 function App() {
   return <Routes>
@@ -21,6 +22,7 @@ function App() {
     <Route path="/comments" element={<Comments />} />
     <Route path="/landing" element={<Landing />} />
     <Route path="/confirm-email/:token" element={<ConfirmedEmail />} />
+    <Route path="/payment" element={<StripePage />} />
   </Routes>
 }
 

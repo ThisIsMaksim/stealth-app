@@ -3,7 +3,7 @@ import {
   AvatarFallback,
   AvatarImage,
   Badge,
-  Button,
+  Button, Card, Divider,
   Dropdown,
   DropdownAction,
   DropdownContent,
@@ -32,12 +32,11 @@ import {
   TooltipContent,
   TooltipProvider
 } from "keep-react";
-import {DotsThreeOutlineVertical, Plus, Timer, User} from "phosphor-react"
-import {IProspect} from "../../../../types/Prospects.type.ts"
+import {ArrowSquareOut, DotsThreeOutlineVertical, Plus, Timer, Trash, User} from "phosphor-react"
+import {IProspect} from "../../../types/Prospects.type"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
-import './index.css'
-import {useMemo, useState} from "react"
+import {useLayoutEffect, useMemo, useState} from "react"
 import {ClockLoader} from "react-spinners"
 
 dayjs.extend(relativeTime)
@@ -114,15 +113,9 @@ const Prospects = ({prospects, withoutSkeletons, removeProspect}: ProspectsProps
         <TableHead className="w-[200px]">
           <div>Post frequency</div>
         </TableHead>
-        {/*<TableHead>*/}
-        {/*  <div className="text-end"># of comments</div>*/}
-        {/*</TableHead>*/}
         <TableHead className="w-[200px]">
           <div className="text-end">Last comment</div>
         </TableHead>
-        {/*<TableHead>*/}
-        {/*  <div className="text-end w-[100px]">Last check</div>*/}
-        {/*</TableHead>*/}
         <TableHead></TableHead>
       </TableRow>
     </TableHeader>
@@ -138,7 +131,9 @@ const Prospects = ({prospects, withoutSkeletons, removeProspect}: ProspectsProps
               </Avatar>
               <div>
                 <p className="text-body-4 font-medium">{item.name}</p>
-                <p className="Position text-body-5 font-normal">{item.position}</p>
+                <p className="text-body-5 font-normal line-clamp-2">
+                  {item.position}
+                </p>
               </div>
             </div>}
             {!item.name && (
@@ -163,9 +158,7 @@ const Prospects = ({prospects, withoutSkeletons, removeProspect}: ProspectsProps
             )}
           </TableCell>
           <TableCell className="text-start">{item.post_frequency}</TableCell>
-          {/*<TableCell className="text-end">{item.comments_count}</TableCell>*/}
           <TableCell className="text-end">{item.last_comment_ts ? dayjs().to(item.last_comment_ts) : '-'}</TableCell>
-          {/*<TableCell className="text-end">{item.last_post_check_ts ? dayjs().to(item.last_post_check_ts) : '-'}</TableCell>*/}
           <TableCell>
             <Dropdown>
               <DropdownAction asChild>
@@ -185,12 +178,83 @@ const Prospects = ({prospects, withoutSkeletons, removeProspect}: ProspectsProps
   </Table>
 )
 
+interface OpenProspectProps {
+  linkUrl: string
+}
+
+export const OpenProspect = ({ linkUrl }: OpenProspectProps) => (
+  <div className="absolute top-[16px] right-[58px]">
+    <Button variant="softBg" shape="icon" color="secondary" onClick={() => window.open(linkUrl, '_blank')}>
+      <ArrowSquareOut/>
+    </Button>
+  </div>
+)
+
+interface RemoveProspectProps {
+  removeProspect: () => void
+}
+
+export const RemoveProspect = ({ removeProspect }: RemoveProspectProps) => (
+  <div className="absolute top-[16px] right-[16px]">
+    <Button variant="softBg" shape="icon" color="secondary" onClick={removeProspect}>
+      <Trash />
+    </Button>
+  </div>
+)
+
+const MobileProspects = ({prospects, withoutSkeletons, removeProspect}: ProspectsProps) => (
+  <div className="mt-2">
+    <div className="space-y-3 pb-10">
+      {!withoutSkeletons && prospects.length === 0 && <Skeletons />}
+      {prospects.map((item) => (
+        <Card key={item.id} className="relative max-w-full p-4 bg-gray-50 dark:bg-gray-800">
+          <div className="text-start">
+            {item.name ? (
+              <div className="flex items-center gap-2 pr-[90px]">
+                <Avatar>
+                  <AvatarImage src={item.avatar_url}/>
+                  <AvatarFallback>{item.name.slice(0, 2)}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-body-4 font-medium overflow-hidden whitespace-nowrap" style={{textOverflow: 'ellipsis'}}>{item.name}</p>
+                  <p className="text-body-5 font-normal line-clamp-2" style={{textOverflow: 'ellipsis'}}>
+                    {item.position}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              (
+                <Badge variant="border" color="primary">
+                  <ClockLoader color="rgb(27, 77, 255)" size={15}/>
+                  Enriching...
+                </Badge>
+              )
+            )}
+          </div>
+          <Divider className="mt-4 mb-4"/>
+          <div className="flex flex-row items-center gap-2">
+            <div className="text-body-3 font-medium">Post frequency:</div>
+            <div className="text-body-3 text-start text-metal-400">{item.post_frequency}</div>
+          </div>
+          <div className="flex flex-row items-center gap-2">
+            <div className="text-body-3 font-medium">Last comment:</div>
+            <div className="text-body-3 text-start text-metal-400">{item.last_comment_ts ? dayjs().to(item.last_comment_ts) : '-'}</div>
+          </div>
+          <RemoveProspect removeProspect={() => removeProspect(item.id)} />
+          <OpenProspect linkUrl={item.link_url} />
+        </Card>
+      ))}
+    </div>
+  </div>
+)
+
 export const Audience = (props: Props) => {
   const {prospects, status, addProspect} = props
   const isEmpty = useMemo(() => status === 'done' && prospects.length === 0, [prospects, status])
   const [filterByName, setFilterByName] = useState('all')
   const [filterPostFrequency, setFilterPostFrequency] = useState('all')
   const [enteredName, setEnteredName] = useState('')
+  const [isMobile, setMobile] = useState(false)
 
   const names = useMemo(() => {
     return [...new Set(prospects.filter(c => !!c.name).map(c => c.name))]
@@ -228,9 +292,15 @@ export const Audience = (props: Props) => {
     })
   }, [filterByName, filterPostFrequency, prospects])
 
+  useLayoutEffect(() => {
+    setMobile(window.innerWidth < 768)
+
+    window.addEventListener('resize', () => setMobile(window.innerWidth < 768))
+  }, [])
+
   const Header = !isEmpty ? (
-    <div className="flex items-center justify-between pt-4 pb-4">
-      <div className="flex items-center gap-5">
+    <div className="flex items-center justify-between pt-4 pb-1">
+      <div className="flex items-center gap-2">
         <h2 className="text-heading-6 font-semibold text-metal-900 dark:text-white">Total prospects</h2>
         <Badge className="dark:bg-metal-800 dark:text-white">
           {prospects.length}
@@ -306,11 +376,13 @@ export const Audience = (props: Props) => {
 
   if (isEmpty) return <EmptyComponent {...props} />
 
+  const Content = isMobile ? MobileProspects : Prospects
+
   return (
     <div>
       {Header}
       {Filters}
-      <Prospects
+      <Content
         prospects={filteredProspects}
         withoutSkeletons={prospects.length > 0}
         removeProspect={props.removeProspect}

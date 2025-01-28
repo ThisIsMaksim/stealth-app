@@ -29,7 +29,7 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  Switch, Card, SidebarDropdown, SidebarCollapse, SidebarDropdownList
+  Switch, Card, SidebarDropdown, SidebarCollapse, SidebarDropdownList, CardContent
 } from 'keep-react'
 import {Link, useLocation} from "react-router-dom"
 import {IUser} from "../../types/User.type.ts"
@@ -92,7 +92,7 @@ export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChan
           </Card>
           <Label className="text-heading-5">ELVYN.ai</Label>
         </NavbarBrand>
-        <div className="flex flex-col justify-start gap-2">
+        <div className="max-md:hidden flex flex-col justify-start gap-2">
           <Select
             value={activeCampaign?.id}
             onValueChange={handleChange}
@@ -194,6 +194,7 @@ export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChan
           Dark mode
           <Switch variant='icon' checked={theme === 'dark'} onCheckedChange={handleChangeTheme} />
         </div>
+        <Subscribe />
       </SidebarBody>
       <SidebarFooter className="flex flex-col gap-4 items-start">
         <LinkedIn
@@ -278,6 +279,21 @@ const LinkedIn = observer((props: LinkedInProps) => {
 interface UserProps {
   user: IUser
   handleLogout: () => void
+}
+
+const Subscribe = () => {
+  return (
+    <Card>
+      <CardContent className="flex flex-col justify-center text-center w-[100%] space-y-3 p-4 bg-emerald-400 dark:bg-emerald-600 text-white">
+        <div>Trial will expire in <br/> 7 days</div>
+        <Button>
+          <Link to="/payment">
+            Upgrade plan
+          </Link>
+        </Button>
+      </CardContent>
+    </Card>
+  )
 }
 
 const User = observer(({ user, handleLogout }: UserProps) => {

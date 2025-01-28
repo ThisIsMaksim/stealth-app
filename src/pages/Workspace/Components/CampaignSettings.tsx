@@ -7,11 +7,11 @@ import {
   SelectContent,
   SelectGroup, SelectItem,
   SelectValue, toast
-} from "keep-react";
-import {ICampaign, IChangeCampaignRequest} from "../../../../types/Campaigns.type.ts"
+} from "keep-react"
+import {ICampaign, IChangeCampaignRequest} from "../../../types/Campaigns.type"
 import {observer} from "mobx-react"
-import {Action, fetchWithDelay} from "../../../../utils/fetchWithDelay.ts"
-import {useStores} from "../../../../stores"
+import {Action, fetchWithDelay} from "../../../utils/fetchWithDelay"
+import {useStores} from "../../../stores"
 
 interface Props {
   campaign: ICampaign

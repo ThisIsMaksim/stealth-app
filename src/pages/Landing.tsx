@@ -1,8 +1,9 @@
 import {Button} from "keep-react"
+import {StripeProducts} from "../components/Stripe"
 
 export const Landing = () => {
   return (
-    <div className="h-full overflow-y-auto">
+    <div className="light h-full overflow-y-auto ml-[-16px] mr-[-16px]">
       <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 shadow-sm">
         <nav className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
@@ -28,6 +29,9 @@ export const Landing = () => {
               <Button variant="link" className="p-0">
                 <a href="#features">Features</a>
               </Button>
+              <Button variant="link" className="p-0">
+                <a href="#prices">Prices</a>
+              </Button>
               <Button onClick={() => window.location.href = '/'}>Get Started</Button>
             </div>
           </div>
@@ -44,7 +48,8 @@ export const Landing = () => {
             automation.
           </p>
           <div className="flex justify-center space-x-4">
-            <Button className="px-6 py-3 rounded-lg text-lg font-medium" size="xl" onClick={() => window.location.href = '/'}>
+            <Button className="px-6 py-3 rounded-lg text-lg font-medium" size="xl"
+                    onClick={() => window.location.href = '/'}>
               Start Your Free Trial
             </Button>
             <Button variant="outline" size="xl">
@@ -311,7 +316,8 @@ export const Landing = () => {
               <div className="relative bg-white p-8 rounded-xl shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     data-lucide="message-square" className="lucide lucide-message-square text-primary-600 mb-4 h-8 w-8">
+                     data-lucide="message-square"
+                     className="lucide lucide-message-square text-primary-600 mb-4 h-8 w-8">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
                 <h3 className="text-xl font-semibold mb-3 text-primary-600">Smart Engagement</h3>
@@ -367,6 +373,9 @@ export const Landing = () => {
             </div>
           </div>
         </section>
+        <section id="prices" className="px-4 py-20">
+          <StripeProducts isPrimaryColor />
+        </section>
         <section className="container mx-auto px-4 py-20 text-center">
           <h2 className="text-4xl font-bold mb-6 text-primary-600">Ready to Transform Your Social Media Strategy?</h2>
           <p className="text-xl text-primary-400 mb-10 max-w-2xl mx-auto">
@@ -410,6 +419,7 @@ export const Landing = () => {
                 <li><a href="#how-it-works" className="text-gray-400 hover:text--primary-50">How It Works</a></li>
                 <li><a href="#benefits" className="text-gray-400 hover:text--primary-50">Benefits</a></li>
                 <li><a href="#features" className="text-gray-400 hover:text--primary-50">Features</a></li>
+                <li><a href="#prices" className="text-gray-400 hover:text--primary-50">Prices</a></li>
               </ul>
             </div>
             <div>

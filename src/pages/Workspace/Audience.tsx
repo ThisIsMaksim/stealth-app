@@ -1,10 +1,10 @@
 import {observer} from "mobx-react"
-import {Audience} from "./Campaign/Components/Audience"
-import {useStores} from "../stores"
+import {Audience} from "./Components/Audience"
+import {useStores} from "../../stores"
 import {useCallback, useEffect} from "react"
-import {ModalType} from "../stores/modal.store.ts"
-import {AuthPageWrapper} from "./AuthPageWrapper"
-import {useOnbording} from "../hooks/useOnbording.ts"
+import {ModalType} from "../../stores/modal.store"
+import {AuthPageWrapper} from "../AuthPageWrapper"
+import {useOnbording} from "../../hooks/useOnbording"
 
 export const AudiencePage = observer(() => {
   const { UserStore, CampaignsStore, ProspectsStore, ModalStore } = useStores()

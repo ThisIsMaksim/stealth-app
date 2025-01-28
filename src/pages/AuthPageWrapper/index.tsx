@@ -8,6 +8,7 @@ import {ModalType} from "../../stores/modal.store.ts"
 import { Header } from "../../components/Header.tsx"
 import {HashLoader} from "react-spinners"
 import {UnActiveCampaign} from "../../components/UnActiveCampaign.tsx";
+import {Support} from "../../components/Support.tsx";
 
 interface AuthPageWrapperProps {
   children: React.ReactNode
@@ -103,6 +104,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
           <UnActiveCampaign />
           {children}
         </Card>
+        <Support />
       </div>
     </div>
   )

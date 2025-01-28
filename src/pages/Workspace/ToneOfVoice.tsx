@@ -1,7 +1,7 @@
 import {observer} from "mobx-react"
-import {useStores} from "../stores"
-import {ToneOfVoice} from "./Campaign/Components/ToneOfVoice.tsx"
-import {AuthPageWrapper} from "./AuthPageWrapper";
+import {useStores} from "../../stores"
+import {ToneOfVoice} from "./Components/ToneOfVoice"
+import {AuthPageWrapper} from "../AuthPageWrapper"
 
 export const ToneOfVoicePage = observer(() => {
   const {  CampaignsStore } = useStores()

@@ -37,7 +37,11 @@ const PostSkeleton = () => (
   </Card>
 )
 
-const EmptyComponent = () => (
+interface EmptyComponentProps {
+  title: string
+}
+
+const EmptyComponent = ({ title }: EmptyComponentProps) => (
   <Empty>
     <EmptyImage>
       <img
@@ -48,7 +52,7 @@ const EmptyComponent = () => (
         alt="404"
       />
     </EmptyImage>
-    <EmptyTitle className="mb-[14px] mt-5">You don't have new posts in this status</EmptyTitle>
+    <EmptyTitle className="mb-[14px] mt-5">{title}</EmptyTitle>
   </Empty>
 )
 
@@ -70,7 +74,7 @@ const Posts = observer(({status, authorName}: Props) => {
   if (PostsStore.state === 'pending') {
     return <PostSkeleton />
   } else if (!posts.length) {
-    return <EmptyComponent />
+    return <EmptyComponent title={status !== 'draft' ? "You don't have posts in this status" : "You don't have new posts"} />
   } else {
     return posts.map((post, index) => <PostWithComment index={index} post={post} />)
   }
@@ -114,7 +118,7 @@ export const Comments = observer(() => {
     }, 1000)
   }, [posts, showOnbording])
 
-  const filters = posts.length > 0 ? (
+  const filters = (
     <Card className="max-w-full dark:border-gray-700">
       <CardContent>
         <div className="text-start space-y-3">
@@ -182,7 +186,7 @@ export const Comments = observer(() => {
         </div>
       </CardContent>
     </Card>
-  ) : null
+  )
 
   return (
     <AuthPageWrapper>
