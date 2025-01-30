@@ -4,18 +4,17 @@ import {useStores} from "../../stores"
 import {useEffect, useState} from "react"
 import {observer} from "mobx-react"
 import {useNavigate} from "react-router-dom"
-import {ModalType} from "../../stores/modal.store.ts"
-import { Header } from "../../components/Header.tsx"
+import { Header } from "../../components/Header"
 import {HashLoader} from "react-spinners"
-import {UnActiveCampaign} from "../../components/UnActiveCampaign.tsx";
-import {Support} from "../../components/Support.tsx";
+import {UnActiveCampaign} from "../../components/UnActiveCampaign"
+import {Support} from "../../components/Support"
 
 interface AuthPageWrapperProps {
   children: React.ReactNode
 }
 
 export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
-  const { UserStore, CampaignsStore, ModalStore } = useStores()
+  const { UserStore, CampaignsStore, FirebaseStore } = useStores()
   const navigate = useNavigate()
   const [height, setHeight] = useState(0)
 
@@ -44,6 +43,14 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
   }, [CampaignsStore, CampaignsStore.campaigns, CampaignsStore.state])
 
   useEffect(() => {
+    if (!FirebaseStore.initialized && UserStore.user) {
+      FirebaseStore.initialize({
+        email: UserStore.user.email,
+      })
+    }
+  }, [FirebaseStore.initialized, UserStore.user])
+
+  useEffect(() => {
     const appHeight = () => {
       setHeight(window.innerHeight)
     }
@@ -53,7 +60,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
     appHeight()
   }, [])
 
-  if (!UserStore.authorized || (UserStore.user.is_confirmed && !CampaignsStore.activeCampaign)) {
+  if (!UserStore.authorized || (UserStore.user.is_confirmed && !CampaignsStore.activeCampaign) || !FirebaseStore.initialized) {
     return <div className="flex flex-row justify-center items-center w-[calc(100vw-32px)]" style={{ height }}>
       <HashLoader color="rgb(27, 77, 255)" />
     </div>
@@ -86,21 +93,10 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
 
   return (
     <div className="flex flex-row w-[calc(100vw-8px)] lg:w-[calc(100vw-32px)] h-max-full" style={{ height }}>
-      <div className="hidden lg:block">
-        <Menu
-          campaigns={CampaignsStore.campaigns}
-          activeCampaign={CampaignsStore.activeCampaign}
-          onChange={(campaign) => CampaignsStore.setActiveCampaign(campaign)}
-          showCreateCampaignModal={() => ModalStore.open(ModalType.CreateCampaign)}
-        />
-      </div>
+      <Menu className="hidden lg:block" />
       <div className="relative w-[100vw] lg:w-[calc(100vw-260px)] ml-0 lg:ml-[16px] overflow-x-hidden">
-        <Header
-          campaigns={CampaignsStore.campaigns}
-          activeCampaign={CampaignsStore.activeCampaign}
-          onChange={(campaign) => CampaignsStore.setActiveCampaign(campaign)}
-        />
-        <Card className={`w-full max-w-full h-[calc(100%-86px-12px)] lg:h-[calc(100%-36px)] p-4 mt-[4px] overflow-auto overflow-x-hidden`}>
+        <Header />
+        <Card className="w-full max-w-full h-[calc(100%-66px-12px)] lg:h-[calc(100%-66px-36px-4px)] p-4 mt-[4px] lg:mt-[8px] overflow-auto overflow-x-hidden">
           <UnActiveCampaign />
           {children}
         </Card>

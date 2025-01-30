@@ -2,11 +2,11 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import {ThemeProvider} from "./ThemeProvider.tsx"
+import {ThemeProvider} from "./ThemeProvider"
 import {BrowserRouter} from "react-router-dom"
 import {ToastWrapper} from "keep-react"
 import {Modal} from "./components/Modal"
-import {Onboarding} from "./components/Onboarding.tsx";
+import {Onboarding} from "./components/Onboarding"
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

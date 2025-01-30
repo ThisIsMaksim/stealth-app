@@ -395,8 +395,9 @@ export const Landing = () => {
       <footer className="bg-[#0F172A] text-white py-16 text-start">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-            <div>
+            <div className="space-y-3">
               <h3 className="text-2xl font-bold mb-4">Elvyn</h3>
+              <a href="/terms-of-use" className="text-gray-400 hover:text--primary-50">Terms of use</a>
               <p className="text-gray-400 mb-4">
                 <a href="https://ycula.com" className="hover:text--primary-50">powered by Ycula</a>
               </p>
@@ -464,7 +465,7 @@ export const Landing = () => {
                 </p>
                 <p className="ml-8">Saturday - Sunday: Closed</p>
               </div>
-              <Button size="lg" className="mt-4" onClick={() => window.location.href = 'mailto:team@ycula.com'}>
+              <Button size="lg" className="mt-4" onClick={() => window.open("https://t.me/elvyn_ai", "_blank")}>
                 Contact Us
               </Button>
             </div>

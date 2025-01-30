@@ -17,8 +17,10 @@
   },
   "dependencies": {
     "@reactour/tour": "^3.7.0",
+    "@vladmandic/face-api": "^1.7.14",
     "autoprefixer": "^10.4.20",
     "dayjs": "^1.11.13",
+    "firebase": "^11.2.0",
     "keep-react": "^1.6.1",
     "mobx-react": "^9.1.1",
     "phosphor-react": "^1.4.1",

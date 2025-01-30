@@ -7,6 +7,7 @@ import {AboutYouPage} from "./pages/Workspace/AboutYou"
 import {ToneOfVoicePage} from "./pages/Workspace/ToneOfVoice"
 import {SettingsPage} from "./pages/Workspace/Settings"
 import {StripePage} from "./pages/StripePage"
+import {TermsOfUsePage} from "./pages/TermsOfUse"
 import './App.css'
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
     <Route path="/landing" element={<Landing />} />
     <Route path="/confirm-email/:token" element={<ConfirmedEmail />} />
     <Route path="/payment" element={<StripePage />} />
+    <Route path='/terms-of-use' element={<TermsOfUsePage />} />
   </Routes>
 }
 

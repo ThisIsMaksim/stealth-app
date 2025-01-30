@@ -118,6 +118,14 @@ class UserStore {
     action(!response.ok ? 'Something went wrong' : undefined)
   }
 
+  *unBindLinkedinAccount(action: Action<void>) {
+    yield fetch(`${getHost()}/api/v1/users/unbind-linkedin-account`, {
+      method: 'POST'
+    })
+
+    action()
+  }
+
   *sendOTP(otp: string) {
     yield fetch(`${getHost()}/api/v1/users/set-otp`, {
       method: 'POST',

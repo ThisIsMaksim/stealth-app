@@ -2,18 +2,15 @@ import {useCallback} from "react"
 import {
   Article,
   User as UserIcon,
-  Chats, LinkedinLogo, PlusCircle,
-  PresentationChart, SignOut, Users, Diamond, Gear, CaretDown,
+  Chats, LinkedinLogo,
+  PresentationChart, Users, Diamond, Gear, CaretDown,
 } from 'phosphor-react'
 import {
-  Avatar,
-  AvatarImage,
   Sidebar,
   SidebarBody,
   SidebarFooter,
   SidebarItem,
   SidebarList,
-  AvatarFallback,
   NavbarBrand,
   Label,
   Button,
@@ -23,43 +20,23 @@ import {
   DropdownGroup,
   DropdownItem,
   Divider,
-  Select,
-  SelectAction,
-  SelectValue,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  Switch, Card, SidebarDropdown, SidebarCollapse, SidebarDropdownList, CardContent
+  Card, SidebarDropdown, SidebarCollapse, SidebarDropdownList, CardContent, toast
 } from 'keep-react'
 import {Link, useLocation} from "react-router-dom"
-import {IUser} from "../../types/User.type.ts"
-import {ICampaign} from "../../types/Campaigns.type.ts"
+import {IUser} from "../../types/User.type"
 import {useStores} from "../../stores"
-import {ModalType} from "../../stores/modal.store.ts"
-import {observer} from "mobx-react";
+import {ModalType} from "../../stores/modal.store"
+import {observer} from "mobx-react"
 import {PulseLoader} from "react-spinners"
-import {useTheme} from "../../ThemeProvider.tsx"
 import logo from '../../assets/logo.png'
+import {User} from "../User"
+import {ComponentProps} from "../../types/Component"
+import {UpgradePlan} from "../UpgradePlan"
+import {Action, fetchWithDelay} from "../../utils/fetchWithDelay.ts";
 
-interface Props {
-  activeCampaign: ICampaign
-  campaigns: ICampaign[]
-  onChange: (campaign?: ICampaign) => void
-  showCreateCampaignModal: () => void
-}
-
-export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChange}: Props) => {
-  const { UserStore, ModalStore } = useStores()
+export const Menu = ({ className }: ComponentProps) => {
+  const { UserStore, ModalStore, FirebaseStore } = useStores()
   const location = useLocation()
-  const { theme, setTheme } = useTheme()
-
-  const handleChangeTheme = useCallback(() => {
-    setTheme(theme === "light" ? "dark" : "light")
-  }, [theme])
-
-  const handleChange = useCallback((id: string) => {
-    onChange(campaigns.find((c) => c.id === id))
-  }, [campaigns, onChange])
 
   const handleBindLinkedInAccount = useCallback(() => {
     ModalStore.open(
@@ -70,17 +47,30 @@ export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChan
       () => UserStore.needCheckLinkedinAccountStatus = false
     )
   }, [UserStore, ModalStore])
+  const handleUnBindLinkedInAccount = useCallback(() => {
+    // eslint-disable-next-line no-async-promise-executor
+    const promise = () => new Promise<void>(async (resolve, reject) => {
+      const result = await fetchWithDelay<void, Action<void>>(
+        UserStore.unBindLinkedinAccount.bind(UserStore),
+        undefined,
+      )
 
-  const handleLogout = useCallback(async () => {
-    UserStore.logout(
-      () => {
-        window.location.href= '/signin'
+      if (result.error) {
+        reject()
+      } else {
+        resolve()
       }
-    )
+    })
+
+    toast.promise(promise, {
+      loading: 'Doing...',
+      success: 'Done',
+      error: 'Something went wrong',
+    })
   }, [UserStore])
 
   return (
-    <Sidebar className="min-w[220px] max-w-[250px] lg:max-w-[220px] h-[calc(100%)] lg:h-[calc(100%-32px)]">
+    <Sidebar className={`${className} min-w[220px] max-w-[250px] lg:max-w-[220px] h-[calc(100%)] lg:h-[calc(100%-32px)]`}>
       <SidebarBody>
         <NavbarBrand className="flex flex-row items-center gap-1">
           <Card>
@@ -92,52 +82,12 @@ export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChan
           </Card>
           <Label className="text-heading-5">ELVYN.ai</Label>
         </NavbarBrand>
-        <div className="max-md:hidden flex flex-col justify-start gap-2">
-          <Select
-            value={activeCampaign?.id}
-            onValueChange={handleChange}
-          >
-            <SelectAction id="active-campaign">
-              <SelectValue
-                placeholder={`Campaign: ${activeCampaign?.name}`}
-              />
-            </SelectAction>
-            <SelectContent className="border border-metal-100 dark:border-metal-800 dark:bg-gray-900">
-              <SelectGroup>
-                {campaigns.map((campaign) => (
-                  <SelectItem
-                    key={campaign.id}
-                    value={campaign.id}
-                  >
-                    {campaign.name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Button id="add-campaign" variant="outline" onClick={showCreateCampaignModal}>
-            <PlusCircle size={18} className="mr-1.5"/>
-            <span className="lowercase">Add a campaign</span>
-          </Button>
-        </div>
         <Divider className="w-[100%]"/>
         <SidebarList>
-          {/*<Link to="/">*/}
-          {/*  <SidebarItem className={location.pathname === '/' ? 'text-blue-500' : ''}>*/}
-          {/*    <HouseLine size={20}/>*/}
-          {/*    Dashboard*/}
-          {/*  </SidebarItem>*/}
-          {/*</Link>*/}
-          {/*<Link to="/">*/}
-          {/*  <SidebarItem className={location.pathname === '/' ? 'text-blue-500' : ''}>*/}
-          {/*    <PresentationChart size={20}/>*/}
-          {/*    Workspace*/}
-          {/*  </SidebarItem>*/}
-          {/*</Link>*/}
           <SidebarItem className="text-start" dropdown>
             <SidebarDropdown open>
               <SidebarCollapse>
-                <div id="workspace" className="flex items-center gap-3">
+                <div id="workspace" className="flex items-center gap-3 text-start">
                   <span>
                     <PresentationChart size={20}/>
                   </span>
@@ -167,12 +117,14 @@ export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChan
                     About you
                   </SidebarItem>
                 </Link>
-                <Link to="/workspace/tone-of-voice">
-                  <SidebarItem className={location.pathname === '/workspace/tone-of-voice' ? 'text-blue-500' : ''}>
-                    <Diamond size={16} />
-                    Tone of voice
-                  </SidebarItem>
-                </Link>
+                {FirebaseStore.config['tone_of_voice'] && (
+                  <Link to="/workspace/tone-of-voice">
+                    <SidebarItem className={location.pathname === '/workspace/tone-of-voice' ? 'text-blue-500' : ''}>
+                      <Diamond size={16}/>
+                      Tone of voice
+                    </SidebarItem>
+                  </Link>
+                )}
                 <Link to="/workspace/settings">
                   <SidebarItem className={location.pathname === '/workspace/settings' ? 'text-blue-500' : ''}>
                     <Gear size={16} />
@@ -189,23 +141,16 @@ export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChan
             </SidebarItem>
           </Link>
         </SidebarList>
-        <Divider className="w-[100%]"/>
-        <div className="flex flex-row gap-2">
-          Dark mode
-          <Switch variant='icon' checked={theme === 'dark'} onCheckedChange={handleChangeTheme} />
-        </div>
         <Subscribe />
       </SidebarBody>
       <SidebarFooter className="flex flex-col gap-4 items-start">
         <LinkedIn
           user={UserStore.user}
+          handleUnBindLinkedInAccount={handleUnBindLinkedInAccount}
           handleBindLinkedInAccount={handleBindLinkedInAccount}
         />
-        <Divider className="w-[100%]"/>
-        <User
-          user={UserStore.user}
-          handleLogout={handleLogout}
-        />
+        <Divider className="w-[100%] lg:hidden"/>
+        <User className="lg:hidden" />
       </SidebarFooter>
     </Sidebar>
   )
@@ -214,10 +159,11 @@ export const Menu = ({showCreateCampaignModal, activeCampaign, campaigns, onChan
 interface LinkedInProps {
   user: IUser
   handleBindLinkedInAccount: () => void
+  handleUnBindLinkedInAccount: () => void
 }
 
 const LinkedIn = observer((props: LinkedInProps) => {
-  const {user, handleBindLinkedInAccount} = props
+  const {user, handleBindLinkedInAccount, handleUnBindLinkedInAccount} = props
 
   if (!user?.linkedin_account) {
     return (
@@ -230,43 +176,43 @@ const LinkedIn = observer((props: LinkedInProps) => {
 
   if (user?.linkedin_account?.status === 'new') {
     return (
-      <div className="flex flex-row gap-2 p-0 cursor-pointer">
-        <LinkedinLogo size={28}/>
-        <div>
-          <p className="text-body-4 font-medium text-metal-400 text-start dark:text-white">
-          Try to connect
-          </p>
-          <p
-            className="w-[150px] text-body-4 font-normal text-metal-300 text-start dark:text-metal-400 lowercase overflow-hidden whitespace-nowrap"
-            style={{textOverflow: 'ellipsis'}}
-          >
-            <PulseLoader size={8} color="rgb(27, 77, 255)" />
-          </p>
-        </div>
-      </div>
+      <Card className="dark:border-gray-700">
+        <CardContent className="flex flex-col justify-center text-center w-[100%] space-y-3 p-4 bg-emerald-400 dark:bg-emerald-600 text-white">
+          <LinkedinLogo size={28}/>
+          <div>
+            <p className="text-body-4 font-medium text-metal-400 text-start dark:text-white">
+              Try to connect
+            </p>
+            <p
+              className="w-[150px] text-body-4 font-normal text-metal-300 text-start dark:text-metal-400 lowercase overflow-hidden whitespace-nowrap"
+              style={{textOverflow: 'ellipsis'}}
+            >
+              <PulseLoader size={8} color="rgb(27, 77, 255)" />
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     )
   }
 
   return (
     <Dropdown>
       <DropdownAction asChild>
-        <div className="flex flex-row gap-2 p-0 cursor-pointer">
-          <LinkedinLogo size={28}/>
-          <div>
-            <p className="text-body-4 font-medium text-metal-400 text-start dark:text-white">
-              {user.linkedin_account?.name}
-            </p>
-            <p
-              className="w-[150px] text-body-4 font-normal text-metal-300 text-start dark:text-metal-400 lowercase overflow-hidden whitespace-nowrap"
-              style={{textOverflow: 'ellipsis'}}
-            >
-            Status: {user.linkedin_account?.status}
-            </p>
-          </div>
-        </div>
+        <Button variant="outline" color="success" className="flex flex-row justify-start items-center w-full gap-1 text-start">
+          <LinkedinLogo size={28} className="ml-2" />
+          <p
+            className="w-[130px] text-body-2 font-normal text-start lowercase overflow-hidden whitespace-nowrap"
+            style={{textOverflow: 'ellipsis'}}
+          >
+            {user.linkedin_account?.status}
+          </p>
+        </Button>
       </DropdownAction>
       <DropdownContent align="start" className="p-2 border border-metal-100 dark:border-metal-800 dark:bg-gray-900">
         <DropdownGroup>
+          <DropdownItem onClick={handleUnBindLinkedInAccount}>
+            Unbind
+          </DropdownItem>
           <DropdownItem onClick={handleBindLinkedInAccount}>
             Reconnect
           </DropdownItem>
@@ -276,54 +222,17 @@ const LinkedIn = observer((props: LinkedInProps) => {
   )
 })
 
-interface UserProps {
-  user: IUser
-  handleLogout: () => void
-}
+const Subscribe = observer(() => {
+  const { FirebaseStore } = useStores()
 
-const Subscribe = () => {
+  if (!FirebaseStore.config['stripe']) return null
+
   return (
-    <Card>
+    <Card className="dark:border-gray-700">
       <CardContent className="flex flex-col justify-center text-center w-[100%] space-y-3 p-4 bg-emerald-400 dark:bg-emerald-600 text-white">
         <div>Trial will expire in <br/> 7 days</div>
-        <Button>
-          <Link to="/payment">
-            Upgrade plan
-          </Link>
-        </Button>
+        <UpgradePlan />
       </CardContent>
     </Card>
-  )
-}
-
-const User = observer(({ user, handleLogout }: UserProps) => {
-  return (
-    <Dropdown>
-      <DropdownAction asChild>
-        <div id="user" className="flex flex-row gap-2 p-0 cursor-pointer">
-          <Avatar>
-            <AvatarImage src={user.linkedin_account?.avatar_url} alt="avatar" />
-            <AvatarFallback>{user.name.slice(0, 2)}</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="text-body-4 font-medium text-metal-400 text-start dark:text-white">{user.name}</p>
-            <p
-              className="w-[140px] text-body-4 font-normal text-metal-300 text-start dark:text-metal-400 lowercase overflow-hidden whitespace-nowrap"
-              style={{textOverflow: 'ellipsis'}}
-            >
-              {user.email}
-            </p>
-          </div>
-        </div>
-      </DropdownAction>
-      <DropdownContent align="start" className="p-2 border border-metal-100 dark:border-metal-800 dark:bg-metal-900">
-        <DropdownGroup>
-          <DropdownItem onClick={handleLogout}>
-            <SignOut size={20} />
-            Logout
-          </DropdownItem>
-        </DropdownGroup>
-      </DropdownContent>
-    </Dropdown>
   )
 })

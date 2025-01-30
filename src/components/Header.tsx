@@ -1,4 +1,5 @@
 import {
+  Button,
   Drawer, DrawerAction, DrawerContent, Navbar,
   NavbarContainer,
   NavbarList,
@@ -11,25 +12,20 @@ import {
 } from 'keep-react'
 import {useCallback} from "react"
 import {observer} from "mobx-react"
-import {ICampaign} from "../types/Campaigns.type.ts"
 import {ThemeSwitcher} from "./ThemeSwitcher"
 import {PlusCircle} from "phosphor-react"
-import {ModalType} from "../stores/modal.store.ts"
+import {ModalType} from "../stores/modal.store"
 import {useStores} from "../stores"
 import {Menu} from "./Menu"
-
-interface Props {
-  activeCampaign: ICampaign
-  campaigns: ICampaign[]
-  onChange: (campaign?: ICampaign) => void
-}
+import {User} from "./User"
+import {UpgradePlan} from "./UpgradePlan.tsx";
+import {ComponentProps} from "../types/Component.ts";
 
 const MobileMenu = observer(() => {
-  const { ModalStore, CampaignsStore } = useStores()
   return (
     <Drawer showCloseIcon={false}>
       <DrawerAction asChild>
-        <button className="rounded-lg bg-primary-25 p-2.5 dark:bg-white w-[40px] h-[40px]">
+        <button className="lg:hidden rounded-lg bg-primary-25 p-2.5 dark:bg-white w-[40px] h-[40px]">
           <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 50 50">
             <path
               d="M 0 7.5 L 0 12.5 L 50 12.5 L 50 7.5 Z M 0 22.5 L 0 27.5 L 50 27.5 L 50 22.5 Z M 0 37.5 L 0 42.5 L 50 42.5 L 50 37.5 Z"></path>
@@ -37,26 +33,41 @@ const MobileMenu = observer(() => {
         </button>
       </DrawerAction>
       <DrawerContent className="w-[250px] p-0" position="left">
-        <Menu
-          campaigns={CampaignsStore.campaigns}
-          activeCampaign={CampaignsStore.activeCampaign}
-          onChange={(campaign) => CampaignsStore.setActiveCampaign(campaign)}
-          showCreateCampaignModal={() => ModalStore.open(ModalType.CreateCampaign)}
-        />
+        <Menu />
       </DrawerContent>
     </Drawer>
   )
 })
 
-export const Header = observer(({campaigns, activeCampaign, onChange}: Props) => {
-  const { ModalStore } = useStores()
-  const handleChange = useCallback((id: string) => {
-    onChange(campaigns.find((c) => c.id === id))
-  }, [campaigns, onChange])
+const AddCampaignButton = observer(({ className }: ComponentProps) => {
+  const {ModalStore} = useStores()
 
   return (
-    <Navbar className="lg:hidden">
-      <NavbarContainer className="h-[44px] pr-[16px] pl-[16px]">
+    <div className={className}>
+      <button id="add-campaign" className="block lg:hidden rounded-lg bg-primary-25 p-2.5 dark:bg-white"
+              onClick={() => ModalStore.open(ModalType.CreateCampaign)}>
+        <PlusCircle size={20} className="text-gray-900"/>
+      </button>
+      <Button id="add-campaign" className="hidden lg:flex" variant="outline" onClick={() => ModalStore.open(ModalType.CreateCampaign)}>
+        <PlusCircle size={18} className="mr-1.5"/>
+        <span className="lowercase">Add a campaign</span>
+      </Button>
+    </div>
+  )
+})
+
+export const Header = observer(() => {
+  const { CampaignsStore } = useStores()
+  const activeCampaign = CampaignsStore.activeCampaign
+  const campaigns = CampaignsStore.campaigns
+
+  const handleChange = useCallback((id: string) => {
+    CampaignsStore.setActiveCampaign(campaigns.find((c) => c.id === id))
+  }, [campaigns.length])
+
+  return (
+    <Navbar>
+      <NavbarContainer className="h-[24px] pr-[16px] pl-[16px]">
         <NavbarList className="flex flex-row justify-between w-[100%]">
           <div className="flex flex-row gap-2 max-w-[350px] w-[100%]">
             <MobileMenu />
@@ -85,16 +96,16 @@ export const Header = observer(({campaigns, activeCampaign, onChange}: Props) =>
                 </SelectContent>
               </Select>
             )}
+            <AddCampaignButton className="hidden lg:block" />
           </div>
           <div className="flex flex-row gap-2 lg:hidden">
-            <button id="add-campaign" className="rounded-lg bg-primary-25 p-2.5 dark:bg-white"
-                    onClick={() => ModalStore.open(ModalType.CreateCampaign)}>
-              <PlusCircle size={20} className="text-gray-900"/>
-            </button>
+            <AddCampaignButton />
             <ThemeSwitcher />
           </div>
         </NavbarList>
         <NavbarList>
+          <UpgradePlan />
+          <User className="max-md:hidden" />
           <ThemeSwitcher />
         </NavbarList>
       </NavbarContainer>
