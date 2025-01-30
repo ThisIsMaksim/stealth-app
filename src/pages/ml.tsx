@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from "react"
+import {useCallback, useState} from "react"
 import * as faceapi from '@vladmandic/face-api'
 import {Button} from "keep-react"
 
