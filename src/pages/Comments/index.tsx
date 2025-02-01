@@ -1,6 +1,6 @@
 import {AuthPageWrapper} from "../AuthPageWrapper"
 import {observer} from "mobx-react"
-import {useEffect, useMemo, useState} from "react"
+import {useEffect, useMemo, useRef, useState} from "react"
 import {useStores} from "../../stores"
 import {
   Card,
@@ -65,6 +65,7 @@ const Posts = observer(({status, authorName}: Props) => {
   const { CampaignsStore, PostsStore } = useStores()
   const posts = PostsStore.postsWithComments
     .filter(post => post.comment.status === status && (authorName === 'all' || post.post.author.name === authorName))
+
   useEffect(() => {
     if (CampaignsStore.activeCampaign) {
       PostsStore.fetchPosts(CampaignsStore.activeCampaign.id, status)
@@ -82,6 +83,7 @@ const Posts = observer(({status, authorName}: Props) => {
 
 export const Comments = observer(() => {
   const { PostsStore } = useStores()
+  const commentsRef = useRef<HTMLDivElement>(null)
   const [filterByName, setFilterByName] = useState('all')
   const [enteredName, setEnteredName] = useState('')
   const [filterByStatus, setFilterByStatus] = useState('draft')
@@ -117,6 +119,10 @@ export const Comments = observer(() => {
       ])
     }, 1000)
   }, [posts, showOnbording])
+
+  useEffect(() => {
+    commentsRef.current?.parentElement?.scrollTo(0, 0)
+  }, [filterByName, filterByStatus])
 
   const filters = (
     <Card className="max-w-full dark:border-gray-700">
@@ -190,7 +196,7 @@ export const Comments = observer(() => {
 
   return (
     <AuthPageWrapper>
-      <div className="relative flex flex-col-reverse lg:flex-row w-full gap-4">
+      <div ref={commentsRef} className="relative flex flex-col-reverse lg:flex-row w-full gap-4">
         <div className="w-full lg:max-w-[550px]">
           <Posts status={filterByStatus} authorName={filterByName}/>
         </div>

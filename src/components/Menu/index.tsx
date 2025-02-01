@@ -20,21 +20,21 @@ import {
   DropdownGroup,
   DropdownItem,
   Divider,
-  Card, SidebarDropdown, SidebarCollapse, SidebarDropdownList, CardContent, toast
+  Card, SidebarDropdown, SidebarCollapse, SidebarDropdownList, CardContent
 } from 'keep-react'
 import {Link, useLocation} from "react-router-dom"
 import {IUser} from "../../types/User.type"
 import {useStores} from "../../stores"
 import {ModalType} from "../../stores/modal.store"
 import {observer} from "mobx-react"
-import {PulseLoader} from "react-spinners"
 import logo from '../../assets/logo.png'
 import {User} from "../User"
 import {ComponentProps} from "../../types/Component"
 import {UpgradePlan} from "../UpgradePlan"
-import {Action, fetchWithDelay} from "../../utils/fetchWithDelay.ts";
+import {Action, fetchWithDelay} from "../../utils/fetchWithDelay"
+import {LinkedinAccountStatus} from "../../types/LinkedinAccount.type"
 
-export const Menu = ({ className }: ComponentProps) => {
+export const Menu = observer(({ className }: ComponentProps) => {
   const { UserStore, ModalStore, FirebaseStore } = useStores()
   const location = useLocation()
 
@@ -47,26 +47,11 @@ export const Menu = ({ className }: ComponentProps) => {
       () => UserStore.needCheckLinkedinAccountStatus = false
     )
   }, [UserStore, ModalStore])
-  const handleUnBindLinkedInAccount = useCallback(() => {
-    // eslint-disable-next-line no-async-promise-executor
-    const promise = () => new Promise<void>(async (resolve, reject) => {
-      const result = await fetchWithDelay<void, Action<void>>(
-        UserStore.unBindLinkedinAccount.bind(UserStore),
-        undefined,
-      )
-
-      if (result.error) {
-        reject()
-      } else {
-        resolve()
-      }
-    })
-
-    toast.promise(promise, {
-      loading: 'Doing...',
-      success: 'Done',
-      error: 'Something went wrong',
-    })
+  const handleUnBindLinkedInAccount = useCallback(async () => {
+    await fetchWithDelay<void, Action<void>>(
+      UserStore.unBindLinkedinAccount.bind(UserStore),
+      undefined,
+    )
   }, [UserStore])
 
   return (
@@ -154,7 +139,7 @@ export const Menu = ({ className }: ComponentProps) => {
       </SidebarFooter>
     </Sidebar>
   )
-}
+})
 
 interface LinkedInProps {
   user: IUser
@@ -174,44 +159,61 @@ const LinkedIn = observer((props: LinkedInProps) => {
     )
   }
 
-  if (user?.linkedin_account?.status === 'new') {
-    return (
-      <Card className="dark:border-gray-700">
-        <CardContent className="flex flex-col justify-center text-center w-[100%] space-y-3 p-4 bg-emerald-400 dark:bg-emerald-600 text-white">
-          <LinkedinLogo size={28}/>
-          <div>
-            <p className="text-body-4 font-medium text-metal-400 text-start dark:text-white">
-              Try to connect
-            </p>
-            <p
-              className="w-[150px] text-body-4 font-normal text-metal-300 text-start dark:text-metal-400 lowercase overflow-hidden whitespace-nowrap"
-              style={{textOverflow: 'ellipsis'}}
-            >
-              <PulseLoader size={8} color="rgb(27, 77, 255)" />
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    )
+  let color: string
+  let text: string
+
+  switch (user.linkedin_account?.status) {
+    case LinkedinAccountStatus.NEW:
+      color = 'primary'
+      text = 'connecting'
+
+      break
+    case LinkedinAccountStatus.CONNECTED:
+      color = 'success'
+      text = 'connected'
+
+      break
+    case LinkedinAccountStatus.DISCONNECTED:
+    case LinkedinAccountStatus.INVALID_CREDENTIALS:
+      color = 'error'
+      text = 'not connected'
+
+      break
+    case LinkedinAccountStatus.OTP_PROVIDED:
+    case LinkedinAccountStatus.OTP_REQUESTED:
+      color = 'primary'
+      text = 'need OTP'
+
+      break
+
+    default:
+      color = 'primary'
+      text = 'connect'
   }
 
   return (
     <Dropdown>
       <DropdownAction asChild>
-        <Button variant="outline" color="success" className="flex flex-row justify-start items-center w-full gap-1 text-start">
-          <LinkedinLogo size={28} className="ml-2" />
+        <Button
+          variant="outline"
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          color={color}
+          className="flex flex-row gap-1 p-2"
+        >
+          <LinkedinLogo size={28} />
           <p
-            className="w-[130px] text-body-2 font-normal text-start lowercase overflow-hidden whitespace-nowrap"
+            className="w-[130px] overflow-hidden whitespace-nowrap"
             style={{textOverflow: 'ellipsis'}}
           >
-            {user.linkedin_account?.status}
+            LinkedIn {text}
           </p>
         </Button>
       </DropdownAction>
       <DropdownContent align="start" className="p-2 border border-metal-100 dark:border-metal-800 dark:bg-gray-900">
         <DropdownGroup>
           <DropdownItem onClick={handleUnBindLinkedInAccount}>
-            Unbind
+            Delete
           </DropdownItem>
           <DropdownItem onClick={handleBindLinkedInAccount}>
             Reconnect

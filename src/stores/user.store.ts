@@ -123,6 +123,9 @@ class UserStore {
       method: 'POST'
     })
 
+    this.user.linkedin_account = undefined
+    this.linkedinAccountStatus = undefined
+
     action()
   }
 
@@ -143,6 +146,7 @@ class UserStore {
 
       const user: IUser = yield response.json()
 
+      this.user = user
       this.linkedinAccountStatus = user.linkedin_account?.status
     }
 
