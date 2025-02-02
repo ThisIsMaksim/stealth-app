@@ -11,8 +11,6 @@ import {
   SidebarFooter,
   SidebarItem,
   SidebarList,
-  NavbarBrand,
-  Label,
   Button,
   Dropdown,
   DropdownAction,
@@ -27,12 +25,12 @@ import {IUser} from "../../types/User.type"
 import {useStores} from "../../stores"
 import {ModalType} from "../../stores/modal.store"
 import {observer} from "mobx-react"
-import logo from '../../assets/logo.png'
 import {User} from "../User"
 import {ComponentProps} from "../../types/Component"
 import {UpgradePlan} from "../UpgradePlan"
 import {Action, fetchWithDelay} from "../../utils/fetchWithDelay"
 import {LinkedinAccountStatus} from "../../types/LinkedinAccount.type"
+import {Logo} from "../Logo"
 
 export const Menu = observer(({ className }: ComponentProps) => {
   const { UserStore, ModalStore, FirebaseStore } = useStores()
@@ -57,16 +55,7 @@ export const Menu = observer(({ className }: ComponentProps) => {
   return (
     <Sidebar className={`${className} min-w[220px] max-w-[250px] lg:max-w-[220px] h-[calc(100%)] lg:h-[calc(100%-32px)]`}>
       <SidebarBody>
-        <NavbarBrand className="flex flex-row items-center gap-1">
-          <Card>
-            <img
-              className="flex-shrink-0 w-[32px] h-[32px]"
-              src={logo}
-              alt="logo"
-            />
-          </Card>
-          <Label className="text-heading-5">ELVYN.ai</Label>
-        </NavbarBrand>
+        <Logo />
         <Divider className="w-[100%]"/>
         <SidebarList>
           <SidebarItem className="text-start" dropdown>
