@@ -8,19 +8,66 @@ import { Header } from "../../components/Header"
 import {HashLoader} from "react-spinners"
 import {UnActiveCampaign} from "../../components/UnActiveCampaign"
 import {Support} from "../../components/Support"
+import {StripePage} from "../StripePage.tsx";
 
 interface AuthPageWrapperProps {
   children: React.ReactNode
 }
 
+const SubscribeOver = ({height}) => (
+  <div className="flex items-center justify-center w-[100vw]" style={{height}}>
+    <Empty>
+      <EmptyImage>
+        <img
+          src="https://staticmania.cdn.prismic.io/staticmania/7c82d76e-be06-41ca-a6ef-3db9009e6231_Property+1%3DFolder_+Property+2%3DSm.svg"
+          className="pt-4"
+          height={234}
+          width={350}
+          alt="404"
+        />
+      </EmptyImage>
+      <EmptyTitle className="mb-[14px] mt-5">Your subscription is over</EmptyTitle>
+      <EmptyDescription className="mb-8">
+        To continue using the service, extend it
+      </EmptyDescription>
+      <Button variant="outline" className="flex gap-1.5" onClick={() => window.location.href = '/payment'}>
+        Resubscribe
+      </Button>
+    </Empty>
+  </div>
+)
+
+const EmailUnConfirmed = ({height, email}) => (
+  <div className="flex items-center justify-center w-[100vw]" style={{height}}>
+    <Empty>
+      <EmptyImage>
+        <img
+          src="https://staticmania.cdn.prismic.io/staticmania/7c82d76e-be06-41ca-a6ef-3db9009e6231_Property+1%3DFolder_+Property+2%3DSm.svg"
+          className="pt-4"
+          height={234}
+          width={350}
+          alt="404"
+        />
+      </EmptyImage>
+      <EmptyTitle className="mb-[14px] mt-5">You need to confirm your email address</EmptyTitle>
+      <EmptyDescription className="mb-8">
+        {`We have sent you a confirmation email link to ${email}`}
+      </EmptyDescription>
+      <Button variant="outline" className="flex gap-1.5">
+        Resend
+      </Button>
+    </Empty>
+  </div>
+)
+
 export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
-  const { UserStore, CampaignsStore, FirebaseStore } = useStores()
+  const {UserStore, CampaignsStore, FirebaseStore} = useStores()
   const navigate = useNavigate()
   const [height, setHeight] = useState(0)
 
   useEffect(() => {
     if (UserStore.authorized) return
-    
+
     UserStore.fetchUser()
   }, [UserStore])
 
@@ -67,28 +114,17 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
   }
 
   if (!UserStore.user.is_confirmed) {
-    return (
-      <div className="flex items-center justify-center w-[100vw]" style={{ height }}>
-        <Empty>
-          <EmptyImage>
-            <img
-              src="https://staticmania.cdn.prismic.io/staticmania/7c82d76e-be06-41ca-a6ef-3db9009e6231_Property+1%3DFolder_+Property+2%3DSm.svg"
-              className="pt-4"
-              height={234}
-              width={350}
-              alt="404"
-            />
-          </EmptyImage>
-          <EmptyTitle className="mb-[14px] mt-5">You need to confirm your email address</EmptyTitle>
-          <EmptyDescription className="mb-8">
-            {`We have sent you a confirmation email link to ${UserStore.user.email}`}
-          </EmptyDescription>
-          <Button variant="outline" className="flex gap-1.5">
-            Resend
-          </Button>
-        </Empty>
-      </div>
-    )
+    return <EmailUnConfirmed height={height} email={UserStore.user.email} />
+  }
+
+  if (FirebaseStore.config.stripe) {
+    if (!UserStore.user.subscription) {
+      return <StripePage />
+    }
+
+    if (UserStore.user.subscription?.status === 'over') {
+      return <SubscribeOver height={height} />
+    }
   }
 
   return (

@@ -1,31 +1,13 @@
 import {
   Button,
-  Card,
-  CardContent,
-  CardTitle,
   Empty,
   EmptyDescription,
   EmptyImage,
-  EmptyTitle,
-  Input,
-  Navbar
+  EmptyTitle
 } from "keep-react"
-import {CheckCircle, XCircle} from "phosphor-react"
-import {Logo} from "../components/Logo"
 import {useSearchParams} from "react-router-dom"
 import {useEffect, useState} from "react"
-
-const FEATURES: Record<string, boolean> = {
-  '300 prospects': true,
-  'Custom feed with prospects only': true,
-  'Filters by relevancy and frequency': true,
-  'Unlimited campaigns': true,
-  'Smart regeneration': true,
-}
-
-const BASIC_FEATURES: Record<string, boolean> = {
-  ...FEATURES,
-}
+import {Subscriptions} from "../components/Subscriptions"
 
 const Success = () => (
   <Empty>
@@ -116,44 +98,14 @@ export const StripePage = () => {
         return <Failed/>
       }
 
-      return (
-        <Card className="min-w-96">
-          <CardTitle>
-            <div className="text-heading-6 font-bold text-white">Basic</div>
-            <div className="text-heading-4 font-bold text-white">
-              <span>49$</span>
-              <span className="ml-1 text-red-400 line-through">80$</span>
-            </div>
-          </CardTitle>
-          <form action="/api/v1/purchases/session" method="POST" className="pr-4 pl-4 mt-4">
-            <Input type="hidden" name="subscription_id" value="c15363c2-fb5e-47a6-a5a6-55a662a37903"/>
-            <Button color="secondary" size="xl" type="submit" className="w-full">
-              Get started
-            </Button>
-          </form>
-          <CardContent className="space-y-3 text-start">
-            <div className="font-bold">What's include</div>
-            {Object.keys(BASIC_FEATURES).map(key => (
-              <div className="flex flex-row gap-1">
-                {BASIC_FEATURES[key]
-                  ? <CheckCircle size={24} className="text-green-400"/>
-                  : <XCircle size={24} className="text-red-400"/>}
-                {key}
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      )
+      return <Subscriptions />
     }
 
     setComponent(getComponent())
   }, [params])
 
   return (
-    <div className="relative flex items-center justify-center m-auto h-full">
-      <Navbar className="fixed top-1 left-1 right-1 p-2">
-        <Logo/>
-      </Navbar>
+    <div className="relative flex items-center justify-between m-auto w-full h-full gap-4">
       {Component}
     </div>
   )
