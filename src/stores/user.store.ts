@@ -3,6 +3,7 @@ import {ILocation, IUser} from "../types/User.type.ts"
 import {getHost} from "../utils/getHost.ts";
 import {LinkedinAccountStatus} from "../types/LinkedinAccount.type.ts";
 import {Action} from "../utils/fetchWithDelay.ts";
+import {Subscription} from "../types/Subscriptions.type.ts";
 
 interface ISignUpRequest {
   first_name: string
@@ -30,6 +31,7 @@ class UserStore {
   locations: ILocation[] = []
   linkedinAccountStatus: LinkedinAccountStatus | undefined
   needCheckLinkedinAccountStatus = false
+  subscriptions: Subscription[] = []
 
   constructor() {
     makeAutoObservable(this, {
@@ -195,6 +197,20 @@ class UserStore {
     }
 
     action()
+  }
+
+  *fetchSubscriptions() {
+    const response = yield fetch(`${getHost()}/api/v1/purchases/subscriptions`)
+
+    if (!response.ok) {
+      this.state = "error"
+
+      return
+    }
+
+    const data = yield response.json()
+
+    this.subscriptions = data.subscriptions
   }
 }
 

@@ -1,5 +1,4 @@
 import {Button} from "keep-react"
-import {StripeProducts} from "../components/Stripe"
 
 export const Landing = () => {
   return (
@@ -29,9 +28,9 @@ export const Landing = () => {
               <Button variant="link" className="p-0">
                 <a href="#features">Features</a>
               </Button>
-              <Button variant="link" className="p-0">
-                <a href="#prices">Prices</a>
-              </Button>
+              {/*<Button variant="link" className="p-0">*/}
+              {/*  <a href="#prices">Prices</a>*/}
+              {/*</Button>*/}
               <Button onClick={() => window.location.href = '/'}>Get Started</Button>
             </div>
           </div>
@@ -373,9 +372,9 @@ export const Landing = () => {
             </div>
           </div>
         </section>
-        <section id="prices" className="px-4 py-20">
-          <StripeProducts isPrimaryColor />
-        </section>
+        {/*<section id="prices" className="px-4 py-20">*/}
+        {/*  <StripeProducts isPrimaryColor />*/}
+        {/*</section>*/}
         <section className="container mx-auto px-4 py-20 text-center">
           <h2 className="text-4xl font-bold mb-6 text-primary-600">Ready to Transform Your Social Media Strategy?</h2>
           <p className="text-xl text-primary-400 mb-10 max-w-2xl mx-auto">

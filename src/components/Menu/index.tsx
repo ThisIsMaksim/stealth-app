@@ -18,7 +18,7 @@ import {
   DropdownGroup,
   DropdownItem,
   Divider,
-  Card, SidebarDropdown, SidebarCollapse, SidebarDropdownList, CardContent
+  SidebarDropdown, SidebarCollapse, SidebarDropdownList
 } from 'keep-react'
 import {Link, useLocation} from "react-router-dom"
 import {IUser} from "../../types/User.type"
@@ -27,7 +27,6 @@ import {ModalType} from "../../stores/modal.store"
 import {observer} from "mobx-react"
 import {User} from "../User"
 import {ComponentProps} from "../../types/Component"
-import {UpgradePlan} from "../UpgradePlan"
 import {Action, fetchWithDelay} from "../../utils/fetchWithDelay"
 import {LinkedinAccountStatus} from "../../types/LinkedinAccount.type"
 import {Logo} from "../Logo"
@@ -115,7 +114,7 @@ export const Menu = observer(({ className }: ComponentProps) => {
             </SidebarItem>
           </Link>
         </SidebarList>
-        <Subscribe />
+        {/*<Subscribe />*/}
       </SidebarBody>
       <SidebarFooter className="flex flex-col gap-4 items-start">
         <LinkedIn
@@ -213,17 +212,17 @@ const LinkedIn = observer((props: LinkedInProps) => {
   )
 })
 
-const Subscribe = observer(() => {
-  const { FirebaseStore } = useStores()
-
-  if (!FirebaseStore.config['stripe']) return null
-
-  return (
-    <Card className="dark:border-gray-700">
-      <CardContent className="flex flex-col justify-center text-center w-[100%] space-y-3 p-4 bg-emerald-400 dark:bg-emerald-600 text-white">
-        <div>Trial will expire in <br/> 7 days</div>
-        <UpgradePlan />
-      </CardContent>
-    </Card>
-  )
-})
+// const Subscribe = observer(() => {
+//   const { FirebaseStore } = useStores()
+//
+//   if (!FirebaseStore.config['stripe']) return null
+//
+//   return (
+//     <Card className="dark:border-gray-700">
+//       <CardContent className="flex flex-col justify-center text-center w-[100%] space-y-3 p-4 bg-emerald-400 dark:bg-emerald-600 text-white">
+//         <div>Trial will expire in <br/> 7 days</div>
+//         <UpgradePlan />
+//       </CardContent>
+//     </Card>
+//   )
+// })

@@ -18,8 +18,7 @@ import {ModalType} from "../stores/modal.store"
 import {useStores} from "../stores"
 import {Menu} from "./Menu"
 import {User} from "./User"
-import {UpgradePlan} from "./UpgradePlan.tsx";
-import {ComponentProps} from "../types/Component.ts";
+import {ComponentProps} from "../types/Component.ts"
 
 const MobileMenu = observer(() => {
   return (
@@ -104,7 +103,7 @@ export const Header = observer(() => {
           </div>
         </NavbarList>
         <NavbarList>
-          <UpgradePlan />
+          {/*<UpgradePlan />*/}
           <User className="max-md:hidden" />
           <ThemeSwitcher />
         </NavbarList>
