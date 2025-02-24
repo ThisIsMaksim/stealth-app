@@ -398,7 +398,7 @@ export const Landing = () => {
               <h3 className="text-2xl font-bold mb-4">Elvyn</h3>
               <a href="/terms-of-use" className="text-gray-400 hover:text--primary-50">Terms of use</a>
               <p className="text-gray-400 mb-4">
-                <a href="https://ycula.com" className="hover:text--primary-50">powered by Ycula</a>
+                <a href="https://ycula.com" className="hover:text--primary-50">powered by Elvyn</a>
               </p>
               <div className="flex space-x-4">
                 <a href="https://www.linkedin.com/company/104867789" target="_blank" rel="noopener noreferrer"
@@ -432,7 +432,7 @@ export const Landing = () => {
                     <rect width="20" height="16" x="2" y="4" rx="2"></rect>
                     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
                   </svg>
-                  <a href="mailto:team@ycula.com" className="hover:text--primary-50">team@ycula.com</a>
+                  <a href="mailto:support@elvyn.ai" className="hover:text--primary-50">support@elvyn.ai</a>
                 </p>
                 <p className="flex items-start space-x-3 text-gray-400">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"

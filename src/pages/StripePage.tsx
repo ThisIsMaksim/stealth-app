@@ -59,7 +59,7 @@ const Success = () => (
     <EmptyDescription className="mb-8">
       you can start using ELVYN.ai
     </EmptyDescription>
-    <Button id="add-prospects" variant="outline" className="flex gap-1.5" onClick={() => window.location.href = '/'}>
+    <Button variant="outline" className="flex gap-1.5" onClick={() => window.location.href = '/'}>
       Continue
     </Button>
   </Empty>
@@ -80,7 +80,7 @@ const Failed = () => (
     <EmptyDescription className="mb-8">
       you need to try again
     </EmptyDescription>
-    <Button id="add-prospects" variant="outline" className="flex gap-1.5" onClick={() => window.location.href = '/payment'}>
+    <Button variant="outline" className="flex gap-1.5" onClick={() => window.location.href = '/payment'}>
       Retry
     </Button>
   </Empty>

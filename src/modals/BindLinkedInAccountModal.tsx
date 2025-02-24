@@ -7,12 +7,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalTitle,
-  Select,
-  SelectAction,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectValue,
   toast,
 } from 'keep-react'
 import {useCallback, useEffect, useMemo, useState} from "react"
@@ -22,6 +16,8 @@ import {LinkedinAccountStatus} from "../types/LinkedinAccount.type.ts"
 import {fetchWithDelay} from "../utils/fetchWithDelay.ts"
 import {SyncLoader} from "react-spinners"
 import {validateEmail} from "../utils/validateEmail.ts"
+import Select, {StylesConfig} from 'react-select'
+import {useTheme} from "../ThemeProvider.tsx"
 
 interface Props {
   isOpen: boolean
@@ -36,6 +32,8 @@ export const BindLinkedInAccountModal = observer(({isOpen, close}: Props) => {
   const [otp, setOTP] = useState("")
   const [pending, setPending] = useState(false)
   const isSubmitButtonEnabled = useMemo(() => validateEmail(email) && !!password.length && !!location.length, [email, location.length, password.length])
+  const {theme} = useTheme()
+  const isDark = theme === 'dark'
 
   const handleBindAccount = useCallback(async () => {
     setPending(true)
@@ -79,10 +77,10 @@ export const BindLinkedInAccountModal = observer(({isOpen, close}: Props) => {
     const status = UserStore.linkedinAccountStatus
 
     if (status === LinkedinAccountStatus.OTP_REQUESTED) {
-      UserStore.needCheckLinkedinAccountStatus = false
+      UserStore.needCheckLinkedinAccountStatus = true
     }
     if (status === LinkedinAccountStatus.OTP_PROVIDED) {
-      UserStore.needCheckLinkedinAccountStatus = false
+      UserStore.needCheckLinkedinAccountStatus = true
 
       setPending(true)
 
@@ -106,6 +104,68 @@ export const BindLinkedInAccountModal = observer(({isOpen, close}: Props) => {
 
     setPending(false)
   }, [UserStore, UserStore.linkedinAccountStatus, close])
+
+  const colourStyles: StylesConfig = {
+    singleValue: (styles) => {
+      return {
+        ...styles,
+        color: isDark
+          ? '#AEB9C9'
+          : 'black',
+      }
+    },
+    control: (styles) => {
+      return {
+        ...styles,
+        color: isDark
+          ? 'white'
+          : 'black',
+        backgroundColor: isDark ? 'rgb(31, 41, 55)' : 'white',
+        borderColor: isDark
+          ? '#2E3643'
+          : '#E5E7EB',
+        borderRadius: '4px'
+      }
+    },
+    option: (styles, { isSelected }) => {
+      return {
+        ...styles,
+        backgroundColor: (
+          isSelected
+          ? isDark ? '#3d4a5c' : '#d7dfe9'
+          : isDark ? 'rgb(31, 41, 55)': 'rgb(249, 250, 251)'
+        ),
+        color: isDark
+          ? 'white'
+          : 'black',
+
+        ':hover': {
+          ...styles[':hover'],
+          backgroundColor: isDark ? '#3d4a5c' : '#d7dfe9',
+          cursor: 'pointer',
+        },
+
+        ':active': {
+          ...styles[':active'],
+          backgroundColor: isSelected
+            ? 'blue'
+            : 'red'
+        },
+      };
+    },
+    menu: (styles) => {
+      return {
+        ...styles,
+        backgroundColor: isDark ? '#1C222B' : 'rgb(249, 250, 251)',
+      }
+    },
+    input: (styles) => {
+      return {
+        ...styles,
+        color: isDark ? 'white' : 'black',
+      }
+    }
+  };
 
   let Component = (
     <ModalContent className="max-md:min-w-[calc(100%-16px)] min-w-[500px] min-h-[300px]">
@@ -143,18 +203,18 @@ export const BindLinkedInAccountModal = observer(({isOpen, close}: Props) => {
           </fieldset>
           <fieldset className="space-y-3">
             <Label>Location</Label>
-            <Select onValueChange={setLocation} value={location}>
-              <SelectAction>
-                <SelectValue placeholder="Select current location"/>
-              </SelectAction>
-              <SelectContent>
-                <SelectGroup>
-                  {UserStore.locations?.map((location) => (
-                    <SelectItem value={location.iso_code}>{location.name}</SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <Select
+              styles={colourStyles}
+              defaultValue={location}
+              isClearable={false}
+              isSearchable={true}
+              name="location"
+              placeholder="Select location"
+              options={UserStore.locations?.map(location => ({ value: location.iso_code, label: location.name }))}
+              onChange={(event: {value: string}) => {
+                setLocation(event.value)
+              }}
+            />
           </fieldset>
         </div>
       </div>

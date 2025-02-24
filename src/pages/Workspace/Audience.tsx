@@ -5,6 +5,7 @@ import {useCallback, useEffect} from "react"
 import {ModalType} from "../../stores/modal.store"
 import {AuthPageWrapper} from "../AuthPageWrapper"
 import {useOnbording} from "../../hooks/useOnbording"
+import {SubscriptionStatus} from "../../types/Subscriptions.type.ts";
 
 export const AudiencePage = observer(() => {
   const { UserStore, CampaignsStore, ProspectsStore, ModalStore } = useStores()
@@ -35,12 +36,12 @@ export const AudiencePage = observer(() => {
   }, [CampaignsStore.activeCampaign, ProspectsStore])
 
   useEffect(() => {
-    if (!CampaignsStore.activeCampaign) return
+    if (!CampaignsStore.activeCampaign || (!UserStore.user?.subscription || UserStore.user?.subscription?.status !== SubscriptionStatus.ACTIVE)) return
 
     setTimeout(() => {
       showOnbording('audience', [
         {
-          selector: '#user',
+          selector: '#logo',
           content: () => (
             <div>
               <div className="text-start text-body-3 text-gray-900">

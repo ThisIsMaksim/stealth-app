@@ -307,7 +307,7 @@ export const Audience = (props: Props) => {
         </Badge>
       </div>
       <div className="flex items-center gap-5">
-        <Button variant="outline" className="flex gap-1.5" onClick={() => addProspect()}>
+        <Button id="add-prospects" variant="outline" className="flex gap-1.5" onClick={() => addProspect()}>
           <Plus className="size-4 fill-metal-900 dark:fill-white"/>
           Add prospect
         </Button>

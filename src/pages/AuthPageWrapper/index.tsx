@@ -9,6 +9,7 @@ import {HashLoader} from "react-spinners"
 import {UnActiveCampaign} from "../../components/UnActiveCampaign"
 import {Support} from "../../components/Support"
 import {StripePage} from "../StripePage.tsx";
+import {SubscriptionStatus} from "../../types/Subscriptions.type.ts";
 
 interface AuthPageWrapperProps {
   children: React.ReactNode
@@ -122,7 +123,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
       return <StripePage />
     }
 
-    if (UserStore.user.subscription?.status === 'over') {
+    if (UserStore.user.subscription?.status !== SubscriptionStatus.ACTIVE) {
       return <SubscribeOver height={height} />
     }
   }

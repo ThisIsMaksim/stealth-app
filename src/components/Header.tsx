@@ -43,7 +43,7 @@ const AddCampaignButton = observer(({ className }: ComponentProps) => {
 
   return (
     <div className={className}>
-      <button id="add-campaign" className="block lg:hidden rounded-lg bg-primary-25 p-2.5 dark:bg-white"
+      <button className="block lg:hidden rounded-lg bg-primary-25 p-2.5 dark:bg-white"
               onClick={() => ModalStore.open(ModalType.CreateCampaign)}>
         <PlusCircle size={20} className="text-gray-900"/>
       </button>

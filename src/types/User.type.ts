@@ -1,4 +1,5 @@
 import {ILinkedinAccount} from "./LinkedinAccount.type.ts"
+import {SubscriptionStatus} from "./Subscriptions.type.ts"
 
 export interface IUser {
   id: string
@@ -17,7 +18,7 @@ export interface ILocation {
 export interface ISubscription {
   is: string
   name: string
-  status: string
+  status: SubscriptionStatus
   start_ts: string
   end_ts: string
 }

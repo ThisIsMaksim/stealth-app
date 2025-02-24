@@ -46,8 +46,16 @@ export const Subscriptions = observer(() => {
         <CardTitle>
           <div className="text-heading-6 font-bold text-white">{subscription.title}</div>
           <div className="text-heading-4 font-bold text-white">
-            <span className="text-gray-900 dark:text-white">{subscription.price}</span>
-            <span className="ml-1 text-red-400 line-through">80$</span>
+            {!!subscription.price_with_discount && subscription.price_with_discount !== subscription.price
+              ? (
+                <>
+                  <span className="text-gray-900 dark:text-white">{subscription.price_with_discount}</span>
+                  <span className="ml-1 text-red-400 line-through">{subscription.price}</span>
+                </>
+              )
+            : (
+                <span className="text-gray-900 dark:text-white">{subscription.price}</span>
+              )}
           </div>
         </CardTitle>
         <form action="/api/v1/purchases/session" method="POST" className="w-full max-w-[400px] pr-4 pl-4 mt-4">
@@ -58,7 +66,7 @@ export const Subscriptions = observer(() => {
         </form>
         <CardContent className="space-y-3 text-start">
           <div className="font-bold">What's include</div>
-          {subscription.description.split('\n').map(key => (
+          {subscription.description.split('\\n').map(key => (
             <div className="flex flex-row gap-1">
               {/*{subscription.description.split('\n')*/}
               {/*  ? <CheckCircle size={24} className="text-green-400"/>*/}

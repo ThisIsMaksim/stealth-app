@@ -3,6 +3,7 @@ export interface Subscription {
   id: string,
   name: string,
   price: string,
+  price_with_discount: string
   status: SubscriptionStatus,
   title: string
 }

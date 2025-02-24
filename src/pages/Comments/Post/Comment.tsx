@@ -7,6 +7,12 @@ import {Action, fetchWithDelay} from "../../../utils/fetchWithDelay.ts"
 import {IApprovePostRequest, IRejectPostRequest} from "../../../stores/posts.store.ts"
 import {ModalType} from "../../../stores/modal.store.ts"
 import {observer} from "mobx-react"
+import funny from '../../../assets/reactions/linkedin-funny-emoticon-250.png'
+import insightful from '../../../assets/reactions/Linkedin-Insightful-Icon-Lamp250.png'
+import love from '../../../assets/reactions/Linkedin-Love-Icon-Heart250.png'
+import heartinHand from '../../../assets/reactions/Linkedin-Support-Icon-HeartinHand250.png'
+import clappingHands from '../../../assets/reactions/Linkedin-Celebrate-Icon-ClappingHands250.png'
+import like from '../../../assets/reactions/Linkedin-Like-Icon-Thumbup250.png'
 
 interface Props {
   index: number
@@ -127,42 +133,42 @@ export const Comment = observer(({ index, postId, comment }: Props) => {
           <CardContent className="flex flex-row gap-1 p-2">
             <Button variant="softBg" color={reaction === 'like' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('like')}>
               <img
-                src="https://www.userflow.nl/images/Linkedin-Like-Icon-Thumbup250.png"
+                src={like}
                 width="32"
                 alt="reaction"
               />
             </Button>
             <Button variant="softBg" color={reaction === 'praise' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('praise')}>
               <img
-                src="https://www.userflow.nl/images/Linkedin-Celebrate-Icon-ClappingHands250.png"
+                src={clappingHands}
                 width="32"
                 alt="reaction"
               />
             </Button>
             <Button variant="softBg" color={reaction === 'appreciation' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('appreciation')}>
               <img
-                src="https://www.userflow.nl/images/Linkedin-Support-Icon-HeartinHand250.png"
+                src={heartinHand}
                 width="32"
                 alt="reaction"
               />
             </Button>
             <Button variant="softBg" color={reaction === 'empathy' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('empathy')}>
               <img
-                src="https://www.userflow.nl/images/Linkedin-Love-Icon-Heart250.png"
+                src={love}
                 width="32"
                 alt="reaction"
               />
             </Button>
             <Button variant="softBg" color={reaction === 'interest' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('interest')}>
               <img
-                src="https://www.userflow.nl/images/Linkedin-Insightful-Icon-Lamp250.png"
-                width="32"
+                src={insightful}
+                width="16"
                 alt="reaction"
               />
             </Button>
             <Button variant="softBg" color={reaction === 'entertainment' ? 'success' : 'secondary'} shape="icon" onClick={() => handleReactionClick('entertainment')}>
               <img
-                src="https://www.userflow.nl/images/linkedin-funny-emoticon-250.png"
+                src={funny}
                 width="32"
                 alt="reaction"
               />
