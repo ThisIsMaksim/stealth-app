@@ -12,5 +12,6 @@ export enum LinkedinAccountStatus {
   OTP_REQUESTED = 'otp_requested',
   INVALID_CREDENTIALS = 'invalid_credentials',
   OTP_PROVIDED = 'otp_provided',
-  DISCONNECTED = 'disconnected'
+  DISCONNECTED = 'disconnected',
+  ERROR = 'error'
 }

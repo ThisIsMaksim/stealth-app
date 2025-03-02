@@ -173,6 +173,11 @@ const LinkedIn = observer((props: LinkedInProps) => {
       text = 'need OTP'
 
       break
+    case LinkedinAccountStatus.ERROR:
+      color = 'error'
+      text = 'error'
+
+      break
 
     default:
       color = 'primary'

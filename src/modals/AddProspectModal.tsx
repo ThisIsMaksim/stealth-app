@@ -21,6 +21,7 @@ export const AddProspectModal = ({isOpen, close}: Props) => {
   const { CampaignsStore, ProspectsStore } = useStores()
   const [link, setLink] = useState("")
   const [pending, setPending] = useState(false)
+  const [error, setError] = useState('')
 
   const handleAddProspect = useCallback(async () => {
     YM.richGoal('add-prospects')
@@ -51,6 +52,16 @@ export const AddProspectModal = ({isOpen, close}: Props) => {
     }
   }, [CampaignsStore.activeCampaign?.id, ProspectsStore, close, link])
 
+  const handleChangeLink = useCallback((value: string) => {
+    if (value.includes('company')) {
+      setError('You can\'t add a company account.')
+    } else {
+      setError('')
+    }
+
+    setLink(value)
+  }, [])
+
   let Component = (
     <>
       <ModalHeader className="mb-6 space-y-3">
@@ -60,15 +71,16 @@ export const AddProspectModal = ({isOpen, close}: Props) => {
           </ModalTitle>
         </div>
       </ModalHeader>
-      <div className="mt-4 mb-4">
+      <div className="mb-4">
         <Textarea
-          className="h-[150px]"
+          className="h-[220px]"
           placeholder="For example: https://www.linkedin.com/in/fedianin-maksim/"
-          onChange={(e) => setLink(e.target.value)}
+          onChange={(e) => handleChangeLink(e.target.value)}
         />
       </div>
+      <div className={`mt-2 mb-4 text-body-4 text-error-600 ${error ? '' : 'opacity-0'}`}>{error || 'without error'}</div>
       <ModalFooter>
-        <Button color="success" disabled={pending} onClick={handleAddProspect}>
+        <Button color="success" disabled={pending || !!error} onClick={handleAddProspect}>
           Add
         </Button>
         <Button color="error" disabled={pending} onClick={close}>Cancel</Button>
@@ -78,7 +90,7 @@ export const AddProspectModal = ({isOpen, close}: Props) => {
 
   if (pending) {
     Component = (
-      <div className="flex justify-center items-center h-[300px]">
+      <div className="flex justify-center items-center h-[420px]">
         <div className="flex flex-row gap-4">
           <SyncLoader color="rgb(27, 77, 255)" size={10} />
           <p className="flex justify-center items-center">Adding...</p>
@@ -92,7 +104,7 @@ export const AddProspectModal = ({isOpen, close}: Props) => {
       open={isOpen}
       onOpenChange={(value) => !value ? close() : null}
     >
-      <ModalContent className="max-md:min-w-[calc(100%-16px)] min-w-[500px] h-[300px]">
+      <ModalContent className="max-md:min-w-[calc(100%-16px)] min-w-[500px] h-[420px]">
         {Component}
       </ModalContent>
     </Modal>
