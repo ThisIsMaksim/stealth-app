@@ -7,13 +7,15 @@ import {
   CardHeader,
   CardTitle,
   Input,
-  InputIcon, toast,
+  InputIcon,
+  toast,
 } from 'keep-react'
 import './index.css'
 import {useStores} from "../../stores"
 import {useCallback, useState} from "react"
 import {Link} from "react-router-dom"
 import {fetchWithDelay} from "../../utils/fetchWithDelay.ts";
+import { Colors } from '../../../src/colors';
 
 export function SignIn() {
   const { UserStore } = useStores()
@@ -37,7 +39,9 @@ export function SignIn() {
       if (error) {
         toast.error(error)
       } else {
-        location.href = '/'
+        toast.success('Successfully')
+
+        location.href = '/workspace/audience'
       }
 
       setPending(false)
@@ -45,8 +49,6 @@ export function SignIn() {
 
     toast.promise(promise, {
       loading: 'Do magic...',
-      success: 'Successfully',
-      error: 'Something went wrong',
     })
   }, [UserStore, email, password])
 
@@ -59,10 +61,11 @@ export function SignIn() {
             <CardDescription>
               Don't have an account?
               <Button variant="link" className="p-1">
-                <Link to="/signup">Sign un</Link>
+                <Link to="/signup">Sign up</Link>
               </Button>
             </CardDescription>
           </CardHeader>
+          <form onSubmit={handleLogin}>
           <div className="space-y-3">
             <fieldset className="space-y-3">
               <div className="relative">
@@ -73,7 +76,7 @@ export function SignIn() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <InputIcon>
-                  <Envelope size={19} color="#AFBACA"/>
+                  <Envelope size={19} color={Colors.gray[400]}/>
                 </InputIcon>
               </div>
             </fieldset>
@@ -86,12 +89,12 @@ export function SignIn() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <InputIcon>
-                  <Lock size={19} color="#AFBACA"/>
+                  <Lock size={19} color={Colors.gray[400]}/>
                 </InputIcon>
                 <Eye
                   className="absolute top-[30%] right-4 cursor-pointer"
                   size={19}
-                  color="#AFBACA"
+                  color={Colors.gray[400]}
                   onClick={() => setShowPassword(!showPassword)}
                 />
               </div>
@@ -100,6 +103,7 @@ export function SignIn() {
               Login
             </Button>
           </div>
+          </form>
         </CardContent>
       </Card>
     </div>

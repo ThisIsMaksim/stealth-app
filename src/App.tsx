@@ -8,11 +8,13 @@ import {ToneOfVoicePage} from "./pages/Workspace/ToneOfVoice"
 import {SettingsPage} from "./pages/Workspace/Settings"
 import {StripePage} from "./pages/StripePage"
 import {TermsOfUsePage} from "./pages/TermsOfUse"
+import { Gateway } from "./pages/Gateway"
 import './App.css'
 
 function App() {
   return <Routes>
-    <Route path="/" element={<AudiencePage />} />
+    <Route path="/" element={<Landing />} />
+    <Route path="/app" element={<Gateway />} />
     <Route path="/signup" element={<SignUp />} />
     <Route path="/signin" element={<SignIn />} />
     <Route path="/workspace/audience" element={<AudiencePage />} />
@@ -21,7 +23,6 @@ function App() {
     <Route path="/workspace/tone-of-voice" element={<ToneOfVoicePage />} />
     <Route path="/workspace/settings" element={<SettingsPage />} />
     <Route path="/comments" element={<Comments />} />
-    <Route path="/landing" element={<Landing />} />
     <Route path="/confirm-email/:token" element={<ConfirmedEmail />} />
     <Route path="/payment" element={<StripePage />} />
     <Route path='/terms-of-use' element={<TermsOfUsePage />} />

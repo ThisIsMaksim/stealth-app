@@ -15,6 +15,7 @@ import {useCallback, useState} from "react"
 import {validatePassword} from "../../utils/validatePassword.ts"
 import {fetchWithDelay} from "../../utils/fetchWithDelay.ts"
 import {validateEmail} from "../../utils/validateEmail.ts"
+import { Colors } from '../../../src/colors';
 
 export function SignUp() {
   const { UserStore } = useStores()
@@ -75,7 +76,7 @@ export function SignUp() {
       if (error) {
         toast.error(error)
       } else {
-        location.href = '/'
+        location.href = '/workspace/audience'
       }
 
       setPending(false)
@@ -110,7 +111,7 @@ export function SignUp() {
                   onChange={(e) => setFirstName(e.target.value)}
                 />
                 <InputIcon>
-                  <IdentificationCard size={19} color="#AFBACA"/>
+                  <IdentificationCard size={19} color={Colors.gray[400]}/>
                 </InputIcon>
               </div>
               <div className="relative">
@@ -120,7 +121,7 @@ export function SignUp() {
                   onChange={(e) => setSecondName(e.target.value)}
                 />
                 <InputIcon>
-                  <IdentificationCard size={19} color="#AFBACA"/>
+                  <IdentificationCard size={19} color={Colors.gray[400]}/>
                 </InputIcon>
               </div>
             </fieldset>
@@ -133,7 +134,7 @@ export function SignUp() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <InputIcon>
-                  <Envelope size={19} color="#AFBACA"/>
+                  <Envelope size={19} color={Colors.gray[400]}/>
                 </InputIcon>
               </div>
             </fieldset>
@@ -146,12 +147,12 @@ export function SignUp() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <InputIcon>
-                  <Lock size={19} color="#AFBACA"/>
+                  <Lock size={19} color={Colors.gray[400]}/>
                 </InputIcon>
                 <Eye
                   className="absolute top-[30%] right-4 cursor-pointer"
                   size={19}
-                  color="#AFBACA"
+                  color={Colors.gray[400]}
                   onClick={() => setShowPassword(!showPassword)}
                 />
               </div>
@@ -163,12 +164,12 @@ export function SignUp() {
                   onChange={(e) => setRepeatPassword(e.target.value)}
                 />
                 <InputIcon>
-                  <Lock size={19} color="#AFBACA"/>
+                  <Lock size={19} color={Colors.gray[400]}/>
                 </InputIcon>
                 <Eye
                   className="absolute top-[30%] right-4 cursor-pointer"
                   size={19}
-                  color="#AFBACA"
+                  color={Colors.gray[400]}
                   onClick={() => setShowRepeatPassword(!showRepeatPassword)}
                 />
               </div>

@@ -18,6 +18,7 @@ import {SyncLoader} from "react-spinners"
 import {validateEmail} from "../utils/validateEmail.ts"
 import Select, {StylesConfig} from 'react-select'
 import {useTheme} from "../ThemeProvider.tsx"
+import {Colors} from "../colors.ts"
 
 interface Props {
   isOpen: boolean
@@ -76,54 +77,52 @@ export const BindLinkedInAccountModal = observer(({isOpen, close}: Props) => {
   useEffect(() => {
     const status = UserStore.linkedinAccountStatus
 
-    if (status === LinkedinAccountStatus.OTP_REQUESTED) {
-      UserStore.needCheckLinkedinAccountStatus = true
-    }
-    if (status === LinkedinAccountStatus.OTP_PROVIDED) {
-      UserStore.needCheckLinkedinAccountStatus = true
-
-      setPending(true)
-
-      return
-    }
-    if (status === LinkedinAccountStatus.CONNECTED) {
-      UserStore.needCheckLinkedinAccountStatus = false
-
-      toast.success('LinkedIn account connected')
-
-      close()
-    }
-    if (status === LinkedinAccountStatus.NEW) {
-      return
-    }
-    if (status === LinkedinAccountStatus.INVALID_CREDENTIALS) {
-      UserStore.needCheckLinkedinAccountStatus = false
-
-      toast.error('Invalid email or password')
+    switch (status) {
+      case LinkedinAccountStatus.OTP_REQUESTED:
+        UserStore.needCheckLinkedinAccountStatus = true
+        break
+        
+      case LinkedinAccountStatus.OTP_PROVIDED:
+        UserStore.needCheckLinkedinAccountStatus = true
+        setPending(true)
+        return
+        
+      case LinkedinAccountStatus.CONNECTED:
+        UserStore.needCheckLinkedinAccountStatus = false
+        toast.success('LinkedIn account connected')
+        close()
+        break
+        
+      case LinkedinAccountStatus.NEW:
+        return
+        
+      case LinkedinAccountStatus.INVALID_CREDENTIALS:
+        UserStore.needCheckLinkedinAccountStatus = false
+        toast.error('Invalid email or password')
+        break
     }
 
     setPending(false)
   }, [UserStore, UserStore.linkedinAccountStatus, close])
-
   const colourStyles: StylesConfig = {
     singleValue: (styles) => {
       return {
         ...styles,
         color: isDark
-          ? '#AEB9C9'
-          : 'black',
+          ? Colors.gray[400]
+          : Colors.black,
       }
     },
     control: (styles) => {
       return {
         ...styles,
         color: isDark
-          ? 'white'
-          : 'black',
-        backgroundColor: isDark ? 'rgb(31, 41, 55)' : 'white',
+          ? Colors.white
+          : Colors.black,
+        backgroundColor: isDark ? Colors.gray[800] : Colors.white,
         borderColor: isDark
-          ? '#2E3643'
-          : '#E5E7EB',
+          ? Colors.gray[700]
+          : Colors.gray[200],
         borderRadius: '4px'
       }
     },
@@ -132,40 +131,40 @@ export const BindLinkedInAccountModal = observer(({isOpen, close}: Props) => {
         ...styles,
         backgroundColor: (
           isSelected
-          ? isDark ? '#3d4a5c' : '#d7dfe9'
-          : isDark ? 'rgb(31, 41, 55)': 'rgb(249, 250, 251)'
+          ? isDark ? Colors.gray[700] : Colors.gray[200]
+          : isDark ? Colors.gray[800]: Colors.gray[50]
         ),
         color: isDark
-          ? 'white'
-          : 'black',
+          ? Colors.white
+          : Colors.black,
 
         ':hover': {
           ...styles[':hover'],
-          backgroundColor: isDark ? '#3d4a5c' : '#d7dfe9',
+          backgroundColor: isDark ? Colors.gray[700] : Colors.gray[200],
           cursor: 'pointer',
         },
 
         ':active': {
           ...styles[':active'],
           backgroundColor: isSelected
-            ? 'blue'
-            : 'red'
+            ? Colors.blue[600]
+            : Colors.red[600]
         },
       };
     },
     menu: (styles) => {
       return {
         ...styles,
-        backgroundColor: isDark ? '#1C222B' : 'rgb(249, 250, 251)',
+        backgroundColor: isDark ? Colors.gray[900] : Colors.gray[50],
       }
     },
     input: (styles) => {
       return {
         ...styles,
-        color: isDark ? 'white' : 'black',
+        color: isDark ? Colors.white : Colors.black,
       }
     }
-  };
+  }
 
   let Component = (
     <ModalContent className="max-md:min-w-[calc(100%-16px)] min-w-[500px] min-h-[300px]">

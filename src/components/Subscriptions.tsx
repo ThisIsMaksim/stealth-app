@@ -44,7 +44,7 @@ export const Subscriptions = observer(() => {
       </div>
       <Card className="flex flex-col items-center justify-center w-full max-w-[450px] h-full">
         <CardTitle>
-          <div className="text-heading-6 font-bold text-white">{subscription.title}</div>
+          {/* <div className="text-heading-6 font-bold text-white">{subscription.title}</div> */}
           <div className="text-heading-4 font-bold text-white">
             {!!subscription.price_with_discount && subscription.price_with_discount !== subscription.price
               ? (
@@ -57,11 +57,12 @@ export const Subscriptions = observer(() => {
                 <span className="text-gray-900 dark:text-white">{subscription.price}</span>
               )}
           </div>
+          <div className="text-sm font-bold text-white">monthly subscription</div>
         </CardTitle>
         <form action="/api/v1/purchases/session" method="POST" className="w-full max-w-[400px] pr-4 pl-4 mt-4">
           <Input type="hidden" name="subscription_id" value={subscription.id} />
-          <Button color="secondary" size="xl" type="submit" className="w-full">
-            Get started
+          <Button color="primary" size="xl" type="submit" className="w-full">
+            Try 14 days trials now for FREE
           </Button>
         </form>
         <CardContent className="space-y-3 text-start">

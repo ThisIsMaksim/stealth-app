@@ -26,6 +26,12 @@ body {
     color: #1B4DFF;
 }
 
+.linkedin_content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .gradient-text {
     background-clip: text;
     -webkit-background-clip: text;

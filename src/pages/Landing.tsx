@@ -31,7 +31,7 @@ export const Landing = () => {
               {/*<Button variant="link" className="p-0">*/}
               {/*  <a href="#prices">Prices</a>*/}
               {/*</Button>*/}
-              <Button onClick={() => window.location.href = '/'}>Get Started</Button>
+              <Button onClick={() => window.location.href = '/app'}>Get Started</Button>
             </div>
           </div>
         </nav>
@@ -48,7 +48,7 @@ export const Landing = () => {
           </p>
           <div className="flex justify-center space-x-4">
             <Button className="px-6 py-3 rounded-lg text-lg font-medium" size="xl"
-                    onClick={() => window.location.href = '/'}>
+                    onClick={() => window.location.href = '/app'}>
               Start Your Free Trial
             </Button>
             <Button variant="outline" size="xl">
@@ -382,7 +382,7 @@ export const Landing = () => {
             Media engagement.
           </p>
           <div className="flex justify-center space-x-4">
-            <Button size="xl" onClick={() => window.location.href = '/'}>
+            <Button size="xl" onClick={() => window.location.href = '/app'}>
               Start Your Free Trial Now
             </Button>
             <Button size="xl">
@@ -391,7 +391,7 @@ export const Landing = () => {
           </div>
         </section>
       </main>
-      <footer className="bg-[#0F172A] text-white py-16 text-start">
+      <footer className="bg-gray-900 text-white py-16 text-start">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             <div className="space-y-3">

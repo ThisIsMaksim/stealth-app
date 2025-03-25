@@ -59,7 +59,7 @@ const Success = () => (
     <EmptyDescription className="mb-8">
       you can start using ELVYN.ai
     </EmptyDescription>
-    <Button variant="outline" className="flex gap-1.5" onClick={() => window.location.href = '/'}>
+    <Button variant="outline" className="flex gap-1.5" onClick={() => window.location.href = '/workspace/audience'}>
       Continue
     </Button>
   </Empty>
