@@ -21,13 +21,25 @@ interface Props {
 }
 
 export const Comment = observer(({ index, postId, comment }: Props) => {
-  const {PostsStore, ModalStore} = useStores()
+  const {PostsStore, ModalStore, UserStore} = useStores()
   const [isPending, setPending] = useState(false)
   const [value, setValue] = useState<string>(comment.content)
   const [reaction, setReaction] = useState<string>('')
   const commentMaxLength = useRef(500)
 
   const handleApprove = useCallback(() => {
+    if (!UserStore.user.linkedin_account) {
+      ModalStore.open(
+        ModalType.BindLinkedInAccount,
+        {
+          locations: UserStore.locations,
+        },
+        () => UserStore.needCheckLinkedinAccountStatus = false
+      )
+
+      return
+    }
+
     setPending(true)
 
     // eslint-disable-next-line no-async-promise-executor
@@ -47,20 +59,44 @@ export const Comment = observer(({ index, postId, comment }: Props) => {
       setPending(false)
 
       if (result.error) {
+        toast.error(() => (
+          <>
+            <div>Failed to publish comment</div>
+            <div>Please try again later</div>
+          </>
+        ))
+
         reject()
       } else {
+        toast.success(() => (
+          <>
+            <div>Comment sent for publication</div>
+            <div>This usually happens quickly, but can take up to 15 minutes</div>
+          </>
+        ))
+
         resolve()
       }
     })
 
     toast.promise(promise, {
       loading: 'Approving...',
-      success: 'Approved',
-      error: 'Something went wrong',
     })
   }, [PostsStore, postId, comment, value, reaction])
 
   const handleReject = useCallback(() => {
+    if (!UserStore.user.linkedin_account) {
+      ModalStore.open(
+        ModalType.BindLinkedInAccount,
+        {
+          locations: UserStore.locations,
+        },
+        () => UserStore.needCheckLinkedinAccountStatus = false
+      )
+
+      return
+    }
+
     setPending(true)
 
     // eslint-disable-next-line no-async-promise-executor
@@ -92,6 +128,18 @@ export const Comment = observer(({ index, postId, comment }: Props) => {
   }, [PostsStore, comment, postId])
 
   const handleRemake = useCallback(() => {
+    if (!UserStore.user.linkedin_account) {
+      ModalStore.open(
+        ModalType.BindLinkedInAccount,
+        {
+          locations: UserStore.locations,
+        },
+        () => UserStore.needCheckLinkedinAccountStatus = false
+      )
+
+      return
+    }
+
     ModalStore.open(ModalType.RemakeComment, {
       postId: postId,
       comment: comment,

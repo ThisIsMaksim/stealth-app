@@ -54,7 +54,7 @@ export const SharedPost = observer(({ post }: PropsPost) => {
 
   return (
     <div onMouseMove={handleMouseMove}>
-      {showOpenPostButton && <OpenPost linkUrl={post.link_url}/>}
+      {showOpenPostButton && <OpenPost linkUrl={post.link_url} isShared={!!post.shared_content} />}
       <Content post={post} />
       <Images images={post.image_urls} />
     </div>
@@ -76,11 +76,16 @@ export const PostWithComment = observer(({ index, post }: PropsPostWithComment) 
   }, [])
 
   return (
-    <Card className="relative w-full max-w-[550px] max-md:p-0 dark:border-gray-700 mb-4" onMouseMove={handleMouseMove}>
-      {showOpenPostButton && <OpenPost linkUrl={post.post.link_url}/>}
-      <CardContent className="space-y-3 max-md:p-4">
-        <Post post={post.post} />
-        <Comment index={index} postId={post.post.id} comment={post.comment} />
+    <Card className="relative w-full max-w-[550px] p-0 dark:border-gray-700 mb-4">
+      <CardContent className="relative p-0 bg-blue-700">
+      {post.post.shared_content && <div className="flex items-center w-full h-[40px] text-start text-sm pl-2 text-white">reaction on post</div>}
+      <Card className="w-full max-w-[550px] max-md:p-0" onMouseMove={handleMouseMove}>
+        {showOpenPostButton && <OpenPost linkUrl={post.post.link_url} isShared={!!post.post.shared_content} />}
+        <CardContent className="space-y-3 max-md:p-4 p-3">
+          <Post post={post.post} />
+          <Comment index={index} postId={post.post.id} comment={post.comment} />
+        </CardContent>
+      </Card>
       </CardContent>
     </Card>
   )
@@ -88,10 +93,11 @@ export const PostWithComment = observer(({ index, post }: PropsPostWithComment) 
 
 interface OpenPostProps {
   linkUrl: string
+  isShared: boolean
 }
 
-export const OpenPost = ({ linkUrl }: OpenPostProps) => (
-  <div className="absolute top-[16px] right-[16px]">
+export const OpenPost = ({ linkUrl, isShared }: OpenPostProps) => (
+  <div className={`absolute top-[${!isShared ? '16px' : '56px'}] right-[16px]`}>
     <Button variant="softBg" shape="icon" color="secondary" onClick={() => window.open(linkUrl, '_blank')}>
       <ArrowSquareOut/>
     </Button>

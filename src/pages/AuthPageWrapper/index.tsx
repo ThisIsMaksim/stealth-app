@@ -8,8 +8,8 @@ import { Header } from "../../components/Header"
 import {HashLoader} from "react-spinners"
 import {UnActiveCampaign} from "../../components/UnActiveCampaign"
 import {Support} from "../../components/Support"
-import {StripePage} from "../StripePage.tsx";
-import {SubscriptionStatus} from "../../types/Subscriptions.type.ts";
+import {StripePage} from "../StripePage.tsx"
+import {SubscriptionStatus} from "../../types/Subscriptions.type.ts"
 
 interface AuthPageWrapperProps {
   children: React.ReactNode
@@ -131,7 +131,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
   return (
     <div className="flex flex-row w-[calc(100vw-8px)] lg:w-[calc(100vw-32px)] h-max-full" style={{ height }}>
       <Menu className="hidden lg:block" />
-      <div className="relative w-[100vw] lg:w-[calc(100vw-260px)] ml-0 lg:ml-[16px] overflow-x-hidden">
+      <div className="relative w-[100vw] lg:w-[calc(100vw-260px)] ml-0 lg:ml-[8px] overflow-x-hidden">
         <Header />
         <Card className="w-full max-w-full h-[calc(100%-66px-12px)] lg:h-[calc(100%-66px-36px-4px)] p-4 mt-[4px] lg:mt-[8px] overflow-auto overflow-x-hidden">
           <UnActiveCampaign />

@@ -1,6 +1,6 @@
 import {AuthPageWrapper} from "../AuthPageWrapper"
 import {observer} from "mobx-react"
-import {useEffect, useMemo, useRef, useState} from "react"
+import {useCallback, useEffect, useMemo, useRef, useState} from "react"
 import {useStores} from "../../stores"
 import {
   Card,
@@ -10,11 +10,12 @@ import {
   EmptyImage,
   EmptyTitle, Input, Label, Select, SelectAction, SelectContent, SelectGroup, SelectItem, SelectValue,
   Skeleton,
-  SkeletonLine
+  SkeletonLine,
 } from "keep-react"
 import {PostWithComment} from "./Post"
 import {Stack, User} from "phosphor-react"
 import {useOnbording} from "../../hooks/useOnbording.ts";
+import { SyncLoader } from "react-spinners"
 
 const PostSkeleton = () => (
   <Card className="min-w-[400px] max-w-[550px] dark:border-gray-700">
@@ -65,19 +66,60 @@ const Posts = observer(({status, authorName}: Props) => {
   const { CampaignsStore, PostsStore } = useStores()
   const posts = PostsStore.postsWithComments
     .filter(post => post.comment.status === status && (authorName === 'all' || post.post.author.name === authorName))
+  const offset = useRef(0)
+  const canLoadMore = useRef(true)
+
+  const handleLoadMorePosts = useCallback(() => {
+    offset.current = offset.current + 10
+
+    handleFetchMorePosts()
+  }, [offset])
+  const handleFetchMorePosts = useCallback(() => {
+    PostsStore.fetchPosts(CampaignsStore.activeCampaign.id, status, offset.current)
+  }, [CampaignsStore.activeCampaign, PostsStore])
 
   useEffect(() => {
     if (CampaignsStore.activeCampaign) {
-      PostsStore.fetchPosts(CampaignsStore.activeCampaign.id, status)
+      PostsStore.fetchPosts(CampaignsStore.activeCampaign.id, status, offset.current)
     }
   }, [CampaignsStore.activeCampaign, PostsStore, status])
+
+  useEffect(() => {
+    offset.current = 0
+  }, [status])
 
   if (PostsStore.state === 'pending') {
     return <PostSkeleton />
   } else if (!posts.length) {
     return <EmptyComponent title={status !== 'draft' ? "You don't have posts in this status" : "You don't have new posts"} />
   } else {
-    return posts.map((post, index) => <PostWithComment index={index} post={post} />)
+    return (
+      <div>
+        {posts.map((post, index) => <PostWithComment index={index} post={post} />)}
+        {!PostsStore.ended && (
+          <div
+          ref={(node) => {
+            if (node) {
+              const observer = new IntersectionObserver(([entry]) => {
+                if (entry.isIntersecting) {
+                  if (canLoadMore.current === true && PostsStore.state === 'done') {
+                    handleLoadMorePosts()
+
+                    canLoadMore.current = false
+
+                    setTimeout(() => canLoadMore.current = true, 1000)
+                  }
+                }
+              })
+              observer.observe(node)
+            }
+          }}
+        >
+          <SyncLoader color="rgb(27, 77, 255)" size={6} />
+          </div>
+        )}
+      </div>
+    )
   }
 })
 

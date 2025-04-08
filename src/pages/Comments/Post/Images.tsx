@@ -62,6 +62,8 @@ const ImagesWrapper = ({ imagesUrl }: { imagesUrl: string[] }) => {
 }
 
 export const Images = ({ images }: Props) => {
+  if (!images) return null
+
   return (
     <PhotoProvider maskOpacity={0.5} bannerVisible={false}>
       <ImagesWrapper imagesUrl={images}/>

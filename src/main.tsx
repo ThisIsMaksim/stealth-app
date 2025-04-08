@@ -20,8 +20,8 @@ createRoot(document.getElementById('root')!).render(
           toastOptions={{
             classNames: {
               title: 'text-body-3 font-medium',
-              toast: 'rounded-xl shadow-large',
-              description: 'text-body-4 font-normal',
+              toast: 'text-start rounded-xl shadow-large',
+              description: 'w-full text-body-4 font-normal',
             },
           }}
         />

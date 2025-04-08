@@ -173,6 +173,11 @@ const LinkedIn = observer((props: LinkedInProps) => {
       text = 'need OTP'
 
       break
+    case LinkedinAccountStatus.DEVICE_VERIFY_REQUESTED:
+      color = 'primary'
+      text = 'need to verify'
+
+      break
     case LinkedinAccountStatus.ERROR:
       color = 'error'
       text = 'error'

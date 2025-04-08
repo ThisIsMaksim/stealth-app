@@ -24,6 +24,7 @@ export interface IRemakePostRequest {
 class PostsStore {
   state = "pending"
   postsWithComments: IPostWithComment[] = []
+  ended = false
 
   constructor() {
     makeAutoObservable(this, {
@@ -31,12 +32,15 @@ class PostsStore {
     })
   }
 
-  *fetchPosts(id: string, status: string) {
-    this.state = "pending"
-    this.postsWithComments = []
+  *fetchPosts(id: string, status: string, offset: number) {
+    if (offset === 0) {
+      this.state = "pending"
+      this.postsWithComments = []
+    } else {
+      this.state = "pending more posts"
+    }
 
-    const limit = 50
-    const offset = 0
+    const limit = 10
 
     const response = yield fetch(`${getHost()}/api/v1/posts/?limit=${limit}&offset=${offset}&campaign_id=${id}&status=${status}`)
 
@@ -47,8 +51,15 @@ class PostsStore {
     }
 
     const data = yield response.json()
+    const items = data.posts_with_comments
 
-    this.postsWithComments = data.posts_with_comments
+    if (offset === 0) {
+      this.postsWithComments = items
+    } else {
+      this.postsWithComments = [...this.postsWithComments, ...items]
+    }
+    
+    this.ended = items.length === 0
     this.state = "done"
   }
 

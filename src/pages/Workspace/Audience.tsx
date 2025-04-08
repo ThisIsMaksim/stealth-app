@@ -12,17 +12,17 @@ export const AudiencePage = observer(() => {
   const showOnbording = useOnbording()
 
   const handleAddProspect = useCallback(() => {
-    if (!UserStore.user.linkedin_account) {
-      ModalStore.open(
-        ModalType.BindLinkedInAccount,
-        {
-          locations: UserStore.locations,
-        },
-        () => UserStore.needCheckLinkedinAccountStatus = false
-      )
+    // if (!UserStore.user.linkedin_account) {
+    //   ModalStore.open(
+    //     ModalType.BindLinkedInAccount,
+    //     {
+    //       locations: UserStore.locations,
+    //     },
+    //     () => UserStore.needCheckLinkedinAccountStatus = false
+    //   )
 
-      return
-    }
+    //   return
+    // }
 
     ModalStore.open(
       ModalType.OpenAddProspect

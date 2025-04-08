@@ -86,6 +86,9 @@ export const BindLinkedInAccountModal = observer(({isOpen, close}: Props) => {
         UserStore.needCheckLinkedinAccountStatus = true
         setPending(true)
         return
+      case LinkedinAccountStatus.DEVICE_VERIFY_REQUESTED:
+        UserStore.needCheckLinkedinAccountStatus = true
+        break
         
       case LinkedinAccountStatus.CONNECTED:
         UserStore.needCheckLinkedinAccountStatus = false
@@ -277,6 +280,24 @@ export const BindLinkedInAccountModal = observer(({isOpen, close}: Props) => {
             </fieldset>
           </div>
         </div>
+      </ModalContent>
+    )
+  }
+  if (UserStore.linkedinAccountStatus === LinkedinAccountStatus.DEVICE_VERIFY_REQUESTED) {
+    Component = (
+      <ModalContent className="max-md:min-w-[calc(100%-16px)] min-w-[420px] min-h-[150px]">
+        <ModalHeader className="mb-6 space-y-3">
+          <div className="space-y-1">
+            <ModalTitle>
+              <div className="text-heading-6">Need to verify device</div>
+            </ModalTitle>
+            <ModalDescription>
+              <div className="text-body-4">
+                Linkedin sent a notification to your signed in devices. Open your LinkedIn app and tap Yes to confirm your sign-in attempt.
+              </div>
+            </ModalDescription>
+          </div>
+        </ModalHeader>
       </ModalContent>
     )
   }
