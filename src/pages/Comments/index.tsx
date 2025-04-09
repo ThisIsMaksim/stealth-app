@@ -14,7 +14,7 @@ import {
 } from "keep-react"
 import {PostWithComment} from "./Post"
 import {Stack, User} from "phosphor-react"
-import {useOnbording} from "../../hooks/useOnbording.ts";
+import {useOnbording} from "../../hooks/useOnbording.ts"
 import { SyncLoader } from "react-spinners"
 
 const PostSkeleton = () => (

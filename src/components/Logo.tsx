@@ -10,6 +10,6 @@ export const Logo = () => (
         alt="logo"
       />
     </Card>
-    <Label className="text-heading-5">ELVYN.ai</Label>
+    <Label className="text-heading-5">Elvyn.ai</Label>
   </NavbarBrand>
 )

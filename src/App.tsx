@@ -9,6 +9,7 @@ import {SettingsPage} from "./pages/Workspace/Settings"
 import {StripePage} from "./pages/StripePage"
 import {TermsOfUsePage} from "./pages/TermsOfUse"
 import { Gateway } from "./pages/Gateway"
+import { PostsPage } from "./pages/Posts"
 import './App.css'
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
     <Route path="/confirm-email/:token" element={<ConfirmedEmail />} />
     <Route path="/payment" element={<StripePage />} />
     <Route path='/terms-of-use' element={<TermsOfUsePage />} />
+    <Route path="/posts" element={<PostsPage />} />
   </Routes>
 }
 

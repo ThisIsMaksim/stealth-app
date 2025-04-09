@@ -95,9 +95,7 @@ class PostsStore {
       return
     }
 
-    const data = yield response.json()
-
-    action(null, data.body)
+    action(null, null)
   }
 
   *remakePost(request: IRemakePostRequest, action: (error?: string, response?: IComment) => void) {

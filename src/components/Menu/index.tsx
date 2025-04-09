@@ -129,13 +129,13 @@ export const Menu = observer(({ className }: ComponentProps) => {
   )
 })
 
-interface LinkedInProps {
+interface LinkedInProps extends ComponentProps {
   user: IUser
   handleBindLinkedInAccount: () => void
   handleUnBindLinkedInAccount: () => void
 }
 
-const LinkedIn = observer((props: LinkedInProps) => {
+export const LinkedIn = observer((props: LinkedInProps) => {
   const {user, handleBindLinkedInAccount, handleUnBindLinkedInAccount} = props
 
   if (!user?.linkedin_account) {
@@ -201,7 +201,7 @@ const LinkedIn = observer((props: LinkedInProps) => {
         >
           <LinkedinLogo size={28} />
           <p
-            className="w-[130px] overflow-hidden whitespace-nowrap"
+            className={`w-[130px] overflow-hidden whitespace-nowrap ${props.className}`}
             style={{textOverflow: 'ellipsis'}}
           >
             LinkedIn {text}
