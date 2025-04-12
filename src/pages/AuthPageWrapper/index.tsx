@@ -1,5 +1,5 @@
 import {Menu} from "../../components"
-import {Button, Card, Empty, EmptyDescription, EmptyImage, EmptyTitle} from "keep-react"
+import {Card} from "keep-react"
 import {useStores} from "../../stores"
 import {useEffect, useState} from "react"
 import {observer} from "mobx-react"
@@ -10,56 +10,12 @@ import {UnActiveCampaign} from "../../components/UnActiveCampaign"
 import {Support} from "../../components/Support"
 import {StripePage} from "../StripePage.tsx"
 import {SubscriptionStatus} from "../../types/Subscriptions.type.ts"
+import {SubscribeOver} from "../../components/SubscribeOver"
+import {EmailUnConfirmed} from "../../components/EmailUnConfirmed"
 
 interface AuthPageWrapperProps {
   children: React.ReactNode
 }
-
-const SubscribeOver = ({height}) => (
-  <div className="flex items-center justify-center w-[100vw]" style={{height}}>
-    <Empty>
-      <EmptyImage>
-        <img
-          src="https://staticmania.cdn.prismic.io/staticmania/7c82d76e-be06-41ca-a6ef-3db9009e6231_Property+1%3DFolder_+Property+2%3DSm.svg"
-          className="pt-4"
-          height={234}
-          width={350}
-          alt="404"
-        />
-      </EmptyImage>
-      <EmptyTitle className="mb-[14px] mt-5">Your subscription is over</EmptyTitle>
-      <EmptyDescription className="mb-8">
-        To continue using the service, extend it
-      </EmptyDescription>
-      <Button variant="outline" className="flex gap-1.5" onClick={() => window.location.href = '/payment'}>
-        Resubscribe
-      </Button>
-    </Empty>
-  </div>
-)
-
-const EmailUnConfirmed = ({height, email}) => (
-  <div className="flex items-center justify-center w-[100vw]" style={{height}}>
-    <Empty>
-      <EmptyImage>
-        <img
-          src="https://staticmania.cdn.prismic.io/staticmania/7c82d76e-be06-41ca-a6ef-3db9009e6231_Property+1%3DFolder_+Property+2%3DSm.svg"
-          className="pt-4"
-          height={234}
-          width={350}
-          alt="404"
-        />
-      </EmptyImage>
-      <EmptyTitle className="mb-[14px] mt-5">You need to confirm your email address</EmptyTitle>
-      <EmptyDescription className="mb-8">
-        {`We have sent you a confirmation email link to ${email}`}
-      </EmptyDescription>
-      <Button variant="outline" className="flex gap-1.5">
-        Resend
-      </Button>
-    </Empty>
-  </div>
-)
 
 export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
   const {UserStore, CampaignsStore, FirebaseStore} = useStores()
@@ -115,7 +71,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
   }
 
   if (!UserStore.user.is_confirmed) {
-    return <EmailUnConfirmed height={height} email={UserStore.user.email} />
+    return <EmailUnConfirmed height={`${height}px`} email={UserStore.user.email} />
   }
 
   if (FirebaseStore.config.stripe) {
@@ -124,7 +80,7 @@ export const AuthPageWrapper = observer(({children}: AuthPageWrapperProps) => {
     }
 
     if (UserStore.user.subscription?.status !== SubscriptionStatus.ACTIVE) {
-      return <SubscribeOver height={height} />
+      return <SubscribeOver height={`${height}px`} />
     }
   }
 

@@ -9,7 +9,10 @@ import {SettingsPage} from "./pages/Workspace/Settings"
 import {StripePage} from "./pages/StripePage"
 import {TermsOfUsePage} from "./pages/TermsOfUse"
 import { Gateway } from "./pages/Gateway"
-import { PostsPage } from "./pages/Posts"
+import { PostsPage } from "./new-app/pages/posts/Posts"
+import CampaignSettings from "./new-app/pages/campaign-settings/CampaignSettings"
+import { ProfilePage } from "./new-app/pages/profile/Profile"
+import { SubscribePage } from "./new-app/pages/subscribe/Subscribe"
 import './App.css'
 
 function App() {
@@ -28,6 +31,9 @@ function App() {
     <Route path="/payment" element={<StripePage />} />
     <Route path='/terms-of-use' element={<TermsOfUsePage />} />
     <Route path="/posts" element={<PostsPage />} />
+    <Route path="/campaign-settings" element={<CampaignSettings />} />
+    <Route path="/profile" element={<ProfilePage />} />
+    <Route path="/subscribe" element={<SubscribePage />} />
   </Routes>
 }
 
