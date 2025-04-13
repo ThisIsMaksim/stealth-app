@@ -1,7 +1,7 @@
 import { observer } from "mobx-react"
 import { useStores } from "../../stores"
 import { IPersonalContext } from "../../types/Campaigns.type"
-import { Text, Button, TextArea, useToaster, Tooltip, Card } from '@gravity-ui/uikit'
+import { Text, Button, TextArea, useToaster, Tooltip } from '@gravity-ui/uikit'
 import {CircleQuestionFill} from '@gravity-ui/icons'
 import { useState, useCallback, useEffect } from "react"
 import { fetchWithDelay } from "../../utils/fetchWithDelay"

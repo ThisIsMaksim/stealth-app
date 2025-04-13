@@ -1,33 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react'
 import { Card, Text } from '@gravity-ui/uikit'
-import { CampaignAttributes } from './CmpaignAttributes';
-import { CampaignNameAndStatus } from './CmpaignNameAndStatus';
+import { CampaignAttributes } from './CmpaignAttributes'
+import { CampaignNameAndStatus } from './CmpaignNameAndStatus'
 
-interface CampaignInfoProps {
-  isActive?: boolean;
-  onActivityChange?: (active: boolean) => void;
-}
-
-export const CampaignInfo: React.FC<CampaignInfoProps> = ({
-  isActive = false,
-  onActivityChange,
-}) => {
-  const [active, setActive] = useState(isActive);
-
-  const handleActivityChange = (checked: boolean) => {
-    setActive(checked);
-    onActivityChange?.(checked);
-  };
-
+export const CampaignInfo: React.FC = () => {
   return (
     <div className="flex flex-col gap-6 w-[100vw] max-w-[650px]">
-        <Card view="raised" className="p-6 text-start">
+        <Card view="filled" type="container" theme="normal" className="p-6 text-start">
           <div className="flex justify-between items-center mb-4">
             <Text variant="header-1" className="text-start">Campaign info</Text>
           </div>
           <CampaignNameAndStatus />
       </Card>
-      <Card view="raised" className="p-6 text-start">
+      <Card view="filled" type="container" theme="normal" className="p-6 text-start">
           <div className="flex justify-between items-center mb-4">
             <Text variant="header-1" className="text-start">Campaign context</Text>
           </div>

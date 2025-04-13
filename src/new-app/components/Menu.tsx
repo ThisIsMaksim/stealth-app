@@ -21,11 +21,11 @@ export const Menu = observer(() => {
                 </div>
             </div>
             <div 
-                onClick={() => navigate('/workspace/audience')}
+                onClick={() => navigate('/prospects')}
                 className="w-full cursor-pointer"
             >
                 <div className={`flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 ${
-                    window.location.pathname === '/workspace/audience' ? 'text-blue-600 dark:text-blue-400 font-medium' : 'text-black dark:text-white'
+                    window.location.pathname === '/prospects' ? 'text-blue-600 dark:text-blue-400 font-medium' : 'text-black dark:text-white'
                 }`}>
                     <Users size={20} />
                     <span>Prospects</span>

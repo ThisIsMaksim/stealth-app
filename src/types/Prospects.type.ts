@@ -11,6 +11,7 @@ export interface IProspect {
   name: string,
   position: string,
   post_frequency: string
+  is_private?: boolean
 }
 
 export interface IAddProspectRequest {

@@ -13,6 +13,7 @@ import { PostsPage } from "./new-app/pages/posts/Posts"
 import CampaignSettings from "./new-app/pages/campaign-settings/CampaignSettings"
 import { ProfilePage } from "./new-app/pages/profile/Profile"
 import { SubscribePage } from "./new-app/pages/subscribe/Subscribe"
+import ProspectsPage from "./new-app/pages/prospects/Prospects"
 import './App.css'
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
     <Route path="/campaign-settings" element={<CampaignSettings />} />
     <Route path="/profile" element={<ProfilePage />} />
     <Route path="/subscribe" element={<SubscribePage />} />
+    <Route path="/prospects" element={<ProspectsPage />} />
   </Routes>
 }
 

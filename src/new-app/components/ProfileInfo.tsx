@@ -1,10 +1,10 @@
-import { Card, Text, Button, Avatar, TextArea } from '@gravity-ui/uikit'
+import { Card, Text, Button, Avatar } from '@gravity-ui/uikit'
 import { SignOut, LinkedinLogo } from 'phosphor-react'
 import { LinkedinAccountStatus } from '../../types/LinkedinAccount.type'
 import { IUser } from '../../types/User.type'
 import { useStores } from '../../stores'
 import { ModalType } from '../../stores/modal.store'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { fetchWithDelay, Action } from '../../utils/fetchWithDelay'
 import { SubscriptionStatus } from '../../types/Subscriptions.type'
 import { useNavigate } from 'react-router-dom'
@@ -38,7 +38,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, onLogout }) => {
 
   return (
     <div className="flex flex-col gap-6 w-[100vw] max-w-[650px]">
-      <Card view="raised" className="p-6">
+      <Card view="filled" type="container" theme="normal" className="p-6">
         <div className="flex items-center gap-4 mb-6">
           <Avatar 
             size="xl" 
@@ -110,7 +110,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, onLogout }) => {
         </div>
       </Card>
 
-      <Card view="raised" className="p-6 text-start">
+      <Card view="filled" type="container" theme="normal" className="p-6 text-start">
         <div className="flex justify-between items-center mb-4">
           <Text variant="header-1" className="text-start">Personal context</Text>
         </div>
@@ -143,7 +143,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, onLogout }) => {
         </div>
       </Card>
 
-      <Card view="raised" className="p-6">
+      <Card view="filled" type="container" theme="normal" className="p-6">
         <div className="flex justify-between items-center mb-4">
           <Text variant="header-1" className="text-start">Subscription</Text>
           {/* {user?.subscription?.isPremium && (
