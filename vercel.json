@@ -1,6 +1,9 @@
 {
     "rewrites": [
-      { "source": "/api/(.*)", "destination": "https://elvyn.ai/api/v1/$1" },
+    {
+        "source": "/api/:path*",
+        "destination": "https://elvyn.ai/:path*"
+    },
       { "source": "/(.*)", "destination": "/" }
     ]
   }
