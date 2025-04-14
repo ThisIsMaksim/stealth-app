@@ -4,7 +4,7 @@ import {ToastWrapper} from "keep-react"
 import {Modal} from "./components/Modal"
 import {Onboarding} from "./components/Onboarding"
 import {ThemeProvider as GravityUIThemeProvider, Loader} from '@gravity-ui/uikit'
-import {Toaster, ToasterComponent, ToasterProvider} from '@gravity-ui/uikit'
+import {Toaster, ToasterComponent, ToasterProvider, Text, Link} from '@gravity-ui/uikit'
 import { useTheme } from './ThemeProvider.tsx'
 import { useEffect } from 'react'
 import { useStores } from './stores/index.ts'
@@ -31,8 +31,9 @@ export const NewApp = () => {
 }
 
 const AppWrapper = observer(() => {
-    const { CampaignsStore, UserStore, FirebaseStore } = useStores()
+    const { CampaignsStore, UserStore, FirebaseStore, ProspectsStore, NotificationStore } = useStores()
     const navigate = useNavigate()
+    const prospects = ProspectsStore.prospects
 
     useEffect(() => {
         if (UserStore.authorized) return
@@ -67,6 +68,30 @@ const AppWrapper = observer(() => {
             })
         }
     }, [FirebaseStore.initialized, UserStore.user])
+
+    useEffect(() => {
+        if (CampaignsStore.activeCampaign) {
+          ProspectsStore.fetchProspects(CampaignsStore.activeCampaign.id)
+        }
+    }, [CampaignsStore.activeCampaign, ProspectsStore])
+
+    useEffect(() => {
+        const privateProspects = prospects.filter((prospect) => prospect.is_private)
+
+        if (privateProspects.length > 0) {
+            for (const prospect of privateProspects) {
+                NotificationStore.addNotification({
+                    id: prospect.id,
+                    text: (
+                        <Text>
+                            You tried to add a prospect: <Link href={prospect.link_url}>{prospect.link_url}</Link>. This is a private account, we cannot add it.
+                        </Text>
+                    ),
+                    read: false,
+                })
+            }
+        }
+    }, [prospects])
 
     if (!['/signin', '/signup', '/'].includes(window.location.pathname)) {
         if (!UserStore.authorized || (UserStore.user.is_confirmed && !CampaignsStore.activeCampaign) || !FirebaseStore.initialized) {

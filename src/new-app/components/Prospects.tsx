@@ -97,6 +97,7 @@ export const Prospects: React.FC = observer(() => {
         {
             id: 'position',
             name: 'Position',
+            className: 'w-full',
             template: (item) => !!item.name ? <Text className="whitespace-normal">{item.position || '-'}</Text> : '...',
         },
         // {

@@ -26,7 +26,7 @@ export const Post = observer((props: PropsPost) => {
                     </Label>
                 </div>
             )}
-            <User name={author.name} subtitle={author.position} avatarSrc={author.avatar_url} />
+            <User name={author.name} subtitle={author.position} avatarSrc={author.avatar_url} clickable={false} />
             <PostContent className="text-start" content={content} />
             {hasSharedContent && (
                 <div>

@@ -1,13 +1,7 @@
-import {
-  Button, Input, Modal,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalTitle,
-} from 'keep-react'
 import {useCallback, useState} from "react";
 import {useStores} from "../stores";
 import {YM} from "../utils/ym.ts";
+import { Modal, TextInput, Button, Text } from "@gravity-ui/uikit";
 
 interface Props {
   isOpen: boolean
@@ -17,11 +11,16 @@ interface Props {
 export const CreateCampaignModal = ({isOpen, close}: Props) => {
   const { CampaignsStore } = useStores()
   const [name, setName] = useState("")
+  const [pending, setPending] = useState(false)
 
   const handleCreateCampaign = useCallback(async () => {
     YM.richGoal('create-campaign')
 
+    setPending(true)
+
     await CampaignsStore.createCampaign({name, company_context: '', owner_context: ''})
+
+    setPending(false)
 
     close()
   }, [CampaignsStore, close, name])
@@ -31,27 +30,17 @@ export const CreateCampaignModal = ({isOpen, close}: Props) => {
       open={isOpen}
       onOpenChange={(value) => !value ? close() : null}
     >
-      <ModalContent className="max-md:min-w-[calc(100%-16px)] min-w-[500px]">
-        <ModalHeader className="mb-6 space-y-3">
-          <div className="space-y-1">
-            <ModalTitle>
-              <div className="text-heading-6">
-                Create campaign
-              </div>
-            </ModalTitle>
-          </div>
-        </ModalHeader>
-        <div className="mt-4 mb-6">
-          <Input
-            placeholder="Campaign name"
-            onChange={(e) => setName(e.target.value)}
-          />
+      <div className="space-y-4 p-6">
+        <Text variant="header-2">Create campaign</Text>
+        <TextInput
+          placeholder="Campaign name"
+          onChange={(e) => setName(e.target.value)}
+        />
+        <div className="flex gap-2">
+          <Button view="action" onClick={handleCreateCampaign} loading={pending}>Create</Button>
+          <Button view="flat" onClick={close} disabled={pending}>Cancel</Button>
         </div>
-        <ModalFooter>
-          <Button color="success" onClick={handleCreateCampaign}>Create</Button>
-          <Button color="error" onClick={close}>Cancel</Button>
-        </ModalFooter>
-      </ModalContent>
+      </div>
     </Modal>
   )
 }

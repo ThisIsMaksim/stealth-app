@@ -1,8 +1,8 @@
 import {ReactNode} from "react"
 import {observer} from "mobx-react"
 import {TourProvider} from "@reactour/tour"
-import {useTheme} from "../ThemeProvider.tsx";
-import {Button} from "keep-react";
+import {useTheme} from "../ThemeProvider.tsx"
+import { Button } from "@gravity-ui/uikit"
 
 interface Props {
   children: ReactNode
@@ -38,7 +38,7 @@ export const Onboarding = observer((props: Props) => {
 
         return (
           <Button
-            variant="default"
+            view="outlined-danger"
             onClick={() => setCurrentStep((s) => first ? steps.length - 1 : s - 1)}
           >
             Back
@@ -50,6 +50,7 @@ export const Onboarding = observer((props: Props) => {
 
         return (
           <Button
+            view="action"
             onClick={() => last ? setIsOpen(false) : setCurrentStep((s) => (s === steps?.length - 1 ? 0 : s + 1))}
           >
             {last ? 'Close' : 'Next'}

@@ -1,16 +1,9 @@
-import {
-  Button,
-  Modal,
-  ModalContent, ModalFooter,
-  ModalHeader,
-  ModalTitle, Textarea, toast,
-} from 'keep-react'
-import {useCallback, useState} from "react";
-import {useStores} from "../stores";
-import {fetchWithDelay} from "../utils/fetchWithDelay.ts";
-import {IAddProspectRequest} from "../types/Prospects.type.ts";
-import {SyncLoader} from "react-spinners";
-import {YM} from "../utils/ym.ts";
+import { Button, Modal, TextArea } from '@gravity-ui/uikit'
+import {useCallback, useState} from "react"
+import {useStores} from "../stores"
+import {fetchWithDelay} from "../utils/fetchWithDelay.ts"
+import {IAddProspectRequest} from "../types/Prospects.type.ts"
+import {YM} from "../utils/ym.ts"
 
 interface Props {
   isOpen: boolean
@@ -27,6 +20,7 @@ export const AddProspectModal = ({isOpen, close}: Props) => {
     YM.richGoal('add-prospects')
 
     setPending(true)
+    setError('')
 
     const items = link
       .replaceAll('https://', '')
@@ -44,8 +38,7 @@ export const AddProspectModal = ({isOpen, close}: Props) => {
     )
 
     if (result.error) {
-      toast.error(result.error)
-
+      setError(result.error)
       setPending(false)
     } else {
       close()
@@ -62,51 +55,43 @@ export const AddProspectModal = ({isOpen, close}: Props) => {
     setLink(value)
   }, [])
 
-  let Component = (
-    <>
-      <ModalHeader className="mb-6 space-y-3">
-        <div className="space-y-1">
-          <ModalTitle>
-            <div className="text-heading-6">Add prospect</div>
-          </ModalTitle>
-        </div>
-      </ModalHeader>
-      <div className="mb-4">
-        <Textarea
-          className="h-[220px]"
-          placeholder="For example: https://www.linkedin.com/in/fedianin-maksim/"
-          onChange={(e) => handleChangeLink(e.target.value)}
-        />
-      </div>
-      <div className={`mt-2 mb-4 text-body-4 text-error-600 ${error ? '' : 'opacity-0'}`}>{error || 'without error'}</div>
-      <ModalFooter>
-        <Button color="success" disabled={pending || !!error} onClick={handleAddProspect}>
-          Add
-        </Button>
-        <Button color="error" disabled={pending} onClick={close}>Cancel</Button>
-      </ModalFooter>
-    </>
-  )
-
-  if (pending) {
-    Component = (
-      <div className="flex justify-center items-center h-[420px]">
-        <div className="flex flex-row gap-4">
-          <SyncLoader color="rgb(27, 77, 255)" size={10} />
-          <p className="flex justify-center items-center">Adding...</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <Modal
       open={isOpen}
-      onOpenChange={(value) => !value ? close() : null}
+      onClose={close}
     >
-      <ModalContent className="max-md:min-w-[calc(100%-16px)] min-w-[500px] h-[420px]">
-        {Component}
-      </ModalContent>
+      <div className="p-6 w-[550px]">
+        <div className="mb-6">
+          <h3 className="text-heading-6">Add prospect</h3>
+        </div>
+        <div className="mb-4">
+          <TextArea
+            size="l"
+            rows={8}
+            placeholder="For example: https://www.linkedin.com/in/fedianin-maksim/"
+            errorMessage={error}
+            validationState={!!error ? 'invalid' : undefined}
+            onChange={(e) => handleChangeLink(e.target.value)}
+          />
+        </div>
+        <div className="flex gap-2 justify-end">
+          <Button 
+            view="action"
+            loading={pending}
+            disabled={pending || !!error} 
+            onClick={handleAddProspect}
+          >
+            Add
+          </Button>
+          <Button 
+            view="flat"
+            disabled={pending} 
+            onClick={close}
+          >
+            Cancel
+          </Button>
+        </div>
+      </div>
     </Modal>
   )
 }

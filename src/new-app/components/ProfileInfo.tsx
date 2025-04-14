@@ -9,13 +9,14 @@ import { fetchWithDelay, Action } from '../../utils/fetchWithDelay'
 import { SubscriptionStatus } from '../../types/Subscriptions.type'
 import { useNavigate } from 'react-router-dom'
 import { ProfileAttributes } from './ProfileAttributes'
+import { observer } from 'mobx-react'
 
 interface ProfileInfoProps {
   user: IUser
   onLogout: () => void
 }
 
-export const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, onLogout }) => {
+export const ProfileInfo: React.FC<ProfileInfoProps> = observer(({ user, onLogout }) => {
   const { UserStore, ModalStore } = useStores()
   const navigate = useNavigate()
 
@@ -33,6 +34,13 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, onLogout }) => {
     await fetchWithDelay<void, Action<void>>(
       UserStore.unBindLinkedinAccount.bind(UserStore),
       undefined,
+    )
+  }, [UserStore])
+
+  const handleReconnectLinkedInAccount = useCallback(async () => {
+    ModalStore.open(
+      ModalType.BindLinkedInAccount,
+      () => UserStore.needCheckLinkedinAccountStatus = false
     )
   }, [UserStore])
 
@@ -54,16 +62,28 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, onLogout }) => {
         <div className="flex justify-between items-center mb-2">
           <Text variant="header-1" className="text-start">LinkedIn account</Text>
           {user?.linkedin_account ? (
-            <Button
-              view="outlined-danger"
-              size="m"
-              onClick={handleUnBindLinkedInAccount}
-            >
-              <div className="flex flex-row items-center justify-center">
-                <LinkedinLogo size={16} className="mr-2" />
-                Unlink
-              </div>
-            </Button>
+            <div className="flex flex-row gap-2">
+              <Button
+                view="outlined-warning"
+                size="m"
+                onClick={handleReconnectLinkedInAccount}
+              >
+                <div className="flex flex-row items-center justify-center">
+                  <LinkedinLogo size={16} className="mr-2" />
+                  Reconnect
+                </div>
+              </Button>
+              <Button
+                view="outlined-danger"
+                size="m"
+                onClick={handleUnBindLinkedInAccount}
+              >
+                <div className="flex flex-row items-center justify-center">
+                  <LinkedinLogo size={16} className="mr-2" />
+                  Unlink
+                </div>
+              </Button>
+            </div>
           ) : (
             <Button
               view="outlined"
@@ -77,7 +97,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, onLogout }) => {
             </Button>
           )}
         </div>
-        <div className="grid grid-cols-2 gap-4 text-start">
+        <div className="grid grid-cols-2 gap-4 mt-4 text-start">
           <div className="flex flex-row gap-1 items-center">
             <Text variant="body-2" color="secondary">Status</Text>
             <Text variant="body-1">
@@ -192,4 +212,4 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, onLogout }) => {
       </div>
     </div>
   )
-} 
+})

@@ -2,8 +2,9 @@ import React from 'react'
 import { Card, Text } from '@gravity-ui/uikit'
 import { CampaignAttributes } from './CmpaignAttributes'
 import { CampaignNameAndStatus } from './CmpaignNameAndStatus'
+import { observer } from 'mobx-react'
 
-export const CampaignInfo: React.FC = () => {
+export const CampaignInfo: React.FC = observer(() => {
   return (
     <div className="flex flex-col gap-6 w-[100vw] max-w-[650px]">
         <Card view="filled" type="container" theme="normal" className="p-6 text-start">
@@ -45,5 +46,5 @@ export const CampaignInfo: React.FC = () => {
           </div>
       </Card>
     </div>
-  );
-}; 
+  )
+})

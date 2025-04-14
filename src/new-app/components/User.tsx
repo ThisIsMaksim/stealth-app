@@ -6,9 +6,10 @@ interface UserProps extends ComponentProps {
     name: string
     subtitle: string
     avatarSrc?: string
+    clickable?: boolean
 }
 
-export const User = ({ name, subtitle, avatarSrc, className }: UserProps) => {
+export const User = ({ name, subtitle, avatarSrc, className, clickable = true }: UserProps) => {
     const navigate = useNavigate()
 
     let avatarProps: AvatarProps =
@@ -17,7 +18,7 @@ export const User = ({ name, subtitle, avatarSrc, className }: UserProps) => {
             : {text: name, size: "l", borderColor: 'var(--g-color-line-misc)'}
 
     return (
-        <div onClick={() => navigate('/profile')}>
+        <div onClick={clickable ? () => navigate('/profile') : null}>
             <div id="profile" className={`flex flex-row gap-2 ${className}`}>
                 <Avatar className="shrink-0" {...avatarProps} />
                 <div className="flex flex-col items-start justify-center">
