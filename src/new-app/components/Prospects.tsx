@@ -15,38 +15,46 @@ import {
 import { useStores } from '../../stores'
 import { observer } from 'mobx-react'
 import { IProspect } from '../../types/Prospects.type'
-import { Empty, EmptyImage, EmptyTitle, EmptyDescription } from 'keep-react'
 import { ModalType } from '../../stores/modal.store'
+import Lottie from 'react-lottie'
+import emptyLottie from "../../assets/lottie/empty.json"
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: emptyLottie,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+}
 
 interface EmptyComponentProps {
     addProspect: () => void
-  }
+}
 
 const EmptyComponent = ({addProspect}: EmptyComponentProps) => (
-    <Empty>
-      <EmptyImage>
-        <img
-          src="https://staticmania.cdn.prismic.io/staticmania/16994ca5-ac01-4868-8ade-1b9e276ccdb3_Property+1%3DFolder_+Property+2%3DLg.svg"
-          className="pt-4"
-          height={234}
-          width={350}
-          alt="404"
+    <div>
+      <Lottie
+            options={defaultOptions}
+            height={400}
+            width={400}
         />
-      </EmptyImage>
-      <EmptyTitle className="mb-[14px] mt-5">You don't have any prospects yet</EmptyTitle>
-      <EmptyDescription className="mb-8">
-        Add the prospects to your campaign to start using them
-      </EmptyDescription>
+      <div className="flex flex-col mt-4">
+        <Text variant="header-1" className="mb-[14px]">You don't have any prospects yet</Text>
+        <Text variant="body-1">
+            Add the prospects to your campaign to start using them
+        </Text>
+      </div>
       <Button
         view="action"
         size="l"
-        className="flex gap-1.5"
+        className="flex gap-1.5 mt-4 mb-4"
         onClick={() => addProspect()}
       >
         Add prospect
       </Button>
-    </Empty>
-  )
+    </div>
+)
   
 export const Prospects: React.FC = observer(() => {
     const {CampaignsStore, ProspectsStore, ModalStore} = useStores()
@@ -100,11 +108,6 @@ export const Prospects: React.FC = observer(() => {
             className: 'w-full',
             template: (item) => !!item.name ? <Text className="whitespace-normal">{item.position || '-'}</Text> : '...',
         },
-        // {
-        //     id: 'post_frequency',
-        //     name: 'Post frequency',
-        //     template: (item) => <Text>{item.post_frequency}</Text>,
-        // },
     ]
     const getRowActions: (item: IProspect, index: number) => TableActionConfig<IProspect>[] = () => {
         return [
@@ -136,7 +139,7 @@ export const Prospects: React.FC = observer(() => {
                 <Text variant="header-1" className="text-start mb-4">
                     Prospects
                 </Text>
-                <Label theme="success">{!isLoading ? ProspectsStore.prospects.length : '...'}</Label>
+                <Label theme="success">{!isLoading ? prospects.length : '...'}</Label>
             </div>
             {isLoading ? (
                 <div className="space-y-2">
@@ -150,7 +153,7 @@ export const Prospects: React.FC = observer(() => {
                 />
             ) : (
                 <ProspectsTable
-                    data={ProspectsStore.prospects}
+                    data={prospects}
                     columns={columns}
                     getRowActions={getRowActions}
                 />

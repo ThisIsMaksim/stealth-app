@@ -182,10 +182,12 @@ export const BindLinkedInAccountModal = observer(({isOpen, close}: Props) => {
           size="l"
           length={6}
           onUpdate={(value) => {
-            setOTP(value.join(''))
+            const otpValue = value.join('')
+
+            setOTP(otpValue)
             
-            if (value.length === 6) {
-              handleSendOTP();
+            if (otpValue.length === 6) {
+              handleSendOTP()
             }
           }}
         />

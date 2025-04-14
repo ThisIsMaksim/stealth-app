@@ -10,6 +10,10 @@ import { SubscriptionStatus } from '../../types/Subscriptions.type'
 import { useNavigate } from 'react-router-dom'
 import { ProfileAttributes } from './ProfileAttributes'
 import { observer } from 'mobx-react'
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+
+dayjs.extend(relativeTime)
 
 interface ProfileInfoProps {
   user: IUser
@@ -113,18 +117,9 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = observer(({ user, onLogou
             <Text variant="body-1">{user?.linkedin_account?.location || 'Not specified'}</Text>
           </div>
           <div className="flex flex-row gap-1 items-center">
-            <Text variant="body-2" color="secondary">Profile URL</Text>
+            <Text variant="body-2" color="secondary">Email</Text>
             <Text variant="body-1">
-              {user?.linkedin_account?.linkedin_url ? (
-                <a 
-                  href={user.linkedin_account.linkedin_url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  Open Profile
-                </a>
-              ) : 'Not specified'}
+              {user?.linkedin_account?.email || 'Not specified'}
             </Text>
           </div>
         </div>
@@ -166,12 +161,6 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = observer(({ user, onLogou
       <Card view="filled" type="container" theme="normal" className="p-6">
         <div className="flex justify-between items-center mb-4">
           <Text variant="header-1" className="text-start">Subscription</Text>
-          {/* {user?.subscription?.isPremium && (
-            <div className="flex items-center gap-2">
-              <Crown size={20} weight="fill" className="text-yellow-500" />
-              <Text variant="body-1">Premium</Text>
-            </div>
-          )} */}
         </div>
         <div className="grid grid-cols-2 gap-4 text-start">
           <div className="flex flex-row gap-1 items-center">
@@ -183,7 +172,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = observer(({ user, onLogou
           <div className="flex flex-row gap-1 items-center">
             <Text variant="body-2" color="secondary">Next Payment</Text>
             <Text variant="body-1">
-              {user?.subscription?.end_ts || 'Not specified'}
+              {user?.subscription?.end_ts ? dayjs(user.subscription.end_ts).format('DD MMMM YYYY') : 'Not specified'}
             </Text>
           </div>
           <div className="col-span-2">

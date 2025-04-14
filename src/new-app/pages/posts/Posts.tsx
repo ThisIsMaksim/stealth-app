@@ -10,9 +10,35 @@ import { AddProspects } from "../../components/AddProspects"
 import { LoadMorePosts } from "../../components/LoadMorePosts"
 import { PostsSkeleton } from "../../components/PostsSkeleton"
 import { WelcomeEmptyState } from "../../components/WelcomeEmptyState"
-import { EmptyComponent } from "../../components/EmptyComponent"
 import { PostsOnboarding } from "../../components/PostsOnboarding"
 import { PageWrapper } from "../../components/PageWrapper"
+import Lottie from 'react-lottie'
+import emptyLottie from "../../../assets/lottie/empty.json"
+import {Text, Card} from "@gravity-ui/uikit"
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: emptyLottie,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+}
+
+const EmptyComponent = () => (
+    <Card className="flex flex-col items-center justify-center w-[100vw] max-w-[650px] h-[500px] p-8" view="filled" type="container" theme="normal">
+        <div>
+            <Lottie
+                    options={defaultOptions}
+                    height={400}
+                    width={400}
+                />
+            <div className="flex flex-col mt-4">
+                <Text variant="header-1" className="mb-[14px]">You don't have new posts</Text>
+            </div>
+        </div>
+    </Card>
+)
 
 interface PostsProps {
     posts: IPostWithComment[]
@@ -53,7 +79,7 @@ export const PostsPage = observer(() => {
     } else if (ProspectsStore.prospects.length === 0) {
         content = <WelcomeEmptyState />
     } else if (!posts.length) {
-        content = <EmptyComponent title={chooseStatus !== 'draft' ? "You don't have posts in this status" : "You don't have new posts"} />
+        content = <EmptyComponent />
     } else {
         content = (
             <>

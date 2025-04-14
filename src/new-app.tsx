@@ -95,13 +95,15 @@ const AppWrapper = observer(() => {
 
     if (!['/signin', '/signup', '/'].includes(window.location.pathname)) {
         if (!UserStore.authorized || (UserStore.user.is_confirmed && !CampaignsStore.activeCampaign) || !FirebaseStore.initialized) {
-            return <div className="flex flex-row justify-center items-center w-[100vw] h-[100vh]">
-              <Loader />
-            </div>
+            return (
+                <div className="flex flex-row justify-center items-center w-[100vw] h-[100vh]">
+                    <Loader />
+                </div>
+            )
         }
     
         if (!UserStore.user.is_confirmed) {
-            return <EmailUnConfirmed height={'100vh'} email={UserStore.user.email} />
+            return <EmailUnConfirmed email={UserStore.user.email} />
         }
     
         if (FirebaseStore.config.stripe) {

@@ -1,6 +1,6 @@
 import {Route, Routes} from "react-router-dom"
-import {SignUp, SignIn, Landing} from "./pages"
-import {ConfirmedEmail} from "./pages/ConfirmEmail"
+import {Landing} from "./pages"
+import {ConfirmedEmail} from "./new-app/pages/confirmed-email/ConfirmedEmail"
 import {StripePage} from "./pages/StripePage"
 import {TermsOfUsePage} from "./pages/TermsOfUse"
 import { Gateway } from "./pages/Gateway"
@@ -10,14 +10,16 @@ import { ProfilePage } from "./new-app/pages/profile/Profile"
 import { SubscribePage } from "./new-app/pages/subscribe/Subscribe"
 import ProspectsPage from "./new-app/pages/prospects/Prospects"
 import { RedirectPage } from "./new-app/pages/redirect/Redirect"
+import { Login } from "./new-app/pages/login/Login"
+import { Registaration } from "./new-app/pages/registartion/Registration"
 import './App.css'
 
 function App() {
   return <Routes>
     <Route path="/" element={<Landing />} />
     <Route path="/app" element={<Gateway />} />
-    <Route path="/signup" element={<SignUp />} />
-    <Route path="/signin" element={<SignIn />} />
+    <Route path="/signup" element={<Registaration />} />
+    <Route path="/signin" element={<Login />} />
     <Route path="/workspace/audience" element={<RedirectPage href="/posts" />} />
     <Route path="/workspace/about-company" element={<RedirectPage href="/posts" />} />
     <Route path="/workspace/about-you" element={<RedirectPage href="/posts" />} />

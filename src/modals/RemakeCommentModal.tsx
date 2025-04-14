@@ -59,7 +59,6 @@ export const RemakeCommentModal = ({isOpen, postId, comment, close}: Props) => {
   const {PostsStore} = useStores()
   const [isPending, setPending] = useState(false)
   const [activeTab, setActiveTab] = useState('item-0')
-  // const showOnbording = useOnbording()
 
   const handleRemake = useCallback(async () => {
     setPending(true)
@@ -87,48 +86,13 @@ export const RemakeCommentModal = ({isOpen, postId, comment, close}: Props) => {
     }
   }, [PostsStore, postId, comment, value, activeImproves])
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     showOnbording('remake-comment', [
-  //       {
-  //         selector: '#remake-comment',
-  //         content: () => (
-  //           <div>
-  //             <div className="text-start text-body-3 text-gray-900">
-  //               <ul>
-  //                 <li>
-  //                   In situations when you want to go deeper and tweak a comment in a way you like, or produce a longer
-  //                   comment with specific ideas in mind, you can use the Tweak a comment button and provide instructions
-  //                   to the AI on what you would like to change
-  //                 </li>
-  //                 <li>
-  //                   You can use quick buttons for common changes.
-  //                 </li>
-  //                 <li>
-  //                   By default, it will take into account the previous iteration and apply changes on top of it. This is
-  //                   useful if you mostly like the iteration, but would like to change something (Add a question, Change
-  //                   tone of voice, Add a specific idea)
-  //                 </li>
-  //                 <li>
-  //                   You can also Start from scratch, and provide specific instructions when you want your comment to be
-  //                   drafted in a certain way, and you don't want it to be based on the previous iteration.
-  //                 </li>
-  //               </ul>
-  //             </div>
-  //           </div>
-  //         ),
-  //       },
-  //     ])
-  //   }, 1000)
-  // }, [showOnbording])
-
   return (
     <GravityModal
       open={isOpen}
       onClose={close}
     >
       <div className="w-[550px] p-6">
-        <Text variant="header-2">Remake Comment</Text>
+        <Text variant="header-2">Regenerate Comment</Text>
         <TabProvider value={activeTab} onUpdate={setActiveTab}>
           <TabList className="mt-2" value={activeTab} size="m">
             <Tab value="item-0">

@@ -3,7 +3,7 @@ import { Card, Label, Text } from '@gravity-ui/uikit'
 import { Comment } from "./Comment"
 import { User } from "./User"
 import { PostContent } from "./PostContent"
-import { Images } from "../../pages/Comments/Post/Images"
+import { Images } from "./Images"
 import { IPost, IComment } from "../../types/Post.type"
 
 interface PropsPost {

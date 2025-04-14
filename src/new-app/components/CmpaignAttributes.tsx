@@ -62,6 +62,7 @@ export const CampaignAttributes = observer((props: Props) => {
                 {description && (
                     <Tooltip
                       className="p-2 border-[1px] border-gray-500"
+                      openDelay={100}
                       content={description}
                     >
                         <div tabIndex={0}>

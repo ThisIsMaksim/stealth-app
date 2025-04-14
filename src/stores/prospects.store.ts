@@ -1,7 +1,7 @@
 import { flow, makeAutoObservable } from "mobx"
 import {IAddProspectRequest, IProspect, IRemoveProspectRequest} from "../types/Prospects.type.ts"
 import {getHost} from "../utils/getHost.ts"
-import {Action} from "../utils/fetchWithDelay.ts";
+import {Action} from "../utils/fetchWithDelay.ts"
 
 class ProspectsStore {
   state = "pending"
@@ -43,7 +43,9 @@ class ProspectsStore {
     })
 
     if (!response.ok) {
-      action('Something went wrong')
+      const { error } = yield response.json()
+
+      action(error)
 
       return
     }

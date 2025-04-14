@@ -4,6 +4,7 @@ export interface ILinkedinAccount {
   location: string,
   name: string,
   status: LinkedinAccountStatus
+  email?: string
 }
 
 export enum LinkedinAccountStatus {

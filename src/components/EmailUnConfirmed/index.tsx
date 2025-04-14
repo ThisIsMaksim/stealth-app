@@ -1,29 +1,34 @@
-import {Button, Empty, EmptyDescription, EmptyImage, EmptyTitle} from "keep-react"
+import {Card, Text, Button} from "@gravity-ui/uikit"
+import Lottie from 'react-lottie'
+import emailLottie from "../../assets/lottie/email.json"
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true, 
+  animationData: emailLottie,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice'
+  }
+}
 
 interface EmailUnConfirmedProps {
-  height: string
   email: string
 }
 
-export const EmailUnConfirmed = ({height, email}: EmailUnConfirmedProps) => (
-  <div className="flex items-center justify-center w-[100vw]" style={{height}}>
-    <Empty>
-      <EmptyImage>
-        <img
-          src="https://staticmania.cdn.prismic.io/staticmania/7c82d76e-be06-41ca-a6ef-3db9009e6231_Property+1%3DFolder_+Property+2%3DSm.svg"
-          className="pt-4"
-          height={234}
-          width={350}
-          alt="404"
+export const EmailUnConfirmed = ({email}: EmailUnConfirmedProps) => (
+  <div className="flex items-center justify-center w-[100vw] h-[100vh]">
+      <Card className="flex flex-col p-16" view="filled" type="container" theme="normal">
+        <Lottie options={defaultOptions}
+          height={200}
+          width={200}
         />
-      </EmptyImage>
-      <EmptyTitle className="mb-[14px] mt-5">You need to confirm your email address</EmptyTitle>
-      <EmptyDescription className="mb-8">
-        {`We have sent you a confirmation email link to ${email}`}
-      </EmptyDescription>
-      <Button variant="outline" className="flex gap-1.5">
-        Resend
-      </Button>
-    </Empty>
-  </div>
+        <Text variant="header-1" className="mb-[4px] mt-6">You need to confirm your email address</Text>
+        <Text variant="body-2" className="mb-4">
+          {`We have sent you a confirmation email link to ${email}`}
+        </Text>
+        <Button className="mt-2" view="action" size="l" onClick={() => window.location.href = "/posts"}>
+          Resend
+        </Button>
+      </Card>
+    </div>
 ) 

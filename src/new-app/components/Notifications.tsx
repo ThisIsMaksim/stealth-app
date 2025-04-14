@@ -4,9 +4,20 @@ import { CircleCheck, CircleCheckFill } from '@gravity-ui/icons'
 import { useStores } from '../../stores'
 import { useCallback } from 'react'
 import { ComponentProps } from '../../types/Component'
+import Lottie from 'react-lottie'
+import notificationLottie from "../../assets/lottie/notification.json"
 
 interface NotificationsProps extends ComponentProps {
   // Можно добавить пропсы для кастомизации при необходимости
+}
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true, 
+  animationData: notificationLottie,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice'
+  }
 }
 
 export const Notifications = observer(({ className }: NotificationsProps) => {
@@ -25,7 +36,13 @@ export const Notifications = observer(({ className }: NotificationsProps) => {
     <div className={`flex flex-col w-80 max-h-96 ${className}`}>
       <div className="flex-grow overflow-y-auto p-4">
         {notifications.length === 0 ? (
-          <div className="text-center text-gray-500 dark:text-gray-400 py-4">Notification list is empty</div>
+          <div className="flex flex-col">
+            <Lottie options={defaultOptions}
+              height={200}
+              width={200}
+            />
+            <div className="text-center text-gray-500 dark:text-gray-400 py-4">Notification list is empty</div>
+          </div>
         ) : (
           <List
             itemClassName="mt-2 mb-2 rounded-lg"

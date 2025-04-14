@@ -6,7 +6,7 @@ export const Gateway = observer(() => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        navigate('/workspace/audience')
+        navigate('/posts')
     }, [])
 
     return null
