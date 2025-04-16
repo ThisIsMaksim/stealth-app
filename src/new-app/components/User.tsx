@@ -6,10 +6,10 @@ interface UserProps extends ComponentProps {
     name: string
     subtitle: string
     avatarSrc?: string
-    clickable?: boolean
+    linkUrl?: string
 }
 
-export const User = ({ name, subtitle, avatarSrc, className, clickable = true }: UserProps) => {
+export const User = ({ name, subtitle, avatarSrc, className, linkUrl }: UserProps) => {
     const navigate = useNavigate()
 
     let avatarProps: AvatarProps =
@@ -18,7 +18,7 @@ export const User = ({ name, subtitle, avatarSrc, className, clickable = true }:
             : {text: name, size: "l", borderColor: 'var(--g-color-line-misc)'}
 
     return (
-        <div onClick={clickable ? () => navigate('/profile') : null}>
+        <div className="cursor-pointer" onClick={() => !linkUrl ? navigate('/profile') : window.open(linkUrl, '_blank')}>
             <div id="profile" className={`flex flex-row gap-2 ${className}`}>
                 <Avatar className="shrink-0" {...avatarProps} />
                 <div className="flex flex-col items-start justify-center">

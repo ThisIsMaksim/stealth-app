@@ -1,15 +1,12 @@
-import {Card, Label, NavbarBrand} from "keep-react"
 import logo from "../assets/logo.png"
 
 export const Logo = () => (
-  <NavbarBrand id="logo" className="flex flex-row items-center gap-1">
-    <Card>
-      <img
-        className="flex-shrink-0 w-[32px] h-[32px]"
+  <div id="logo" className="flex flex-row items-center gap-1">
+    <img
+        className="flex-shrink-0 w-[32px] h-[32px] rounded-lg"
         src={logo}
         alt="logo"
       />
-    </Card>
-    <Label className="text-heading-5">Elvyn.ai</Label>
-  </NavbarBrand>
+    <div className="text-heading-5">Elvyn.ai</div>
+  </div>
 )

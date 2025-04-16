@@ -1,6 +1,5 @@
 import App from './App.tsx'
 import {BrowserRouter, useNavigate} from "react-router-dom"
-import {ToastWrapper} from "keep-react"
 import {Modal} from "./components/Modal"
 import {Onboarding} from "./components/Onboarding"
 import {ThemeProvider as GravityUIThemeProvider, Loader} from '@gravity-ui/uikit'
@@ -93,7 +92,7 @@ const AppWrapper = observer(() => {
         }
     }, [prospects])
 
-    if (!['/signin', '/signup', '/'].includes(window.location.pathname)) {
+    if (!['/signin', '/signup', '/confirm-email'].some(path => window.location.pathname.includes(path))) {
         if (!UserStore.authorized || (UserStore.user.is_confirmed && !CampaignsStore.activeCampaign) || !FirebaseStore.initialized) {
             return (
                 <div className="flex flex-row justify-center items-center w-[100vw] h-[100vh]">
@@ -112,7 +111,7 @@ const AppWrapper = observer(() => {
             }
     
             if (UserStore.user.subscription?.status !== SubscriptionStatus.ACTIVE) {
-                return <SubscribeOver height={'100vh'} />
+                return <SubscribeOver />
             }
         }
     }
@@ -122,16 +121,6 @@ const AppWrapper = observer(() => {
             <Onboarding>
                 <App />
             </Onboarding>
-            <ToastWrapper
-                richColors={true}
-                toastOptions={{
-                    classNames: {
-                    title: 'text-body-3 font-medium',
-                    toast: 'text-start rounded-xl shadow-large',
-                    description: 'w-full text-body-4 font-normal',
-                    },
-                }}
-            />
             <ToasterComponent />
             <Modal />
         </>

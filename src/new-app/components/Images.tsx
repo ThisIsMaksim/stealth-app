@@ -8,7 +8,7 @@ const ImagesWrapper = ({ imagesUrl }: { imagesUrl: string[] }) => {
   if (imagesUrl.length === 1) {
     return (
       <PhotoView src={imagesUrl[0]}>
-        <img src={imagesUrl[0]} alt="" />
+        <img className="max-h-[300px]" src={imagesUrl[0]} alt="" />
       </PhotoView>
     )
   }

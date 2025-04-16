@@ -1,4 +1,4 @@
-import {Button} from "keep-react"
+import { Button } from "@gravity-ui/uikit"
 
 export const Landing = () => {
   return (
@@ -28,12 +28,12 @@ export const Landing = () => {
               <Button variant="link" className="p-0">
                 <a href="#features" className="text-gray-600 hover:text-indigo-600 transition-colors">Features</a>
               </Button>
-              <Button 
+              <button 
                 onClick={() => window.location.href = '/app'}
                 className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-full hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300"
               >
                 Get Started
-              </Button>
+              </button>
             </div>
           </div>
         </nav>
@@ -57,13 +57,12 @@ export const Landing = () => {
               automation.
             </p>
             <div className="flex justify-center space-x-6">
-              <Button 
+              <button 
                 className="px-8 py-4 rounded-full text-lg font-medium bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300"
-                size="xl"
                 onClick={() => window.location.href = '/app'}
               >
                 Start Your Free Trial
-              </Button>
+              </button>
             </div>
           </div>
         </section>
@@ -534,13 +533,12 @@ export const Landing = () => {
                 </p>
                 <p className="ml-8">Saturday - Sunday: Closed</p>
               </div>
-              <Button 
-                size="lg" 
+              <button
                 className="mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300"
                 onClick={() => window.open("https://t.me/elvyn_ai", "_blank")}
               >
                 Contact Us
-              </Button>
+              </button>
             </div>
           </div>
           <div className="mt-16 pt-8 border-t border-gray-800">
