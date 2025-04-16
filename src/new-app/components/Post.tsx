@@ -45,7 +45,7 @@ export const Post = observer((props: PropsPost) => {
                         </Text>
                     </div>
                     <Card className="p-2 text-start" view="filled" type="container">
-                        <Text>{post.shared_content.content}</Text>
+                        <PostContent className="text-start" content={post.shared_content.content} />
                     </Card>
                 </div>
             )}
