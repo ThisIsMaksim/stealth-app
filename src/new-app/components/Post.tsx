@@ -1,5 +1,5 @@
 import { observer } from "mobx-react"
-import { Card, Label, Text } from '@gravity-ui/uikit'
+import { Card, Label, Text, Button } from '@gravity-ui/uikit'
 import { Comment } from "./Comment"
 import { User } from "./User"
 import { PostContent } from "./PostContent"
@@ -17,6 +17,10 @@ export const Post = observer((props: PropsPost) => {
     const {author, content} = post
     const hasSharedContent = !!post.shared_content
 
+    const handleOpenPost = () => {
+        window.open(post.link_url, '_blank')
+    }
+
     return (
         <Card className="p-4 max-w-[650px] space-y-2" view="filled" type="container">
             {hasSharedContent && (
@@ -26,7 +30,12 @@ export const Post = observer((props: PropsPost) => {
                     </Label>
                 </div>
             )}
-            <User name={author.name} subtitle={author.position} avatarSrc={author.avatar_url} linkUrl={author.link_url} />
+            <div className="flex justify-between items-start">
+                <User name={author.name} subtitle={author.position} avatarSrc={author.avatar_url} linkUrl={author.link_url} />
+                <Button view="flat" onClick={handleOpenPost} title="Open post in new tab">
+                    🔗
+                </Button>
+            </div>
             <PostContent className="text-start" content={content} />
             {hasSharedContent && (
                 <div>
