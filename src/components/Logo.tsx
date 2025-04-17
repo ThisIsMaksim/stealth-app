@@ -3,7 +3,7 @@ import logo from "../assets/logo.png"
 export const Logo = () => (
   <div id="logo" className="flex flex-row items-center gap-1">
     <img
-        className="flex-shrink-0 w-[32px] h-[32px] rounded-lg"
+        className="flex-shrink-0 w-[32px] rounded-lg"
         src={logo}
         alt="logo"
       />

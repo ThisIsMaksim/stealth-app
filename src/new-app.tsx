@@ -92,7 +92,7 @@ const AppWrapper = observer(() => {
         }
     }, [prospects])
 
-    if (!['/signin', '/signup', '/confirm-email'].some(path => window.location.pathname.includes(path))) {
+    if (!['/signin', '/signup', '/confirm-email'].some(path => window.location.pathname.includes(path) || window.location.pathname === '/')) {
         if (!UserStore.authorized || (UserStore.user.is_confirmed && !CampaignsStore.activeCampaign) || !FirebaseStore.initialized) {
             return (
                 <div className="flex flex-row justify-center items-center w-[100vw] h-[100vh]">

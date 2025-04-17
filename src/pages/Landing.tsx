@@ -29,7 +29,7 @@ export const Landing = () => {
                 <a href="#features" className="text-gray-600 hover:text-indigo-600 transition-colors">Features</a>
               </Button>
               <button 
-                onClick={() => window.location.href = '/app'}
+                onClick={() => window.location.href = '/posts'}
                 className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-full hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300"
               >
                 Get Started
@@ -59,7 +59,7 @@ export const Landing = () => {
             <div className="flex justify-center space-x-6">
               <button 
                 className="px-8 py-4 rounded-full text-lg font-medium bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300"
-                onClick={() => window.location.href = '/app'}
+                onClick={() => window.location.href = '/posts'}
               >
                 Start Your Free Trial
               </button>
@@ -454,7 +454,7 @@ export const Landing = () => {
               <Button 
                 size="xl" 
                 className="px-8 py-4 rounded-full text-lg font-medium bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300"
-                onClick={() => window.location.href = '/app'}
+                onClick={() => window.location.href = '/posts'}
               >
                 Start Your Free Trial Now
               </Button>

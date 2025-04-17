@@ -212,6 +212,20 @@ class UserStore {
 
     this.subscriptions = data.subscriptions
   }
+
+  *resendCheckEmail(action: Action<void>) {
+    const response = yield fetch(`${getHost()}/api/v1/users/resend-confirm-email`, {
+      method: 'POST',
+    })
+
+    if (!response.ok) {
+      action('error')
+
+      return
+    }
+
+    action()
+  }
 }
 
 export default UserStore

@@ -3,8 +3,7 @@ import {Landing} from "./pages"
 import {ConfirmedEmail} from "./new-app/pages/confirmed-email/ConfirmedEmail"
 import {StripePage} from "./pages/StripePage"
 import {TermsOfUsePage} from "./pages/TermsOfUse"
-import { Gateway } from "./pages/Gateway"
-import { PostsPage } from "./new-app/pages/posts/Posts"
+import {PostsPage} from "./new-app/pages/posts/Posts"
 import CampaignSettings from "./new-app/pages/campaign-settings/CampaignSettings"
 import { ProfilePage } from "./new-app/pages/profile/Profile"
 import { SubscribePage } from "./new-app/pages/subscribe/Subscribe"
@@ -12,12 +11,12 @@ import ProspectsPage from "./new-app/pages/prospects/Prospects"
 import { RedirectPage } from "./new-app/pages/redirect/Redirect"
 import { Login } from "./new-app/pages/login/Login"
 import { Registaration } from "./new-app/pages/registartion/Registration"
+import { Page404 } from "./new-app/pages/404/404"
 import './App.css'
 
 function App() {
   return <Routes>
     <Route path="/" element={<Landing />} />
-    <Route path="/app" element={<Gateway />} />
     <Route path="/signup" element={<Registaration />} />
     <Route path="/signin" element={<Login />} />
     <Route path="/workspace/audience" element={<RedirectPage href="/posts" />} />
@@ -34,6 +33,7 @@ function App() {
     <Route path="/profile" element={<ProfilePage />} />
     <Route path="/subscribe" element={<SubscribePage />} />
     <Route path="/prospects" element={<ProspectsPage />} />
+    <Route path="*" element={<Page404 />} />
   </Routes>
 }
 
