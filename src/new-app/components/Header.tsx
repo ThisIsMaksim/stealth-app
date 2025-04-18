@@ -1,21 +1,23 @@
 import { observer } from "mobx-react"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Logo } from "../../components/Logo"
 import { useStores } from "../../stores"
 import { ComponentProps } from "../../types/Component"
 import { User } from "./User"
 import { Button, Popover, Icon } from "@gravity-ui/uikit"
-import { ArrowRightFromLine, Bell } from '@gravity-ui/icons'
+import { ArrowRightFromLine, Bell, Clock } from '@gravity-ui/icons'
 import { ThemeSwitcher } from "../../components/ThemeSwitcher"
 import { CommentFill } from '@gravity-ui/icons'
 import { Notifications } from "./Notifications"
+import { Operations } from "./Operations"
 
 interface HeaderProps extends ComponentProps {}
 
 export const Header = observer(({className}: HeaderProps) => {
-  const { UserStore, NotificationStore } = useStores()
+  const { UserStore, NotificationStore, OperationsStore, CampaignsStore } = useStores()
   const user = UserStore.user
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
+  const [isOperationsOpen, setIsOperationsOpen] = useState(false)
 
   const handleLogout = useCallback(async () => {
     UserStore.logout(
@@ -29,7 +31,24 @@ export const Header = observer(({className}: HeaderProps) => {
     window.open('https://t.me/elvyn_ai', '_blank')
   }, [])
 
+  const operations = OperationsStore.operations
+
+  useEffect(() => {
+    if (!CampaignsStore.activeCampaign) return
+
+    OperationsStore.fetchOperations(CampaignsStore.activeCampaign?.id)
+
+    const interval = setInterval(() => {
+      if (!CampaignsStore.activeCampaign) return
+
+      OperationsStore.fetchOperations(CampaignsStore.activeCampaign?.id)
+    }, 30000)
+
+    return () => clearInterval(interval)
+  }, [CampaignsStore.activeCampaign])
+
   const hasUnreadNotifications = NotificationStore.hasUnread
+  const hasPendingOperations = operations.length > 0
 
   return (
     <div className={`fixed top-0 z-10 flex items-center justify-between p-4 bg-white dark:bg-black border-b border-metal-100 dark:border-metal-800 ${className}`}>
@@ -47,6 +66,25 @@ export const Header = observer(({className}: HeaderProps) => {
           >
             <CommentFill />
           </Button>
+          <Popover
+            content={<Operations />}
+            placement="bottom-end"
+            open={isOperationsOpen}
+            onOpenChange={setIsOperationsOpen}
+          >
+            <Button
+              id="operations"
+              className="relative flex items-center justify-center"
+              view="flat"
+              size="l"
+              title="Operations"
+            >
+              <Icon data={Clock} />
+              {hasPendingOperations && (
+                 <span className="absolute top-1 right-1 block h-2 w-2 rounded-full bg-blue-500 ring-2 ring-white dark:ring-black"></span>
+              )}
+            </Button>
+          </Popover>
           <Popover
             content={<Notifications />}
             placement="bottom-end"

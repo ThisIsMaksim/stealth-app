@@ -1,11 +1,12 @@
 import { observer } from "mobx-react"
 import { useCallback, useEffect, useState } from "react"
-import { Button, TextArea, ToastProps, useToaster } from '@gravity-ui/uikit'
+import { Button, TextArea, ToastProps, useToaster, Text } from '@gravity-ui/uikit'
 import { useStores } from "../../stores"
 import { ModalType } from "../../stores/modal.store"
 import { IApprovePostRequest, IRejectPostRequest } from "../../stores/posts.store"
 import { IComment } from "../../types/Post.type"
 import { fetchWithDelay, Action } from "../../utils/fetchWithDelay"
+import { useOnbording } from "../../hooks/useOnbording"
 
 interface CommentProps {
     postId: string
@@ -13,10 +14,11 @@ interface CommentProps {
 }
 
 export const Comment = observer(({postId, comment}: CommentProps) => {
-    const { UserStore, ModalStore, PostsStore } = useStores()
+    const { UserStore, ModalStore, PostsStore, OperationsStore, CampaignsStore } = useStores()
     const [text, setText] = useState(comment.content)
     const [isApprovePending, setApprovePending] = useState(false)
     const [isRejectPending, setRejectPending] = useState(false)
+    const showOnbording = useOnbording()
     const {add} = useToaster()
 
     const openBindLinkedInAccountModal = useCallback(() => {
@@ -53,6 +55,28 @@ export const Comment = observer(({postId, comment}: CommentProps) => {
         setApprovePending(false)
     
         PostsStore.changePostStatus(postId, 'pending')
+        OperationsStore.fetchOperations(CampaignsStore.activeCampaign?.id)
+
+        setTimeout(() => {
+            showOnbording(
+                'operations',
+                [
+                    {
+                        selector: '#operations',
+                        content: () => (
+                            <div className="flex flex-col space-y-2 text-black text-start">
+                                <Text variant="header-2">
+                                    Your comment has been sent for publication
+                                </Text>
+                                <Text variant="body-1">
+                                    Publication usually happens quickly, but can sometimes take up to 15 minutes
+                                </Text>
+                            </div>
+                        )
+                    }
+                ]
+            )
+        }, 1000)
 
         const toast: ToastProps = !result.error
             ? {

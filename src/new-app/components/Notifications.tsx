@@ -7,10 +7,6 @@ import { ComponentProps } from '../../types/Component'
 import Lottie from 'react-lottie'
 import notificationLottie from "../../assets/lottie/notification.json"
 
-interface NotificationsProps extends ComponentProps {
-  // Можно добавить пропсы для кастомизации при необходимости
-}
-
 const defaultOptions = {
   loop: true,
   autoplay: true, 
@@ -18,6 +14,10 @@ const defaultOptions = {
   rendererSettings: {
     preserveAspectRatio: 'xMidYMid slice'
   }
+}
+
+interface NotificationsProps extends ComponentProps {
+  // Можно добавить пропсы для кастомизации при необходимости
 }
 
 export const Notifications = observer(({ className }: NotificationsProps) => {

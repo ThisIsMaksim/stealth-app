@@ -32,15 +32,13 @@ class PostsStore {
     })
   }
 
-  *fetchPosts(id: string, status: string, offset: number) {
+  *fetchPosts(id: string, status: string, offset: number, limit: number = 10) {
     if (offset === 0) {
       this.state = "pending"
       this.postsWithComments = []
     } else {
       this.state = "pending more posts"
     }
-
-    const limit = 10
 
     const response = yield fetch(`${getHost()}/api/v1/posts/?limit=${limit}&offset=${offset}&campaign_id=${id}&status=${status}`)
 

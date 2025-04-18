@@ -7,6 +7,7 @@ import ModalStore from "./modal.store.ts"
 import OnboardingStore from "./onboarding.store.ts";
 import FirebaseStore from "./firebase.store.ts";
 import { NotificationStore } from "./NotificationStore";
+import { OperationsStore } from "./OperationsStore";
 
 class RootStore {
   UserStore: UserStore
@@ -17,6 +18,7 @@ class RootStore {
   OnboardingStore: OnboardingStore
   FirebaseStore: FirebaseStore
   NotificationStore: NotificationStore
+  OperationsStore: OperationsStore
 
   constructor() {
     this.UserStore = new UserStore()
@@ -27,6 +29,7 @@ class RootStore {
     this.OnboardingStore = new OnboardingStore()
     this.FirebaseStore = new FirebaseStore()
     this.NotificationStore = new NotificationStore()
+    this.OperationsStore = new OperationsStore()
   }
 }
 
