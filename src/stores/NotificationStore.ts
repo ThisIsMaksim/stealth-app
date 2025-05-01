@@ -10,7 +10,6 @@ export interface Notification {
   // Можно добавить другие поля, например, timestamp, link и т.д.
 }
 
-
 export class NotificationStore {
   notifications: Notification[] = [];
 
@@ -35,8 +34,8 @@ export class NotificationStore {
       
       // Добавляем новое прочитанное уведомление, если его еще нет в списке
       if (!readNotifications.includes(id)) {
-        readNotifications.push(id);
-        localStorage.setItem('readNotifications', JSON.stringify(readNotifications));
+        readNotifications.push(id)
+        localStorage.setItem('readNotifications', JSON.stringify(readNotifications))
       }
       
       // TODO: Возможно, отправить запрос на API для обновления статуса на бэкенде
@@ -67,8 +66,15 @@ export class NotificationStore {
     const allNotificationIds = this.notifications.map(n => n.id)
     const ids: string[] = [...readNotifications, ...allNotificationIds]
 
+    console.log('Adding notification:', notification.id)
+    console.log('Existing notification IDs:', ids)
+    console.log('Is notification already exists:', ids.includes(notification.id))
+
     if (ids.includes(notification.id)) return
 
     this.notifications.push(notification)
+    console.log('Notification added successfully')
   }
-} 
+}
+
+export const notificationStore = new NotificationStore(); 

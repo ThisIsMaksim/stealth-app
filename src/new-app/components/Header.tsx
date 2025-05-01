@@ -51,7 +51,7 @@ export const Header = observer(({className}: HeaderProps) => {
   const hasPendingOperations = operations.length > 0
 
   return (
-    <div className={`fixed top-0 z-10 flex items-center justify-between p-4 bg-white dark:bg-black border-b border-metal-100 dark:border-metal-800 ${className}`}>
+    <div className={`fixed top-0 z-10 flex items-center justify-between p-4 pt-2 pb-2 bg-white dark:bg-black border-b border-metal-100 dark:border-metal-800 ${className}`}>
       <div className="flex items-center space-x-4">
         <Logo />
       </div>

@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react'
-import { List, Text, Card, Label } from '@gravity-ui/uikit'
+import { List, Text, Card } from '@gravity-ui/uikit'
 import { useStores } from '../../stores'
 import { ComponentProps } from '../../types/Component'
 import Lottie from 'react-lottie'
@@ -44,7 +44,7 @@ export const Operations = observer(({ className }: OperationsProps) => {
             renderItem={(item) => (
               <div className="w-[300px]">
                 <Card view="filled" type="container" theme="normal" className="p-2">
-                  <Card className="p-2 mb-2 whitespace-pre-wrap" view="raised" type="container" theme="info">
+                  <Card className="w-[270px] p-2 mb-2 whitespace-pre-wrap" view="raised" type="container" theme="info">
                     Comment is being processed. It will be published within 15 minutes.
                   </Card>
                   <div className="flex items-center gap-2 mb-2">
@@ -59,9 +59,7 @@ export const Operations = observer(({ className }: OperationsProps) => {
                     </div>
                   </div>
                   <div className="mb-2">
-                    <Text className="line-clamp-3">
-                      {item.post.content}
-                    </Text>
+                    <div className="line-clamp-3" dangerouslySetInnerHTML={{__html: item.post.content}} />
                   </div>
                   <div className="mb-2">
                     <Text color="secondary" className="line-clamp-3">{truncateText(item.comment.content, 3)}</Text>
