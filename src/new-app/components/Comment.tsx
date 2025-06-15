@@ -7,6 +7,7 @@ import { IApprovePostRequest, IRejectPostRequest } from "../../stores/posts.stor
 import { IComment } from "../../types/Post.type"
 import { fetchWithDelay, Action } from "../../utils/fetchWithDelay"
 import { useOnbording } from "../../hooks/useOnbording"
+import { LinkedinAccountStatus } from "../../types/LinkedinAccount.type"
 
 interface CommentProps {
     postId: string
@@ -32,7 +33,7 @@ export const Comment = observer(({postId, comment}: CommentProps) => {
     }, [ModalStore, UserStore])
 
     const handleApprove = useCallback(async () => {
-        if (!UserStore.user.linkedin_account) {
+        if (UserStore.user?.linkedin_account?.status !== LinkedinAccountStatus.CONNECTED) {
             openBindLinkedInAccountModal()
     
           return
@@ -96,7 +97,7 @@ export const Comment = observer(({postId, comment}: CommentProps) => {
     }, [PostsStore, postId, comment, text])
 
     const handleReject = useCallback(async () => {
-        if (!UserStore.user.linkedin_account) {
+        if (UserStore.user?.linkedin_account?.status !== LinkedinAccountStatus.CONNECTED) {
             openBindLinkedInAccountModal()
     
           return
@@ -135,7 +136,7 @@ export const Comment = observer(({postId, comment}: CommentProps) => {
     }, [PostsStore, postId, comment, text])
 
     const handleRegenerate = useCallback(() => {
-        if (!UserStore.user.linkedin_account) {
+        if (UserStore.user?.linkedin_account?.status !== LinkedinAccountStatus.CONNECTED) {
             openBindLinkedInAccountModal()
     
           return

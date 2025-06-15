@@ -5,6 +5,7 @@ import { User } from "./User"
 import { PostContent } from "./PostContent"
 import { Images } from "./Images"
 import { IPost, IComment } from "../../types/Post.type"
+import dayjs from "dayjs";
 
 interface PropsPost {
     post: IPost
@@ -30,11 +31,14 @@ export const Post = observer((props: PropsPost) => {
                     </Label>
                 </div>
             )}
+            <div className="flex justify-between mb-4">
+              <Label theme="info" size="m">Published: {dayjs(post.published_ts).format('DD MMMM YYYY')}</Label>
+              <Button view="flat" onClick={handleOpenPost} title="Open post in new tab">
+                🔗
+              </Button>
+            </div>
             <div className="flex justify-between items-start">
                 <User name={author.name} subtitle={author.position} avatarSrc={author.avatar_url} linkUrl={author.link_url} />
-                <Button view="flat" onClick={handleOpenPost} title="Open post in new tab">
-                    🔗
-                </Button>
             </div>
             <PostContent className="text-start" content={content} />
             {hasSharedContent && (
