@@ -136,11 +136,11 @@ export const Comment = observer(({postId, comment}: CommentProps) => {
     }, [PostsStore, postId, comment, text])
 
     const handleRegenerate = useCallback(() => {
-        if (UserStore.user?.linkedin_account?.status !== LinkedinAccountStatus.CONNECTED) {
-            openBindLinkedInAccountModal()
-    
-          return
-        }
+        // if (UserStore.user?.linkedin_account?.status !== LinkedinAccountStatus.CONNECTED) {
+        //     openBindLinkedInAccountModal()
+        //
+        //   return
+        // }
     
         ModalStore.open(ModalType.RemakeComment, {
           postId: postId,
